@@ -19,7 +19,7 @@ export class MediaGroupService {
     for (const tag of entity.tags || []) {
       tag.id = await this.tagService.getOrCreate(tag.title);
     }
-    return this.mediaGroupRepository.save([entity]);
+    return this.mediaGroupRepository.save(entity);
   }
 
   getAll() {
