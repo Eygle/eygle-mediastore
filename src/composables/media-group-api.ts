@@ -25,7 +25,7 @@ export function useMediaGroupApi() {
 
   async function findMediaGroupByName(name: string) {
     const res = await rest.get(`/media-group?filters[name]=${name}`)
-    return res.data?.[0] ? plainToInstance(MediaGroupDto, res.data[0] as unknown) : null
+    return res.data ? plainToInstance(MediaGroupDto, res.data as unknown) : null
   }
 
   return { createMediaGroup, fetchMediaGroups, findMediaGroupByName, createMedia }
