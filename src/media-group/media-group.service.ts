@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Raw, Repository } from 'typeorm';
-import { MediaGroup } from './media-group.entity';
-import { TagService } from '../tag/tag.service';
+import { Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Raw, Repository } from "typeorm";
+import { MediaGroup } from "./media-group.entity";
+import { TagService } from "../tag/tag.service";
+import { Field } from "../types/Field";
 
 @Injectable()
 export class MediaGroupService {
@@ -23,6 +24,14 @@ export class MediaGroupService {
 
   getAll() {
     return this.mediaGroupRepository.find({
+      relations: { tags: true, media: true },
+      order: { name: 'asc', tags: { title: 'asc' } },
+    });
+  }
+
+  getAllByField(field: Field) {
+    return this.mediaGroupRepository.find({
+      where: { field },
       relations: { tags: true, media: true },
       order: { name: 'asc', tags: { title: 'asc' } },
     });
