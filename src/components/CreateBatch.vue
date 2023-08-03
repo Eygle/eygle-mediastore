@@ -54,14 +54,17 @@ async function processBestByCategoryBatch() {
   for (const line of entry.value.split('\n').filter((l) => Boolean(l.trim()))) {
     if (line.startsWith('#')) {
       const categoryName = line.substring(1).trim()
-      category = await createMediaGroup(plainToInstance(MediaGroupDto, { name: categoryName }))
+      category = await createMediaGroup(plainToInstance(MediaGroupDto, { name: categoryName, field: Field.Category }))
     } else if (line.startsWith('/')) {
       if (!currentMedia) {
         currentMedia = plainToInstance(MediaDto, {
           isBest: true,
           files: [line.trim()],
-          toSee: isToSee(line)
+          toSee: isToSee(line),
         })
+        if (category) {
+          currentMedia.parent = category
+        }
         mediaList.push(currentMedia)
       } else {
         currentMedia.files.push(line.trim())
@@ -76,7 +79,15 @@ async function processBestByCategoryBatch() {
       await extractGuests(line, mediaList[mediaList.length - 1])
     }
   }
+  progress.value = 0
+  total.value = mediaList.length
+
+  for (const media of mediaList) {
+    await createMedia(media)
+    progress.value++
+  }
   isSending.value = false
+  value.value = false
 }
 
 async function processBestByProfileBatch() {
