@@ -4,7 +4,7 @@
       <v-btn class="mr-1" icon @click.stop="$emit('toggle-mini-variant')">
         <v-icon>mdi-menu</v-icon>
       </v-btn>
-      <router-link :to="{ name: 'home' }" class="app-title">
+      <router-link :to="{ name: RouteName.Home }" class="app-title">
         <span v-for="part of formatTitle" :class="{ highlight: part.highlight }">{{ part.text }}</span>
       </router-link>
       <v-spacer />
@@ -15,6 +15,7 @@
 
 <script lang="ts" setup>
 import { useToolbar } from '@/composables/toolbar'
+import { RouteName } from '@/types/RouteName'
 
 const { toolbar } = useToolbar()
 const formatTitle: { text: string; highlight?: boolean }[] = 'Eygle Mediastore'

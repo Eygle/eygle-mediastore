@@ -3,6 +3,7 @@ import CreateMediaDialog from '@/components/CreateMediaDialog.vue'
 import { ref } from 'vue'
 import CreateMediaGroupDialog from '@/components/CreateMediaGroupDialog.vue'
 import CreateBatch from '@/components/CreateBatch.vue'
+import { RouteName } from '@/types/RouteName'
 
 const isCreateMediaDialogOpened = ref(false)
 const isCreateMediaGroupDialogOpened = ref(false)
@@ -19,8 +20,8 @@ const isCreateBatchOpened = ref(false)
     <CreateBatch v-model="isCreateBatchOpened" />
 
     <div class="mt-8">
-      <v-btn :to="{ name: 'profiles' }">Profiles Page</v-btn>
-      <v-btn :to="{ name: 'categories' }">Categories Page</v-btn>
+      <v-btn :to="{ name: RouteName.Profiles }">Profiles Page</v-btn>
+      <v-btn :to="{ name: RouteName.Categories }" class="ml-4">Categories Page</v-btn>
     </div>
   </v-container>
 </template>
