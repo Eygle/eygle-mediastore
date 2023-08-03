@@ -72,7 +72,7 @@ async function processBestByCategoryBatch() {
       currentMedia.tags = extractTags(line)
       currentMedia = null
     } else if (line.startsWith('+')) {
-      await extractGuests(line, mediaList[mediaList.length - 1])
+      await extractPeople(line, mediaList[mediaList.length - 1], 'Starring')
     }
   }
   progress.value = 0
@@ -146,7 +146,7 @@ async function processProfileBatch() {
     } else if (line.startsWith('>')) {
       profile.tags = extractTags(line)
     } else if (line.startsWith('+')) {
-      await extractGuests(line, profile)
+      await extractPeople(line, profile)
     }
   }
 
@@ -161,14 +161,14 @@ async function processProfileBatch() {
   value.value = false
 }
 
-async function extractGuests(line: string, data: MediaDto | MediaGroupDto) {
+async function extractPeople(line: string, data: MediaDto | MediaGroupDto, role = 'Guest') {
   const guest = await findMediaGroupByName(line.substring(1).trim())
 
   if (guest) {
     data.starring = data.starring || []
     data.starring.push(guest)
   } else {
-    const label = `Guest: ${line.substring(1).trim()}`
+    const label = `${role}: ${line.substring(1).trim()}`
     data.comment = data.comment ? `${data.comment}\n${label}` : label
   }
 }
