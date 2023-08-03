@@ -7,7 +7,7 @@ import CreateBatch from '@/components/CreateBatch.vue'
 
 const isCreateMediaDialogOpened = ref(false)
 const isCreateMediaGroupDialogOpened = ref(false)
-const isCreateBatchOpened = ref(true)
+const isCreateBatchOpened = ref(false)
 </script>
 
 <template>
@@ -20,7 +20,8 @@ const isCreateBatchOpened = ref(true)
     <CreateBatch v-model="isCreateBatchOpened" />
 
     <div class="mt-8">
-      <v-btn :to="{ name: 'profiles' }">Profile Page</v-btn>
+      <v-btn :to="{ name: 'profiles' }">Profiles Page</v-btn>
+      <v-btn :to="{ name: 'categories' }">Categories Page</v-btn>
     </div>
   </v-container>
 </template>
