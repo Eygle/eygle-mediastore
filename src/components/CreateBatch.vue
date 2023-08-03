@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import { computed, defineProps, ref } from 'vue'
 import { Field } from '@/types/Field'
 import { MediaGroupDto } from '@/dto/MediaGroupDto'
@@ -10,7 +10,7 @@ import { MediaDto } from '@/dto/MediaDto'
 enum Type {
   Profile = 'profile',
   BestByProfile = 'bestByProfile',
-  BestByCategories = 'bestByCategories'
+  BestByCategories = 'bestByCategories',
 }
 
 const { createMedia, createMediaGroup, findMediaGroupByName } = useMediaGroupApi()
@@ -26,7 +26,7 @@ const total = ref(0)
 
 const value = computed({
   get: () => props.modelValue,
-  set: (value) => emits('update:modelValue', value)
+  set: (value) => emits('update:modelValue', value),
 })
 
 const typeOptions = Object.entries(Type).map(([title, value]) => ({ title, value }))
@@ -57,11 +57,7 @@ async function processBestByCategoryBatch() {
       category = await createMediaGroup(plainToInstance(MediaGroupDto, { name: categoryName, field: Field.Category }))
     } else if (line.startsWith('/')) {
       if (!currentMedia) {
-        currentMedia = plainToInstance(MediaDto, {
-          isBest: true,
-          files: [line.trim()],
-          toSee: isToSee(line),
-        })
+        currentMedia = plainToInstance(MediaDto, { isBest: true, files: [line.trim()], toSee: isToSee(line) })
         if (category) {
           currentMedia.parent = category
         }
@@ -99,17 +95,12 @@ async function processBestByProfileBatch() {
     if (line.startsWith('#')) {
       parent = (await findMediaGroupByName(line.substring(1).trim())) || {}
       if (!parent.id) {
-        console.log("can't find parent", line.substring(1).trim())
+        console.log('can\'t find parent', line.substring(1).trim())
       }
       continue
     }
     mediaList.push(
-      plainToInstance(MediaDto, {
-        parent: { id: parent.id },
-        files: [line.trim()],
-        isBest: true,
-        toSee: isToSee(line)
-      })
+        plainToInstance(MediaDto, { parent: { id: parent.id }, files: [line.trim()], isBest: true, toSee: isToSee(line) }),
     )
   }
   progress.value = 0
@@ -130,11 +121,7 @@ async function processProfileBatch() {
   for (const line of entry.value.split('\n').filter((l) => Boolean(l.trim()))) {
     if (line.startsWith('#')) {
       profiles.push(
-          plainToInstance(MediaGroupDto, {
-            name: line.substring(1).trim(),
-            field: Field.Profile,
-            toTag: toTag.value
-          })
+          plainToInstance(MediaGroupDto, { name: line.substring(1).trim(), field: Field.Profile, toTag: toTag.value }),
       )
       continue
     }
@@ -194,8 +181,8 @@ function extractTags(line: string) {
             .trim()
             .split(',')
             .map((tag) => tag.trim().toLowerCase())
-            .filter(Boolean)
-    )
+            .filter(Boolean),
+    ),
   ]
   const idxBest = tags.indexOf('#best')
 
@@ -215,15 +202,15 @@ function isToSee(line: string) {
     <v-card>
       <v-card-title>Create Batch</v-card-title>
       <v-card-text>
-        <v-select v-model="type" label="Type" :items="typeOptions" />
+        <v-select v-model="type" :items="typeOptions" label="Type" />
         <v-textarea v-model="entry" label="Batch" />
         <v-checkbox v-if="type === Type.Profile" v-model="toTag" label="To tag" />
         <v-progress-linear v-if="isSending" :max="total" :model-value="progress" />
       </v-card-text>
       <v-card-actions>
         <v-spacer />
-        <v-btn @click="value = false" :disabled="isSending">Cancel</v-btn>
-        <v-btn color="primary" :loading="isSending" @click="submit">Submit</v-btn>
+        <v-btn :disabled="isSending" @click="value = false">Cancel</v-btn>
+        <v-btn :loading="isSending" color="primary" @click="submit">Submit</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>

@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import { useMediaGroupApi } from '@/composables/media-group-api'
 import { onBeforeMount, ref } from 'vue'
 import { Field } from '@/types/Field'
@@ -19,8 +19,7 @@ const getAllProfileBestFiles = (profile: MediaGroupDto) =>
       v-for="profile of profiles"
       :key="profile.id"
       :class="{ trimmed: profile.trimmed, 'to-tag': profile.toTag }"
-      class="mt-4"
-    >
+      class="mt-4">
       <v-card-title class="d-flex">
         {{ profile.name }}
         <v-spacer />
@@ -42,7 +41,7 @@ const getAllProfileBestFiles = (profile: MediaGroupDto) =>
   </v-container>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 .trimmed {
   background-color: rgba(76, 175, 80, 0.1);
 }

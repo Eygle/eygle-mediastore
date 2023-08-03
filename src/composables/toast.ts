@@ -22,6 +22,6 @@ export default function useToast() {
     toastError,
     opened,
     message: computed(() => message.value),
-    color: computed(() => color.value)
+    color: computed(() => color.value),
   }
 }

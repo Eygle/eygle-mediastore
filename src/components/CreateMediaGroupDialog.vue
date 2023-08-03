@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import { computed, defineProps, ref, watch } from 'vue'
 import { instanceToPlain, plainToInstance } from 'class-transformer'
 import { MediaGroupDto } from '@/dto/MediaGroupDto'
@@ -9,7 +9,7 @@ const emits = defineEmits(['update:modelValue'])
 
 const value = computed({
   get: () => props.modelValue,
-  set: (value) => emits('update:modelValue', value)
+  set: (value) => emits('update:modelValue', value),
 })
 
 const fieldsOptions = Object.entries(Field).map(([title, value]) => ({ title, value }))
@@ -24,14 +24,14 @@ watch(form, (to) => console.log(instanceToPlain(to)), { deep: true })
     <v-card>
       <v-card-title>Create media group</v-card-title>
       <v-card-text>
-        <v-select v-model="form.field" label="Field" :items="fieldsOptions" />
+        <v-select v-model="form.field" :items="fieldsOptions" label="Field" />
         <v-text-field v-model="form.name" label="Name" />
         <v-checkbox v-model="form.trimmed" label="Trimmed" />
         <v-expand-transition>
           <div v-if="form.trimmed" class="d-flex align-center">
-            <v-text-field v-model="form.count" label="Count" density="compact" />
+            <v-text-field v-model="form.count" density="compact" label="Count" />
             <span class="mx-2">/</span>
-            <v-text-field v-model="form.total" label="Total" density="compact" />
+            <v-text-field v-model="form.total" density="compact" label="Total" />
           </div>
         </v-expand-transition>
         <v-text-field v-model="form.externalLink" label="Link" />

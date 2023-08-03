@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import { useMediaGroupApi } from '@/composables/media-group-api'
 import { onBeforeMount, ref } from 'vue'
 import { Field } from '@/types/Field'
@@ -13,7 +13,7 @@ onBeforeMount(async () => (categories.value = await fetchMediaGroups(Field.Categ
 <template>
   <v-container>
     <v-card v-for="category of categories" :key="category.id" class="mt-4">
-      <v-card-title class="d-flex"> {{ category.name }} </v-card-title>
+      <v-card-title class="d-flex"> {{ category.name }}</v-card-title>
     </v-card>
   </v-container>
 </template>

@@ -14,10 +14,5 @@ export function useToolbar() {
 
   const setToolbarCount = (count: number) => (toolbar.value.count = count)
 
-  return {
-    toolbar: computed(() => toolbar.value),
-    resetToolbar,
-    setToolbarTitle,
-    setToolbarCount,
-  }
+  return { toolbar: computed(() => toolbar.value), resetToolbar, setToolbarTitle, setToolbarCount }
 }

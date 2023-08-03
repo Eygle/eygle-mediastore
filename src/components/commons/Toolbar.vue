@@ -1,5 +1,5 @@
 <template>
-  <v-app-bar fixed app clipped-left>
+  <v-app-bar app clipped-left fixed>
     <div class="title-container d-flex flex-row align-center">
       <v-btn class="mr-1" icon @click.stop="$emit('toggle-mini-variant')">
         <v-icon>mdi-menu</v-icon>
@@ -9,11 +9,11 @@
       </router-link>
       <v-spacer />
     </div>
-    <v-toolbar-title v-text="toolbar.title" class="ml-8" />
+    <v-toolbar-title class="ml-8" v-text="toolbar.title" />
   </v-app-bar>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import { useToolbar } from '@/composables/toolbar'
 
 const { toolbar } = useToolbar()

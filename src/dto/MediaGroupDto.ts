@@ -5,45 +5,45 @@ import { MediaDto } from '@/dto/MediaDto'
 
 export class MediaGroupDto {
   @Expose()
-  id: number;
+  id: number
 
   @Expose()
-  name: string;
+  name: string
 
   @Expose()
-  field: Field;
+  field: Field
 
   @Expose()
-  trimmed: boolean;
+  trimmed: boolean
 
   @Expose()
-  count?: number;
+  count?: number
 
   @Expose()
-  total?: number;
+  total?: number
 
   @Expose()
-  lastEntry: Date;
+  lastEntry: Date
 
   @Expose()
-  externalLink: string;
+  externalLink: string
 
   @Expose()
-  toFollow: boolean;
+  toFollow: boolean
 
   @Expose()
-  toTag: boolean;
+  toTag: boolean
 
   @Expose()
   comment: string
 
 
   @Expose()
-  tags: TagDto[];
+  tags: TagDto[]
 
   @Expose()
-  media: MediaDto[];
+  media: MediaDto[]
 
   @Expose()
-  starring: MediaGroupDto[];
+  starring: MediaGroupDto[]
 }

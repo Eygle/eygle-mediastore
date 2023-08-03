@@ -4,32 +4,32 @@ import { MediaGroupDto } from '@/dto/MediaGroupDto'
 
 export class MediaDto {
   @Expose()
-  id: number;
+  id: number
 
   @Expose()
-  title: string;
+  title: string
 
   @Expose()
-  files: string[];
+  files: string[]
 
   @Expose()
-  toSee: boolean;
+  toSee: boolean
 
   @Expose()
-  isBest: boolean;
+  isBest: boolean
 
   @Expose()
-  progress: number[];
+  progress: number[]
 
   @Expose()
   comment: string
 
   @Expose()
-  parent: MediaGroupDto;
+  parent: MediaGroupDto
 
   @Expose()
-  tags: TagDto[];
+  tags: TagDto[]
 
   @Expose()
-  starring: MediaGroupDto[];
+  starring: MediaGroupDto[]
 }
