@@ -2,47 +2,43 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Raw, Repository } from 'typeorm';
 import { MediaGroup } from './media-group.entity';
-import { Tag } from '../tag/tag.entity';
+import { TagService } from '../tag/tag.service';
 
 @Injectable()
 export class MediaGroupService {
   constructor(
     @InjectRepository(MediaGroup)
     private mediaGroupRepository: Repository<MediaGroup>,
-    @InjectRepository(Tag) private tagRepository: Repository<Tag>,
+    private tagService: TagService,
   ) {}
 
   async create(data: Partial<MediaGroup>) {
     const entity = this.mediaGroupRepository.create(data);
 
-    if (entity.tags) {
-      for (const tag of entity.tags) {
-        const found = await this.tagRepository.findOne({
-          where: { title: tag.title },
-          select: ['id'],
-        });
-        if (found) {
-          tag.id = found.id;
-        } else {
-          const n = await this.tagRepository.insert(tag);
-          tag.id = n.identifiers[0].id;
-        }
-      }
+    for (const tag of entity.tags || []) {
+      tag.id = await this.tagService.getOrCreate(tag.title);
     }
     return this.mediaGroupRepository.save([entity]);
   }
 
-  getAll(search?: string) {
+  getAll() {
     return this.mediaGroupRepository.find({
-      ...(search && {
-        where: {
-          name: Raw(
-            (alias) => `LOWER(${alias}) LIKE '${search.toLocaleLowerCase()}'`,
-          ),
-        },
-      }),
       relations: { tags: true, media: true },
       order: { name: 'asc', tags: { title: 'asc' } },
+    });
+  }
+
+  findOneById(id: number) {
+    return this.mediaGroupRepository.findOne({ where: { id } });
+  }
+
+  findOneByName(name: string) {
+    return this.mediaGroupRepository.findOne({
+      where: {
+        name: Raw(
+          (alias) => `LOWER(${alias}) LIKE '${name.toLocaleLowerCase()}'`,
+        ),
+      },
     });
   }
 }

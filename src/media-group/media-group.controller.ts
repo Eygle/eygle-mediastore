@@ -13,7 +13,10 @@ export class MediaGroupController {
 
   @Get()
   getAll(@Query() query: MediaGroupQuery) {
-    return this.mediaGroupService.getAll(query.filters?.name);
+    if (query.filters?.name) {
+      return this.mediaGroupService.findOneByName(query.filters.name)
+    }
+    return this.mediaGroupService.getAll();
   }
 
   @Post()
