@@ -19,7 +19,7 @@ export function useMediaGroupApi() {
   }
 
   async function fetchMediaGroups(field: Field) {
-    const res = await rest.get('/media-group')
+    const res = await rest.get(`/media-group/${field}`)
     return res.data.map((data) => plainToInstance(MediaGroupDto, data))
   }
 
