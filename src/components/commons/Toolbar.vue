@@ -1,3 +1,13 @@
+<script lang="ts" setup>
+import { useToolbar } from '@/composables/toolbar'
+import { RouteName } from '@/types/RouteName'
+
+const { toolbar } = useToolbar()
+const formatTitle: { text: string; highlight?: boolean }[] = 'Eygle Mediastore'
+    .split(' ')
+    .flatMap((v) => [{ text: v.charAt(0).toUpperCase(), highlight: true }, { text: `${v.slice(1)} ` }])
+</script>
+
 <template>
   <v-app-bar app clipped-left fixed>
     <div class="title-container d-flex flex-row align-center">
@@ -12,13 +22,3 @@
     <v-toolbar-title class="ml-8" v-text="toolbar.title" />
   </v-app-bar>
 </template>
-
-<script lang="ts" setup>
-import { useToolbar } from '@/composables/toolbar'
-import { RouteName } from '@/types/RouteName'
-
-const { toolbar } = useToolbar()
-const formatTitle: { text: string; highlight?: boolean }[] = 'Eygle Mediastore'
-    .split(' ')
-    .flatMap((v) => [{ text: v.charAt(0).toUpperCase(), highlight: true }, { text: `${v.slice(1)} ` }])
-</script>
