@@ -1,9 +1,9 @@
-import { Injectable } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
-import * as path from "path";
-import { Media } from "./media.entity";
-import { TagService } from "../tag/tag.service";
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import * as path from 'path';
+import { Media } from './media.entity';
+import { TagService } from '../tag/tag.service';
 
 @Injectable()
 export class MediaService {
@@ -23,10 +23,17 @@ export class MediaService {
       tag.id = await this.tagService.getOrCreate(tag.title);
     }
 
-    return this.mediaRepository.save([entity]);
+    return this.mediaRepository.save(entity);
   }
 
-  findAll(): Promise<Media[]> {
-    return this.mediaRepository.find();
+  getAll(): Promise<Media[]> {
+    return this.mediaRepository.find({ relations: { tags: true } });
+  }
+
+  getAllFromParent(parentId: number): Promise<Media[]> {
+    return this.mediaRepository.find({
+      where: { parent: { id: parentId } },
+      relations: { tags: true, starring: true },
+    });
   }
 }
