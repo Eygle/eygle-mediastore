@@ -33,7 +33,7 @@ defineProps<{ group: MediaGroupDto }>()
         </template>
       </v-tooltip>
     </h2>
-    <TagChips :tags="group.tags" :media="group.media" class="mt-8" />
+    <TagChips :parent="group" class="mt-8" />
 
     <div class="mt-8">
       <MediaCard v-for="media of group.media" :key="media.id" :media="media" class="mt-4" />

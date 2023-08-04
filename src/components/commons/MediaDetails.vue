@@ -9,6 +9,6 @@ defineProps<{ media: MediaDto }>()
 <template>
   <div>
     <h2>{{ media.name }}</h2>
-    <TagChips :tags="media.tags" class="mt-4" />
+    <TagChips :parent="media" class="mt-4" />
   </div>
 </template>

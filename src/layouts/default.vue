@@ -12,7 +12,7 @@ const miniVariant = ref(false)
   <Toolbar @toggle-mini-variant="miniVariant = !miniVariant" />
   <Navbar :mini-variant="miniVariant" />
   <v-main>
-    <div class="tw-p-4">
+    <div class="tw-p-4 h-100">
       <router-view />
     </div>
   </v-main>

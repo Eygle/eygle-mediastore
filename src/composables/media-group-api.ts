@@ -4,6 +4,7 @@ import { useConfig } from '@/composables/config'
 import { instanceToPlain, plainToInstance } from 'class-transformer'
 import { Field } from '@/types/Field'
 import { MediaDto } from '@/dto/MediaDto'
+import { TagDto } from '@/dto/TagDto'
 
 export function useMediaGroupApi() {
   const config = useConfig()
@@ -38,5 +39,36 @@ export function useMediaGroupApi() {
     return res.data ? plainToInstance(MediaGroupDto, res.data as unknown) : null
   }
 
-  return { createMediaGroup, fetchMediaGroups, getMediaGroupById, findMediaGroupByName, createMedia, fetchMedias }
+  async function fetchTags() {
+    const res = await rest.get('/tag')
+    return res.data?.map((d) => plainToInstance(TagDto, d)) || []
+  }
+
+  async function findTagsByName(name: string) {
+    const res = await rest.get(`/tag?filters[name]=${name}`)
+    return res.data?.map((d) => plainToInstance(TagDto, d)) || []
+  }
+
+  async function fetchAllMediasTaggedBy(id: number): Promise<MediaDto[]> {
+    const res = await rest.get(`/tag/${id}/media`)
+    return res.data?.map((d) => plainToInstance(MediaDto, d)) || []
+  }
+
+  async function fetchAllMediaGroupsTaggedBy(id: number): Promise<MediaGroupDto[]> {
+    const res = await rest.get(`/tag/${id}/media-group`)
+    return res.data?.map((d) => plainToInstance(MediaGroupDto, d)) || []
+  }
+
+  return {
+    createMediaGroup,
+    fetchMediaGroups,
+    getMediaGroupById,
+    findMediaGroupByName,
+    createMedia,
+    fetchMedias,
+    fetchTags,
+    findTagsByName,
+    fetchAllMediasTaggedBy,
+    fetchAllMediaGroupsTaggedBy
+  }
 }

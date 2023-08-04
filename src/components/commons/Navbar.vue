@@ -19,30 +19,15 @@ const routes = router.getRoutes().filter((r) => r.meta.navbar)
 <template>
   <v-navigation-drawer v-model="drawer" :rail="miniVariant" :expand-on-hover="miniVariant" app clipped>
     <v-list>
-      <v-list-item v-for="route in routes" :key="route.name" :to="route" router exact-path>
-        <template #prepend>
-          <v-icon :icon="route.meta.icon" />
-        </template>
-        <v-list-item-title v-text="route.name" class="text-capitalize" />
-      </v-list-item>
+      <template v-for="route in routes" :key="route.name">
+        <v-divider v-if="route.meta.divider" class="my-4" />
+        <v-list-item :to="route" router exact-path>
+          <template #prepend>
+            <v-icon :icon="route.meta.icon" />
+          </template>
+          <v-list-item-title v-text="route.name" class="text-capitalize" />
+        </v-list-item>
+      </template>
     </v-list>
   </v-navigation-drawer>
 </template>
-
-<style scoped lang="scss">
-//@import '../../assets/variables.scss';
-//
-//.v-list-item {
-//  &__action {
-//    margin-right: unit(4) !important;
-//  }
-//  &--active {
-//    & > * {
-//      color: $primary-color;
-//    }
-//    &::before {
-//      opacity: 0 !important;
-//    }
-//  }
-//}
-</style>

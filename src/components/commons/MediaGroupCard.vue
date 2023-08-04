@@ -17,7 +17,7 @@ const route = useRoute()
       <span v-if="group.count || group.total">{{ group.count || group.total }}</span>
     </v-card-title>
     <v-card-text v-if="group.tags.length">
-      <TagChips :tags="group.tags" :media="group.media" />
+      <TagChips :parent="group" />
     </v-card-text>
   </v-card>
 </template>
