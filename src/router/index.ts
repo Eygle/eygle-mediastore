@@ -19,6 +19,7 @@ const router = createRouter({
       component: () => import('../pages/Profiles.vue'),
       meta: { navbar: true, icon: 'mdi-account-group' },
     },
+    { path: '/profiles/:id', name: RouteName.Profile, component: () => import('../pages/Profile.vue') },
     {
       path: '/stars',
       name: RouteName.Stars,

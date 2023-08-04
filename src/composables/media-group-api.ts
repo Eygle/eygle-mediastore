@@ -28,10 +28,15 @@ export function useMediaGroupApi() {
     return res.data.map((data) => plainToInstance(MediaGroupDto, data))
   }
 
+  async function getMediaGroupById(id: number) {
+    const res = await rest.get(`/media-group?filters[id]=${id}`)
+    return res.data ? plainToInstance(MediaGroupDto, res.data as unknown) : null
+  }
+
   async function findMediaGroupByName(name: string) {
     const res = await rest.get(`/media-group?filters[name]=${name}`)
     return res.data ? plainToInstance(MediaGroupDto, res.data as unknown) : null
   }
 
-  return { createMediaGroup, fetchMediaGroups, findMediaGroupByName, createMedia, fetchMedias }
+  return { createMediaGroup, fetchMediaGroups, getMediaGroupById, findMediaGroupByName, createMedia, fetchMedias }
 }
