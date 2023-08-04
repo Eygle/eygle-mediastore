@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { defineProps } from 'vue'
+import copy from 'copy-to-clipboard'
 import { MediaDto } from '@/dto/MediaDto'
 import TagChips from '@/components/commons/TagChips.vue'
 
@@ -17,7 +18,14 @@ defineProps<{ media: MediaDto }>()
 
       <v-card class="mt-4" color="grey-darken-3" variant="flat">
         <v-card-text>
-          <pre class="text-caption">{{ media.files.join('\n') }}</pre>
+          <div v-for="file of media.files" class="d-flex justify-lg-space-between">
+            <p class="text-caption">{{ file }}</p>
+            <v-tooltip text="Copied !" open-on-click :open-on-hover="false" close-on-content-click>
+              <template #activator="{ props }">
+                <v-icon icon="mdi-content-copy" @click="copy(file)" v-bind="props" />
+              </template>
+            </v-tooltip>
+          </div>
         </v-card-text>
       </v-card>
 
