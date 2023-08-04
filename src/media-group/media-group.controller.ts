@@ -5,6 +5,7 @@ import { Field } from "../types/Field";
 type MediaGroupQuery = {
   filters?: {
     name: string;
+    id: string
   };
 };
 
@@ -16,6 +17,9 @@ export class MediaGroupController {
   getAll(@Query() query: MediaGroupQuery) {
     if (query.filters?.name) {
       return this.mediaGroupService.findOneByName(query.filters.name)
+    }
+    if (query.filters?.id) {
+      return this.mediaGroupService.findOneById(+query.filters.id)
     }
     return this.mediaGroupService.getAll();
   }

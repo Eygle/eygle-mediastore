@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import * as path from 'path';
 import { Media } from './media.entity';
 import { TagService } from '../tag/tag.service';
@@ -28,6 +28,18 @@ export class MediaService {
 
   getAll(): Promise<Media[]> {
     return this.mediaRepository.find({ relations: { tags: true } });
+  }
+
+  async getAllWithTag(tagId: number): Promise<Media[]> {
+    const res = await this.mediaRepository.find({
+      where: { tags: { id: tagId } },
+      select: { id: true },
+    });
+    return this.mediaRepository.find({
+      where: { id: In(res.map(({ id }) => id)) },
+      relations: { tags: true, parent: true, starring: true },
+      order: { parent: { name: 'asc' }, title: 'asc', tags: { title: 'asc' } },
+    });
   }
 
   getAllFromParent(parentId: number): Promise<Media[]> {
