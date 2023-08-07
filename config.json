@@ -1,5 +1,5 @@
 {
   "title": "Eygle Mediastore",
-  "api": "http://localhost:4343",
+  "api": "http://api.mediastore.eygle.fr",
   "itemsPerPage": 10000
 }
