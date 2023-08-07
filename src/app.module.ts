@@ -16,9 +16,9 @@ import { SnakeNamingStrategy } from "typeorm-naming-strategies";
       username: 'admin',
       password: 'azertyuiop',
       database: 'eygle',
-      schema: 'media',
+      schema: 'mediastore',
       autoLoadEntities: true,
-      synchronize: true,
+      // synchronize: true,
       namingStrategy: new SnakeNamingStrategy()
     }),
     MediaModule,
