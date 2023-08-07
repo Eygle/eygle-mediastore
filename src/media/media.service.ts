@@ -30,6 +30,14 @@ export class MediaService {
     return this.mediaRepository.find({ relations: { tags: true } });
   }
 
+  findOneById(id: number) {
+    return this.mediaRepository.findOne({
+      where: { id },
+      relations: { tags: true },
+      order: { tags: { title: 'asc' } },
+    });
+  }
+
   async getAllWithTag(tagId: number): Promise<Media[]> {
     const res = await this.mediaRepository.find({
       where: { tags: { id: tagId } },
@@ -47,5 +55,18 @@ export class MediaService {
       where: { parent: { id: parentId } },
       relations: { tags: true, starring: true },
     });
+  }
+
+  async updateTags(id: number, tags) {
+    const mediaGroup = await this.mediaRepository.findOne({
+      where: { id },
+    });
+    for (const tag of tags || []) {
+      tag.id = await this.tagService.getOrCreate(tag.title);
+    }
+    mediaGroup.tags = tags;
+    if (await this.mediaRepository.save(mediaGroup)) {
+      return this.findOneById(id);
+    }
   }
 }
