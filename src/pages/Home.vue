@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import CreateMediaDialog from '@/components/CreateMediaDialog.vue'
 import { ref } from 'vue'
-import CreateMediaGroupDialog from '@/components/CreateMediaGroupDialog.vue'
+import CreateMediaGroupDialog from '@/components/UpsertMediaGroupDialog.vue'
 import CreateBatch from '@/components/CreateBatch.vue'
 
 const isCreateMediaDialogOpened = ref(false)

@@ -3,11 +3,12 @@ import { defineProps, ref, watch } from 'vue'
 import { onClickOutside, watchDebounced } from '@vueuse/core'
 import { TagDto } from '@/dto/TagDto'
 import { useMediaGroupApi } from '@/composables/media-group-api'
+import { plainToInstance } from 'class-transformer'
 
 const { findTagsByName } = useMediaGroupApi()
 
 const props = defineProps<{ exclude: TagDto[] }>()
-const emits = defineEmits<{ (e: 'addTag', value: string | TagDto): void }>()
+const emits = defineEmits<{ (e: 'addTag', value: TagDto): void }>()
 
 const input = ref<string>('')
 const list = ref()
@@ -46,7 +47,7 @@ function addTag(tag = null) {
   } else if (highlight.value > -1 && highlight.value < items.value.length) {
     emits('addTag', items.value[highlight.value])
   } else {
-    emits('addTag', input.value.trim().toLocaleLowerCase())
+    emits('addTag', plainToInstance(TagDto, { title: input.value.trim().toLocaleLowerCase() }))
   }
   input.value = ''
   items.value = []
@@ -61,7 +62,7 @@ function addTag(tag = null) {
     @submit.prevent="addTag()"
     @keydown.prvent.down="highlight = Math.min(highlight + 1, items.length - 1)"
     @keydown.prevent.up="highlight = Math.max(highlight - 1, -1)">
-    <v-text-field v-model="input" hide-details :loading="loading" @click="items.length && (opened = true)" />
+    <v-text-field v-model="input" label="Add tag" hide-details :loading="loading" @click="items.length && (opened = true)" />
     <v-list ref="list" id="list" v-if="opened" max-height="250" class="position-absolute" elevation="3" width="100%">
       <v-list-item
         v-for="(tag, idx) of items"

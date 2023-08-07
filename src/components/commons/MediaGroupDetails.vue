@@ -39,6 +39,8 @@ defineProps<{ group: MediaGroupDto }>()
       <MediaCard v-for="media of group.media" :key="media.id" :media="media" class="mt-4" />
     </div>
 
+    <a v-if="group.externalLink" :href="group.externalLink" target="_blank">{{ group.externalLink }}</a>
+
     <div class="mt-8 pl-2 border-s-lg" v-if="group.comment">
       {{ group.comment }}
     </div>

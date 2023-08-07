@@ -2,8 +2,6 @@
 import { computed, defineProps, ref, watch } from 'vue'
 import { MediaDto } from '@/dto/MediaDto'
 import { MediaGroupDto } from '@/dto/MediaGroupDto'
-import { plainToInstance } from 'class-transformer'
-import { TagDto } from '@/dto/TagDto'
 import TagsAutocomplete from '@/components/TagsAutocomplete.vue'
 import { useMediaGroupApi } from '@/composables/media-group-api'
 
@@ -14,18 +12,6 @@ const props = defineProps<{ parent: MediaDto | MediaGroupDto }>()
 const opened = ref(false)
 const loading = ref(false)
 const tags = ref([...props.parent.tags])
-
-function addTag(tag: string | TagDto) {
-  if (tag instanceof TagDto) {
-    tags.value.push(tag)
-  } else {
-    tags.value.push(plainToInstance(TagDto, { title: tag }))
-  }
-}
-
-function removeTag(tagIdx: number) {
-  tags.value.splice(tagIdx, 1)
-}
 
 const addedTags = computed(() =>
   tags.value.filter(({ title }) => !props.parent.tags.find((tag) => tag.title === title))
@@ -68,11 +54,11 @@ watch(opened, () => (tags.value = [...props.parent.tags]))
       <v-card-title>Manage tags</v-card-title>
       <v-card-text>
         <p class="mb-4">{{ parent.title || parent.name }}</p>
-        <TagsAutocomplete :exclude="tags" @add-tag="addTag" class="mb-4" />
+        <TagsAutocomplete :exclude="tags" @add-tag="(tag) => tags.push(tag)" class="mb-4" />
 
         <v-chip v-for="(tag, idx) of tags" class="mr-2 mb-2">
           {{ tag.title }}
-          <v-icon icon="mdi-close-circle ml-1 mr-n1" size="18" @click="removeTag(idx)" />
+          <v-icon icon="mdi-close-circle ml-1 mr-n1" size="18" @click="tags.splice(idx, 1)" />
         </v-chip>
 
         <div v-if="addedTags.length" class="mt-4">

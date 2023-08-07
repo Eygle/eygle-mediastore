@@ -20,7 +20,7 @@ onBeforeMount(async () => {
 
 <template>
   <v-container class="h-100 d-flex flex-column">
-    <h2>All tags ({{ tags.length }})</h2>
+    <h2>All tags <span v-if="!loading">({{ tags.length }})</span></h2>
     <div v-if="loading" class="d-flex align-center justify-center flex-grow-1">
       <v-progress-circular indeterminate size="100" />
     </div>
