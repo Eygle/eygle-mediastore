@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Query } from "@nestjs/common";
+import { Body, Controller, Get, Param, Patch, Post, Query } from "@nestjs/common";
 import { MediaGroupService } from './media-group.service';
 import { Field } from "../types/Field";
 
@@ -32,5 +32,10 @@ export class MediaGroupController {
   @Post()
   create(@Body() body) {
     return this.mediaGroupService.create(body);
+  }
+
+  @Patch(':id/tags')
+  updateTags(@Param() { id }: { id: number }, @Body() body) {
+    return this.mediaGroupService.updateTags(id, body)
   }
 }

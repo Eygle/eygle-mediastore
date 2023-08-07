@@ -67,4 +67,17 @@ export class MediaGroupService {
       },
     });
   }
+
+  async updateTags(id: number, tags) {
+    const mediaGroup = await this.mediaGroupRepository.findOne({
+      where: { id },
+    });
+    for (const tag of tags || []) {
+      tag.id = await this.tagService.getOrCreate(tag.title);
+    }
+    mediaGroup.tags = tags
+    if (await this.mediaGroupRepository.save(mediaGroup)) {
+      return this.findOneById(id)
+    }
+  }
 }
