@@ -13,7 +13,18 @@ defineProps<{ media: MediaDto }>()
   <v-card>
     <v-card-title class="d-flex justify-space-between">
       {{ media.title }}
-      <v-icon v-if="media.isBest" icon="mdi-star" color="primary" />
+      <div>
+        <v-tooltip v-if="media.toSee" text="To see">
+          <template #activator="{ props }">
+            <v-icon icon="mdi-eye" color="blue" v-bind="props" />
+          </template>
+        </v-tooltip>
+        <v-tooltip v-if="media.isBest" text="Best">
+          <template #activator="{ props }">
+            <v-icon icon="mdi-star" color="primary" class="ml-2" v-bind="props" />
+          </template>
+        </v-tooltip>
+      </div>
     </v-card-title>
     <v-card-text>
       <TagChips :parent="media" />

@@ -1,47 +1,61 @@
 <script lang="ts" setup>
-import { defineProps, ref, watch } from 'vue'
+import { computed, defineProps, ref, watch } from 'vue'
 import { MediaDto } from '@/dto/MediaDto'
 import { MediaGroupDto } from '@/dto/MediaGroupDto'
-import TagChips from '@/components/commons/TagChips.vue'
 import { plainToInstance } from 'class-transformer'
 import { TagDto } from '@/dto/TagDto'
-import { watchDebounced } from '@vueuse/core'
+import TagsAutocomplete from '@/components/TagsAutocomplete.vue'
 import { useMediaGroupApi } from '@/composables/media-group-api'
 
-const { findTagsByName } = useMediaGroupApi()
+const { updateMediaTags, updateMediaGroupTags } = useMediaGroupApi()
 
 const props = defineProps<{ parent: MediaDto | MediaGroupDto }>()
 
 const opened = ref(false)
-const tags = ref([...props.parent.tags])
-const formTag = ref<string | TagDto>('')
-const items = ref<TagDto[]>([])
 const loading = ref(false)
+const tags = ref([...props.parent.tags])
 
-function isString(data: TagDto | string): data is string {
-  return !(data instanceof TagDto)
-}
-
-function addTag() {
-  if (formTag.value instanceof TagDto) {
-    tags.value.push(formTag.value)
+function addTag(tag: string | TagDto) {
+  if (tag instanceof TagDto) {
+    tags.value.push(tag)
   } else {
-    tags.value.push(plainToInstance(TagDto, { title: formTag.value }))
+    tags.value.push(plainToInstance(TagDto, { title: tag }))
   }
-  formTag.value = ''
 }
 
-async function searchTag() {
-  if (!formTag.value || !isString(formTag.value) || formTag.value?.length < 2) return
+function removeTag(tagIdx: number) {
+  tags.value.splice(tagIdx, 1)
+}
+
+const addedTags = computed(() =>
+  tags.value.filter(({ title }) => !props.parent.tags.find((tag) => tag.title === title))
+)
+
+const deletedTags = computed(() =>
+  props.parent.tags.filter(({ title }) => !tags.value.find((tag) => tag.title === title))
+)
+
+async function save() {
   loading.value = true
-  items.value = await findTagsByName(formTag.value)
+  try {
+    let res
+    if (props.parent instanceof MediaGroupDto) {
+      res = await updateMediaGroupTags(props.parent, tags.value)
+    } else {
+      res = await updateMediaTags(props.parent, tags.value)
+    }
+
+    if (res) {
+      props.parent.tags = res.tags
+      opened.value = false
+    }
+  } catch {
+
+  }
   loading.value = false
 }
 
-function save() {}
-
 watch(opened, () => (tags.value = [...props.parent.tags]))
-watchDebounced(formTag, () => searchTag(), { debounce: 250 })
 </script>
 
 <template>
@@ -50,26 +64,34 @@ watchDebounced(formTag, () => searchTag(), { debounce: 250 })
       <v-btn icon="mdi-plus" variant="text" density="compact" v-bind="props" @click.prevent.stop />
     </template>
 
-    <v-card>
+    <v-card min-height="440px">
       <v-card-title>Manage tags</v-card-title>
       <v-card-text>
-        <v-form @keydown.enter="addTag">
-          <v-combobox
-            v-model="formTag"
-            :loading="loading"
-            label="Add tag"
-            :items="items"
-            item-title="title"
-            item-value="id"
-            hide-no-data
-            @select="console.log('on select')" />
-        </v-form>
-        <TagChips :parent="parent" :tags="tags" editable />
+        <p class="mb-4">{{ parent.title || parent.name }}</p>
+        <TagsAutocomplete :exclude="tags" @add-tag="addTag" class="mb-4" />
+
+        <v-chip v-for="(tag, idx) of tags" class="mr-2 mb-2">
+          {{ tag.title }}
+          <v-icon icon="mdi-close-circle ml-1 mr-n1" size="18" @click="removeTag(idx)" />
+        </v-chip>
+
+        <div v-if="addedTags.length" class="mt-4">
+          <h2 class="mb-2">Added tags</h2>
+          <v-chip v-for="tag in addedTags" color="green-lighten-2" class="mr-2 mb-2">
+            {{ tag.title }}
+          </v-chip>
+        </div>
+        <div v-if="deletedTags.length" class="mt-4">
+          <h2 class="mb-2">Deleted tags</h2>
+          <v-chip v-for="tag in deletedTags" color="red-lighten-2" class="mr-2 mb-2">
+            {{ tag.title }}
+          </v-chip>
+        </div>
       </v-card-text>
       <v-card-actions>
         <v-spacer />
-        <v-btn variant="text" text="Cancel" @click="opened = false" />
-        <v-btn variant="text" text="Save" color="primary" @click="save" />
+        <v-btn variant="text" text="Cancel" :disabled="loading" @click="opened = false" />
+        <v-btn variant="text" text="Save" color="primary" :loading="loading" @click="save" />
       </v-card-actions>
     </v-card>
   </v-dialog>

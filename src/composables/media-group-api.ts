@@ -59,6 +59,16 @@ export function useMediaGroupApi() {
     return res.data?.map((d) => plainToInstance(MediaGroupDto, d)) || []
   }
 
+  async function updateMediaGroupTags(parent: MediaGroupDto, tags: TagDto[]): Promise<MediaGroupDto | null> {
+    const res = await rest.patch(`/media-group/${parent.id}/tags`, tags)
+    return res.data ? plainToInstance(MediaGroupDto, res.data as unknown) : null
+  }
+
+  async function updateMediaTags(parent: MediaDto, tags: TagDto[]): Promise<MediaDto | null> {
+    const res = await rest.patch(`/media/${parent.id}/tags`, tags)
+    return res.data ? plainToInstance(MediaDto, res.data as unknown) : null
+  }
+
   return {
     createMediaGroup,
     fetchMediaGroups,
@@ -69,6 +79,8 @@ export function useMediaGroupApi() {
     fetchTags,
     findTagsByName,
     fetchAllMediasTaggedBy,
-    fetchAllMediaGroupsTaggedBy
+    fetchAllMediaGroupsTaggedBy,
+    updateMediaGroupTags,
+    updateMediaTags
   }
 }
