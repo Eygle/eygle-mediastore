@@ -32,6 +32,7 @@ const router = createRouter({
       component: () => import('../pages/Websites.vue'),
       meta: { navbar: true, icon: 'mdi-web' },
     },
+    { path: '/websites/:id', name: RouteName.Website, component: () => import('../pages/Website.vue') },
     {
       path: '/tags',
       name: RouteName.Tags,

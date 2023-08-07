@@ -11,6 +11,7 @@ enum Type {
   Profile = 'profile',
   BestByProfile = 'bestByProfile',
   BestByCategories = 'bestByCategories',
+  BestByWebsites = 'bestByWebsites',
 }
 
 const { createMedia, createMediaGroup, findMediaGroupByName } = useMediaGroupApi()
@@ -40,12 +41,15 @@ function submit() {
       processBestByProfileBatch()
       break
     case Type.BestByCategories:
-      processBestByCategoryBatch()
+      processGenericBestByBatch(Field.Category)
+      break
+    case Type.BestByWebsites:
+      processGenericBestByBatch(Field.Website)
       break
   }
 }
 
-async function processBestByCategoryBatch() {
+async function processGenericBestByBatch(field: Field) {
   const mediaList: MediaDto[] = []
   let category: MediaGroupDto | null = null
   let currentMedia: MediaDto | null = null
@@ -54,7 +58,7 @@ async function processBestByCategoryBatch() {
   for (const line of entry.value.split('\n').filter((l) => Boolean(l.trim()))) {
     if (line.startsWith('#')) {
       const categoryName = line.substring(1).trim()
-      category = await createMediaGroup(plainToInstance(MediaGroupDto, { name: categoryName, field: Field.Category }))
+      category = await createMediaGroup(plainToInstance(MediaGroupDto, { name: categoryName, field }))
     } else if (line.startsWith('/')) {
       if (!currentMedia) {
         currentMedia = plainToInstance(MediaDto, { isBest: true, files: [line.trim()], toSee: isToSee(line) })

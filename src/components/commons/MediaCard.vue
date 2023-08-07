@@ -19,8 +19,8 @@ defineProps<{ media: MediaDto }>()
       <TagChips :parent="media" />
 
       <v-card class="mt-4" color="grey-darken-3" variant="flat">
-        <v-card-text>
-          <div v-for="file of media.files" class="d-flex justify-lg-space-between">
+        <v-card-text class="pb-2">
+          <div v-for="file of media.files" class="d-flex justify-lg-space-between mb-2">
             <p class="text-caption">{{ file }}</p>
             <v-tooltip text="Copied !" open-on-click :open-on-hover="false" close-on-content-click>
               <template #activator="{ props }">

@@ -7,6 +7,7 @@ export enum RouteName {
   Stars = 'stars',
   Star = 'star',
   Websites = 'websites',
+  Website = 'website',
   Tags = 'tags',
   Tag = 'tag',
 }

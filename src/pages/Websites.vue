@@ -1,5 +1,19 @@
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+import { useMediaGroupApi } from '@/composables/media-group-api'
+import { onBeforeMount, ref } from 'vue'
+import { Field } from '@/types/Field'
+import { MediaGroupDto } from '@/dto/MediaGroupDto'
+import MediaGroupCard from '@/components/commons/MediaGroupCard.vue'
+
+const { fetchMediaGroups } = useMediaGroupApi()
+const websites = ref<MediaGroupDto[]>([])
+
+onBeforeMount(async () => (websites.value = await fetchMediaGroups(Field.Website)))
+</script>
 
 <template>
-  <div>Websites</div>
+  <v-container>
+    <h2>Best by websites</h2>
+    <MediaGroupCard v-for="(website, idx) in websites" :key="idx" :group="website" class="mt-4" />
+  </v-container>
 </template>
