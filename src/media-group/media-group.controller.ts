@@ -34,8 +34,13 @@ export class MediaGroupController {
     return this.mediaGroupService.create(body);
   }
 
+  @Patch(':id')
+  update(@Param() { id }: { id: string }, @Body() body) {
+    return this.mediaGroupService.update(+id, body)
+  }
+
   @Patch(':id/tags')
-  updateTags(@Param() { id }: { id: number }, @Body() body) {
-    return this.mediaGroupService.updateTags(id, body)
+  updateTags(@Param() { id }: { id: string }, @Body() body) {
+    return this.mediaGroupService.updateTags(+id, body)
   }
 }

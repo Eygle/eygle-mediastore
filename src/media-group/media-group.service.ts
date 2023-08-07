@@ -53,7 +53,7 @@ export class MediaGroupService {
     return this.mediaGroupRepository.findOne({
       where: { id },
       relations: { tags: true, media: { tags: true } },
-      order: { media: { title: 'asc', tags: { title: 'asc' } } },
+      order: { media: { title: 'asc', tags: { title: 'asc' } }, tags: { title: 'asc' } },
     });
   }
 
@@ -66,6 +66,17 @@ export class MediaGroupService {
         ),
       },
     });
+  }
+
+  async update(id: number, data: Partial<MediaGroup>) {
+    for (const tag of data.tags || []) {
+      tag.id = await this.tagService.getOrCreate(tag.title);
+    }
+    data.id = id
+    const updated = await this.mediaGroupRepository.preload(data)
+    if (await this.mediaGroupRepository.save(updated)) {
+      return this.findOneById(id)
+    }
   }
 
   async updateTags(id: number, tags) {
