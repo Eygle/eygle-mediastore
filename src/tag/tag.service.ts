@@ -1,9 +1,9 @@
-import { forwardRef, Inject, Injectable } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import { Tag } from "./tag.entity";
-import { Raw, Repository } from "typeorm";
-import { MediaService } from "../media/media.service";
-import { MediaGroupService } from "../media-group/media-group.service";
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Tag } from './tag.entity';
+import { Raw, Repository } from 'typeorm';
+import { MediaService } from '../media/media.service';
+import { MediaGroupService } from '../media-group/media-group.service';
 
 @Injectable()
 export class TagService {
@@ -38,6 +38,7 @@ export class TagService {
             `LOWER(${alias}) LIKE '%${name.toLocaleLowerCase().trim()}%'`,
         ),
       },
+      order: { title: 'asc' },
     });
   }
 
