@@ -5,45 +5,36 @@ import { MediaGroupDto } from '@/dto/MediaGroupDto'
 import { Field } from '@/types/Field'
 import TagsAutocomplete from '@/components/TagsAutocomplete.vue'
 import { useMediaGroupApi } from '@/composables/media-group-api'
+import { useDialogs } from '@/composables/dialogs'
 
 const { createMediaGroup, updateMediaGroup } = useMediaGroupApi()
+const { upsertMediaGroupDialogOpened: opened, mediaGroup: source } = useDialogs()
 
-const props = defineProps<{ modelValue: boolean; source?: MediaGroupDto; field?: Field }>()
-const emits = defineEmits(['update:modelValue', 'saved'])
-
-const opened = computed({
-  get: () => props.modelValue,
-  set: (value) => emits('update:modelValue', value),
-})
+const props = defineProps<{ field?: Field }>()
+const emits = defineEmits(['saved'])
 
 const fieldsOptions = Object.entries(Field).map(([title, value]) => ({ title, value }))
 const loading = ref(false)
-const form = ref(
-  props.source ? instanceToInstance(props.source) : plainToInstance(MediaGroupDto, { field: props.field, tags: [] })
-)
+const form = ref(initForm())
 
-if (props.source) {
-  watch(
-    props.source,
-    (to) => {
-      if (to) {
-        form.value = instanceToInstance(to)
-      }
-    },
-    { deep: true }
-  )
-}
+watch(source, () => (form.value = initForm()), { deep: true })
 
 async function save() {
   try {
     loading.value = true
-    const res = await (props.source ? updateMediaGroup(form.value) : createMediaGroup(form.value))
+    const res = await (source.value ? updateMediaGroup(form.value) : createMediaGroup(form.value))
     emits('saved', res)
     loading.value = false
     opened.value = false
   } catch (e) {
     console.error(e)
   }
+}
+
+function initForm(): MediaGroupDto {
+  return source.value
+    ? instanceToInstance(source.value!)
+    : plainToInstance(MediaGroupDto, { field: props.field, tags: [] })
 }
 </script>
 

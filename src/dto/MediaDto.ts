@@ -20,13 +20,12 @@ export class MediaDto {
   isBest: boolean
 
   @Expose()
-  @Transform(
-    ({ value, type }) =>
-      type === TransformationType.CLASS_TO_CLASS ? value : [durationToString(value[0]), durationToString(value[1])],
-    { toClassOnly: true }
-  )
-  @Transform(({ value }) => [stringToDuration(value[0]), stringToDuration(value[1])], { toPlainOnly: true })
-  progress: [string, string]
+  @Transform(({ value, type }) => {
+    if (type === TransformationType.CLASS_TO_CLASS) return value || [null, null]
+    if (type === TransformationType.CLASS_TO_PLAIN) return [stringToDuration(value[0]), stringToDuration(value[1])]
+    return [durationToString(value?.[0]), durationToString(value?.[1])]
+  })
+  progress: [string | null, string | null]
 
   @Expose()
   comment: string

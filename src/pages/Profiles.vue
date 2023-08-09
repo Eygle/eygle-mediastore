@@ -7,13 +7,14 @@ import MediaGroupCard from '@/components/commons/MediaGroupCard.vue'
 import UpsertMediaGroupDialog from '@/components/UpsertMediaGroupDialog.vue'
 import { useRouter } from 'vue-router'
 import { RouteName } from '@/types/RouteName'
+import { useDialogs } from '@/composables/dialogs'
 
-const { fetchMediaGroups } = useMediaGroupApi()
 const router = useRouter()
+const { fetchMediaGroups } = useMediaGroupApi()
+const { openMediaGroupDialog } = useDialogs()
 
 const profiles = ref<MediaGroupDto[]>([])
 const loading = ref(false)
-const addDialogOpened = ref(false)
 
 onBeforeMount(() => reload())
 
@@ -28,9 +29,8 @@ async function reload() {
   <v-container>
     <MediaGroupCard v-for="profile of profiles" :key="profile.id" :group="profile" class="mt-4" />
     <UpsertMediaGroupDialog
-      v-model="addDialogOpened"
       :field="Field.Profile"
       @saved="({ id }) => router.push({ name: RouteName.Profile, params: { id } })" />
-    <v-btn icon="mdi-plus" color="primary" class="fab" size="large" @click="addDialogOpened = true" />
+    <v-btn icon="mdi-plus" color="primary" class="fab" size="large" @click="openMediaGroupDialog()" />
   </v-container>
 </template>

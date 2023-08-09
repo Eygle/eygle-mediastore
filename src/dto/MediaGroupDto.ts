@@ -1,4 +1,4 @@
-import { Expose } from 'class-transformer'
+import { Expose, Type } from 'class-transformer'
 import { TagDto } from '@/dto/TagDto'
 import { Field } from '@/types/Field'
 import { MediaDto } from '@/dto/MediaDto'
@@ -37,13 +37,15 @@ export class MediaGroupDto {
   @Expose()
   comment: string
 
-
   @Expose()
+  @Type(() => TagDto)
   tags: TagDto[]
 
   @Expose()
+  @Type(() => MediaDto)
   media: MediaDto[]
 
   @Expose()
+  @Type(() => MediaDto)
   starring: MediaGroupDto[]
 }
