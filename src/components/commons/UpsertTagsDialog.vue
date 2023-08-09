@@ -54,7 +54,7 @@ watch(opened, () => (tags.value = [...props.parent.tags]))
       <v-card-title>Manage tags</v-card-title>
       <v-card-text>
         <p class="mb-4">{{ parent.title || parent.name }}</p>
-        <TagsAutocomplete :exclude="tags" @add-tag="(tag) => tags.push(tag)" class="mb-4" />
+        <TagsAutocomplete :exclude="tags" autofocus @add-tag="(tag) => tags.push(tag)" class="mb-4" />
 
         <v-chip v-for="(tag, idx) of tags" class="mr-2 mb-2">
           {{ tag.title }}

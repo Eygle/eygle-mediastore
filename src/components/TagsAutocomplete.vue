@@ -7,7 +7,7 @@ import { plainToInstance } from 'class-transformer'
 
 const { findTagsByName } = useMediaGroupApi()
 
-const props = defineProps<{ exclude: TagDto[] }>()
+const props = defineProps<{ exclude: TagDto[]; autofocus?: boolean }>()
 const emits = defineEmits<{ (e: 'addTag', value: TagDto): void }>()
 
 const input = ref<string>('')
@@ -62,7 +62,7 @@ function addTag(tag = null) {
     @submit.prevent="addTag()"
     @keydown.prvent.down="highlight = Math.min(highlight + 1, items.length - 1)"
     @keydown.prevent.up="highlight = Math.max(highlight - 1, -1)">
-    <v-text-field v-model="input" label="Add tag" hide-details :loading="loading" @click="items.length && (opened = true)" />
+    <v-text-field v-model="input" label="Add tag" hide-details :loading="loading" :autofocus="autofocus" @click="items.length && (opened = true)" />
     <v-list ref="list" id="list" v-if="opened" max-height="250" class="position-absolute" elevation="3" width="100%">
       <v-list-item
         v-for="(tag, idx) of items"
