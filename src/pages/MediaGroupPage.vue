@@ -5,32 +5,33 @@ import { Field } from '@/types/Field'
 import { MediaGroupDto } from '@/dto/MediaGroupDto'
 import MediaGroupCard from '@/components/commons/MediaGroupCard.vue'
 import UpsertMediaGroupDialog from '@/components/UpsertMediaGroupDialog.vue'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { RouteName } from '@/types/RouteName'
 import { useDialogs } from '@/composables/dialogs'
 
 const router = useRouter()
+const route = useRoute()
 const { fetchMediaGroups } = useApi()
 const { openMediaGroupDialog } = useDialogs()
 
-const profiles = ref<MediaGroupDto[]>([])
+const groups = ref<MediaGroupDto[]>([])
 const loading = ref(false)
 
 onBeforeMount(() => reload())
 
 async function reload() {
   loading.value = true
-  profiles.value = await fetchMediaGroups(Field.Profile)
+  groups.value = await fetchMediaGroups(route.meta.field!)
   loading.value = false
 }
 </script>
 
 <template>
   <v-container>
-    <MediaGroupCard v-for="profile of profiles" :key="profile.id" :group="profile" class="mt-4" />
+    <MediaGroupCard v-for="group of groups" :key="group.id" :group="group" class="mt-4" />
     <UpsertMediaGroupDialog
-      :field="Field.Profile"
-      @saved="({ id }) => router.push({ name: RouteName.Profile, params: { id } })" />
+      :field="route.meta.field"
+      @saved="({ id }) => router.push(`${route.path}/${id}`)" />
     <v-btn icon="mdi-plus" color="primary" class="fab" size="large" @click="openMediaGroupDialog()" />
   </v-container>
 </template>

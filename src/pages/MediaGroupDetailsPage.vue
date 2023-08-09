@@ -10,28 +10,27 @@ import { useDialogs } from '@/composables/dialogs'
 
 const route = useRoute()
 const { getMediaGroupById } = useApi()
-const { openMediaDialog } = useDialogs()
+const { openMediaDialog, openMediaGroupDialog } = useDialogs()
 
-const profile = ref<MediaGroupDto | null>(null)
+const group = ref<MediaGroupDto | null>(null)
 const loading = ref(false)
-const editDialogOpened = ref(false)
 
 onBeforeMount(() => reload())
 
 async function reload() {
   loading.value = false
-  profile.value = await getMediaGroupById(+route.params.id)
+  group.value = await getMediaGroupById(+route.params.id)
   loading.value = true
 }
 </script>
 
 <template>
   <v-container>
-    <div v-if="!profile"></div>
-    <MediaGroupDetails v-else :group="profile" />
-    <UpsertMediaGroupDialog v-if="profile" v-model="editDialogOpened" :source="profile" @saved="(data) => profile = data" />
-    <UpsertMediaDialog v-if="profile" :parent="profile" @saved="reload" />
-    <v-btn icon="mdi-pencil" color="primary" class="fab" size="large" @click="editDialogOpened = true" />
+    <div v-if="!group"></div>
+    <MediaGroupDetails v-else :group="group" />
+    <UpsertMediaGroupDialog v-if="group" :source="group" @saved="(data) => group = data" />
+    <UpsertMediaDialog v-if="group" :parent="group" @saved="reload" />
+    <v-btn icon="mdi-pencil" color="primary" class="fab" size="large" @click="openMediaGroupDialog(group)" />
     <v-btn icon="mdi-plus" color="primary" class="fab top" size="large" @click="openMediaDialog()" />
   </v-container>
 </template>

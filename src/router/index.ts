@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../pages/Home.vue'
 import { RouteName } from '@/types/RouteName'
+import { Field } from '@/types/Field'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -9,30 +10,31 @@ const router = createRouter({
     {
       path: '/categories',
       name: RouteName.Categories,
-      component: () => import('../pages/Categories.vue'),
-      meta: { navbar: true, icon: 'mdi-dots-grid' },
+      component: () => import('../pages/MediaGroupPage.vue'),
+      meta: { field: Field.Category, navbar: true, icon: 'mdi-dots-grid' },
     },
-    { path: '/categories/:id', name: RouteName.Category, component: () => import('../pages/Category.vue') },
+    { path: '/categories/:id', name: RouteName.Category, component: () => import('../pages/MediaGroupDetailsPage.vue') },
     {
       path: '/profiles',
       name: RouteName.Profiles,
-      component: () => import('../pages/Profiles.vue'),
-      meta: { navbar: true, icon: 'mdi-account-group' },
+      component: () => import('../pages/MediaGroupPage.vue'),
+      meta: { field: Field.Profile, navbar: true, icon: 'mdi-account-group' },
     },
-    { path: '/profiles/:id', name: RouteName.Profile, component: () => import('../pages/Profile.vue') },
+    { path: '/profiles/:id', name: RouteName.Profile, component: () => import('../pages/MediaGroupDetailsPage.vue') },
     {
       path: '/stars',
       name: RouteName.Stars,
-      component: () => import('../pages/Stars.vue'),
-      meta: { navbar: true, icon: 'mdi-card-account-details-star' },
+      component: () => import('../pages/MediaGroupPage.vue'),
+      meta: { field: Field.Star, navbar: true, icon: 'mdi-card-account-details-star' },
     },
+    { path: '/stars/:id', name: RouteName.Star, component: () => import('../pages/MediaGroupDetailsPage.vue') },
     {
       path: '/websites',
       name: RouteName.Websites,
-      component: () => import('../pages/Websites.vue'),
-      meta: { navbar: true, icon: 'mdi-web' },
+      component: () => import('../pages/MediaGroupPage.vue'),
+      meta: { field: Field.Website, navbar: true, icon: 'mdi-web' },
     },
-    { path: '/websites/:id', name: RouteName.Website, component: () => import('../pages/Website.vue') },
+    { path: '/websites/:id', name: RouteName.Website, component: () => import('../pages/MediaGroupDetailsPage.vue') },
     {
       path: '/tags',
       name: RouteName.Tags,
