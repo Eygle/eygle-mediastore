@@ -58,7 +58,14 @@ export class MediaService {
   }
 
   async update(id: number, data) {
-    return this.mediaRepository.update(id, data)
+    for (const tag of data.tags || []) {
+      tag.id = await this.tagService.getOrCreate(tag.title);
+    }
+    data.id = id
+    const updated = await this.mediaRepository.preload(data)
+    if (await this.mediaRepository.save(updated)) {
+      return this.findOneById(id)
+    }
   }
 
   async updateTags(id: number, tags) {

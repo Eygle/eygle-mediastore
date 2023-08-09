@@ -26,7 +26,7 @@ export class MediaController {
 
   @Patch(':id')
   update(@Param() { id }: { id: number }, @Body() body) {
-    return this.mediaService.update(id, body)
+    return this.mediaService.update(+id, body)
   }
 
   @Patch(':id/tags')
