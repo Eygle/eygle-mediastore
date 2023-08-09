@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { useMediaGroupApi } from '@/composables/media-group-api'
+import { useApi } from '@/composables/api'
 import { onBeforeMount, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import MediaGroupDetails from '@/components/commons/MediaGroupDetails.vue'
@@ -7,7 +7,7 @@ import { MediaGroupDto } from '@/dto/MediaGroupDto'
 
 const route = useRoute()
 
-const { getMediaGroupById } = useMediaGroupApi()
+const { getMediaGroupById } = useApi()
 
 const website = ref<MediaGroupDto | null>(null)
 

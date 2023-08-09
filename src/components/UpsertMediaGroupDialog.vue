@@ -4,10 +4,10 @@ import { instanceToInstance, plainToInstance } from 'class-transformer'
 import { MediaGroupDto } from '@/dto/MediaGroupDto'
 import { Field } from '@/types/Field'
 import TagsAutocomplete from '@/components/TagsAutocomplete.vue'
-import { useMediaGroupApi } from '@/composables/media-group-api'
+import { useApi } from '@/composables/api'
 import { useDialogs } from '@/composables/dialogs'
 
-const { createMediaGroup, updateMediaGroup } = useMediaGroupApi()
+const { createMediaGroup, updateMediaGroup } = useApi()
 const { upsertMediaGroupDialogOpened: opened, mediaGroup: source } = useDialogs()
 
 const props = defineProps<{ field?: Field }>()

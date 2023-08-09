@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { useMediaGroupApi } from '@/composables/media-group-api'
+import { useApi } from '@/composables/api'
 import { onBeforeMount, ref } from 'vue'
 import { MediaGroupDto } from '@/dto/MediaGroupDto'
 import { useRoute } from 'vue-router'
@@ -9,7 +9,7 @@ import UpsertMediaDialog from '@/components/UpsertMediaDialog.vue'
 import { useDialogs } from '@/composables/dialogs'
 
 const route = useRoute()
-const { getMediaGroupById } = useMediaGroupApi()
+const { getMediaGroupById } = useApi()
 const { openMediaDialog } = useDialogs()
 
 const profile = ref<MediaGroupDto | null>(null)

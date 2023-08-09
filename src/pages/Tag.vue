@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { useMediaGroupApi } from '@/composables/media-group-api'
+import { useApi } from '@/composables/api'
 import { onBeforeMount, ref } from 'vue'
 import { MediaGroupDto } from '@/dto/MediaGroupDto'
 import { useRoute } from 'vue-router'
@@ -9,7 +9,7 @@ import MediaGroupDetails from '@/components/commons/MediaGroupDetails.vue'
 import MediaGroupCard from '@/components/commons/MediaGroupCard.vue'
 
 const route = useRoute()
-const { fetchAllMediasTaggedBy, fetchAllMediaGroupsTaggedBy } = useMediaGroupApi()
+const { fetchAllMediasTaggedBy, fetchAllMediaGroupsTaggedBy } = useApi()
 
 const categories = ref<MediaGroupDto[]>([])
 const profiles = ref<MediaGroupDto[]>([])

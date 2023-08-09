@@ -3,11 +3,11 @@ import { defineProps, ref, watch } from 'vue'
 import { instanceToInstance, plainToInstance } from 'class-transformer'
 import { MediaDto } from '@/dto/MediaDto'
 import { MediaGroupDto } from '@/dto/MediaGroupDto'
-import { useMediaGroupApi } from '@/composables/media-group-api'
+import { useApi } from '@/composables/api'
 import TagsAutocomplete from '@/components/TagsAutocomplete.vue'
 import { useDialogs } from '@/composables/dialogs'
 
-const { createMedia, updateMedia } = useMediaGroupApi()
+const { createMedia, updateMedia } = useApi()
 const { upsertMediaDialogOpened: opened, media: source } = useDialogs()
 
 const props = defineProps<{ parent: MediaGroupDto }>()

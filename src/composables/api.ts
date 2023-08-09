@@ -6,7 +6,7 @@ import { Field } from '@/types/Field'
 import { MediaDto } from '@/dto/MediaDto'
 import { TagDto } from '@/dto/TagDto'
 
-export function useMediaGroupApi() {
+export function useApi() {
   const config = useConfig()
   const rest = axios.create({ baseURL: config.api, responseType: 'json' })
 

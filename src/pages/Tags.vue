@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { useMediaGroupApi } from '@/composables/media-group-api'
+import { useApi } from '@/composables/api'
 import { onBeforeMount, ref } from 'vue'
 import { Field } from '@/types/Field'
 import { MediaGroupDto } from '@/dto/MediaGroupDto'
@@ -7,7 +7,7 @@ import MediaGroupCard from '@/components/commons/MediaGroupCard.vue'
 import { TagDto } from '@/dto/TagDto'
 import { RouteName } from '@/types/RouteName'
 
-const { fetchTags } = useMediaGroupApi()
+const { fetchTags } = useApi()
 const tags = ref<TagDto[]>([])
 const loading = ref(false)
 

@@ -3,9 +3,9 @@ import { computed, defineProps, ref, watch } from 'vue'
 import { MediaDto } from '@/dto/MediaDto'
 import { MediaGroupDto } from '@/dto/MediaGroupDto'
 import TagsAutocomplete from '@/components/TagsAutocomplete.vue'
-import { useMediaGroupApi } from '@/composables/media-group-api'
+import { useApi } from '@/composables/api'
 
-const { updateMediaTags, updateMediaGroupTags } = useMediaGroupApi()
+const { updateMediaTags, updateMediaGroupTags } = useApi()
 
 const props = defineProps<{ parent: MediaDto | MediaGroupDto }>()
 

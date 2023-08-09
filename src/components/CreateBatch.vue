@@ -4,7 +4,7 @@ import { Field } from '@/types/Field'
 import { MediaGroupDto } from '@/dto/MediaGroupDto'
 import { plainToInstance } from 'class-transformer'
 import { TagDto } from '@/dto/TagDto'
-import { useMediaGroupApi } from '@/composables/media-group-api'
+import { useApi } from '@/composables/api'
 import { MediaDto } from '@/dto/MediaDto'
 
 enum Type {
@@ -14,7 +14,7 @@ enum Type {
   BestByWebsites = 'bestByWebsites',
 }
 
-const { createMedia, createMediaGroup, findMediaGroupByName } = useMediaGroupApi()
+const { createMedia, createMediaGroup, findMediaGroupByName } = useApi()
 
 const props = defineProps<{ modelValue: boolean }>()
 const emits = defineEmits(['update:modelValue'])

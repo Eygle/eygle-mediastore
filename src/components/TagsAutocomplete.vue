@@ -2,10 +2,10 @@
 import { defineProps, ref, watch } from 'vue'
 import { onClickOutside, watchDebounced } from '@vueuse/core'
 import { TagDto } from '@/dto/TagDto'
-import { useMediaGroupApi } from '@/composables/media-group-api'
+import { useApi } from '@/composables/api'
 import { plainToInstance } from 'class-transformer'
 
-const { findTagsByName } = useMediaGroupApi()
+const { findTagsByName } = useApi()
 
 const props = defineProps<{ exclude: TagDto[]; autofocus?: boolean }>()
 const emits = defineEmits<{ (e: 'addTag', value: TagDto): void }>()
