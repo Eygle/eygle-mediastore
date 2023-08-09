@@ -46,7 +46,11 @@ export function useApi() {
 
   async function findTagsByName(name: string) {
     const res = await rest.get(`/tag?filters[name]=${name}`)
-    return res.data?.map((d) => plainToInstance(TagDto, d)) || []
+    return (res.data?.map((d) => plainToInstance(TagDto, d)) || []).sort((a, b) => {
+      if (a.title.startsWith(name) && !b.title.startsWith(name)) return -1
+      if (b.title.startsWith(name) && !a.title.startsWith(name)) return 1
+      return a.title.localeCompare(b.title)
+    })
   }
 
   async function fetchAllMediasTaggedBy(id: number): Promise<MediaDto[]> {
