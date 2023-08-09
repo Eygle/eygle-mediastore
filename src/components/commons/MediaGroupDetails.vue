@@ -29,7 +29,7 @@ defineProps<{ group: MediaGroupDto }>()
       </v-tooltip>
       <v-tooltip v-if="group.trimmed" text="Trimmed">
         <template #activator="{ props }">
-          <v-icon icon="mdi-check" color="green-lighten-2" class="ml-2" v-bind="props" />
+          <v-icon icon="mdi-content-cut" color="green-lighten-2" class="ml-2" v-bind="props" />
         </template>
       </v-tooltip>
     </h2>

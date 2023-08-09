@@ -36,8 +36,6 @@ onBeforeMount(async () => {
 
   profiles.value = groups.filter(({ field }) => field === Field.Profile)
   categories.value = groups.filter(({ field }) => field === Field.Category)
-  console.log(profiles.value[0])
-  console.log(categories.value[0])
   loading.value = false
 })
 </script>

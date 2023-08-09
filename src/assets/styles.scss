@@ -1,0 +1,13 @@
+a {
+  text-decoration: none;
+}
+
+.fab {
+  position: fixed!important;
+  bottom: 16px;
+  right: 16px;
+
+  &.top {
+    bottom: 84px;
+  }
+}

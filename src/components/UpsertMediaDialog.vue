@@ -1,0 +1,84 @@
+<script lang="ts" setup>
+import { computed, defineProps, ref, watch } from 'vue'
+import { instanceToInstance, instanceToPlain, plainToInstance } from 'class-transformer'
+import { MediaDto } from '@/dto/MediaDto'
+import { MediaGroupDto } from '@/dto/MediaGroupDto'
+import { useMediaGroupApi } from '@/composables/media-group-api'
+import TagsAutocomplete from '@/components/TagsAutocomplete.vue'
+
+const { createMedia, updateMedia } = useMediaGroupApi()
+
+const props = defineProps<{ modelValue: boolean; parent: MediaGroupDto; source?: MediaDto }>()
+const emits = defineEmits(['update:modelValue', 'saved'])
+
+const opened = computed({
+  get: () => props.modelValue,
+  set: (value) => emits('update:modelValue', value),
+})
+
+const form = ref(plainToInstance(MediaDto, { tags: [], files: [null], progress: [null, null], parent: { id: props.parent.id } }))
+const loading = ref(false)
+
+if (props.source) {
+  watch(
+    props.source,
+    (to) => {
+      if (to) {
+        form.value = instanceToInstance(to)
+      }
+    },
+    { deep: true }
+  )
+}
+
+async function save() {
+  try {
+    loading.value = true
+    const res = await (props.source ? updateMedia(form.value) : createMedia(form.value))
+    emits('saved', res)
+    loading.value = false
+    opened.value = false
+  } catch (e) {
+    console.error(e)
+  }
+}
+</script>
+
+<template>
+  <v-dialog v-model="opened" width="700" persistent="">
+    <v-card>
+      <v-card-title>{{ source ? 'Edit' : 'Create' }} media</v-card-title>
+      <v-card-text>
+        <v-text-field v-model="form.title" label="Title" />
+        <TagsAutocomplete :exclude="form.tags" @add-tag="(tag) => form.tags.push(tag)" class="mb-5" />
+        <v-chip v-for="(tag, idx) of form.tags" class="mr-2 mt-2">
+          {{ tag.title }}
+          <v-icon icon="mdi-close-circle ml-1 mr-n1" size="18" @click="form.tags.splice(idx, 1)" />
+        </v-chip>
+        <div v-for="(_, idx) in form.files" :key="idx" class="d-flex align-center">
+          <v-text-field v-model="form.files[idx]" :label="`File ${idx + 1}`" />
+          <v-btn
+            v-if="idx === form.files.length - 1"
+            class="ml-4"
+            icon="mdi-plus"
+            variant="text"
+            @click="form.files.push(null)" />
+          <v-btn v-else class="ml-4" icon="mdi-minus" variant="text" @click="form.files.splice(idx, 1)" />
+        </div>
+        <v-checkbox v-model="form.isBest" color="primary" label="Is best?" hide-details />
+        <v-checkbox v-model="form.toSee" label="To see?" />
+        <div class="d-flex align-center">
+          <v-text-field v-model="form.progress[0]" density="compact" label="Progress" placeholder="[hh:][mm:]ss" />
+          <span class="mx-2">/</span>
+          <v-text-field v-model="form.progress[1]" density="compact" label="Total time" placeholder="[hh:][mm:]ss" />
+        </div>
+        <v-textarea v-model="form.comment" label="Comment" />
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer />
+        <v-btn :disabled="loading" @click="opened = false">Cancel</v-btn>
+        <v-btn :loading="loading" color="primary" @click="save">{{ source ? 'Edit' : 'Create' }}</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+</template>

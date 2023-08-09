@@ -70,7 +70,7 @@ export function useMediaGroupApi() {
   }
 
   async function updateMedia(media: MediaDto): Promise<MediaDto | null> {
-    const res = await rest.patch(`/media/${media.id}`, media)
+    const res = await rest.patch(`/media/${media.id}`, instanceToPlain(media))
     return res.data ? plainToInstance(MediaDto, res.data as unknown) : null
   }
 

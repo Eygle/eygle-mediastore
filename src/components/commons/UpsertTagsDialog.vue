@@ -35,8 +35,8 @@ async function save() {
       props.parent.tags = res.tags
       opened.value = false
     }
-  } catch {
-
+  } catch (e) {
+    console.error(e)
   }
   loading.value = false
 }
