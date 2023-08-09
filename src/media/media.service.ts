@@ -57,6 +57,10 @@ export class MediaService {
     });
   }
 
+  async update(id: number, data) {
+    return this.mediaRepository.update(id, data)
+  }
+
   async updateTags(id: number, tags) {
     const mediaGroup = await this.mediaRepository.findOne({
       where: { id },
