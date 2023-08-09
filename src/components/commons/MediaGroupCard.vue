@@ -3,22 +3,31 @@ import { defineProps } from 'vue'
 import { MediaGroupDto } from '@/dto/MediaGroupDto'
 import TagChips from '@/components/commons/TagChips.vue'
 import { useRoute } from 'vue-router'
-
-defineProps<{ group: MediaGroupDto }>()
+import { useDialogs } from '@/composables/dialogs'
 
 const route = useRoute()
+const { openMediaGroupDialog } = useDialogs()
+
+defineProps<{ group: MediaGroupDto }>()
 </script>
 
 <template>
   <v-card :to="`${route.path}/${group.id}`" :class="{ trimmed: group.trimmed, 'to-tag': group.toTag }">
-    <v-card-title class="d-flex">
-      {{ group.name }}
-      <v-spacer />
-      <span v-if="group.count || group.total">{{ group.count || group.total }}</span>
-    </v-card-title>
-    <v-card-text v-if="group.tags.length">
-      <TagChips :parent="group" />
-    </v-card-text>
+    <v-hover>
+      <template #default="{ isHovering, props }">
+        <v-card-title class="d-flex" v-bind="props">
+          {{ group.name }}
+          <v-spacer />
+          <span v-if="group.count || group.total">{{ group.count || group.total }}</span>
+        </v-card-title>
+        <v-card-text v-if="group.tags.length" v-bind="props">
+          <TagChips :parent="group" />
+        </v-card-text>
+        <v-card-actions v-if="isHovering" v-bind="props" class="d-flex justify-end">
+          <v-btn class="ml-2" variant="text" @click="openMediaGroupDialog(group)">Edit</v-btn>
+        </v-card-actions>
+      </template>
+    </v-hover>
   </v-card>
 </template>
 
