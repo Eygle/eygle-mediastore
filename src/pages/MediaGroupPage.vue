@@ -24,14 +24,24 @@ async function reload() {
   groups.value = await fetchMediaGroups(route.meta.field!)
   loading.value = false
 }
+
+function onSave(group: MediaGroupDto) {
+  const idx = groups.value.findIndex(({ id }) => id === group.id)
+  if (idx === -1) return router.push(`${route.path}/${group.id}`)
+
+  groups.value.splice(idx, 1, group)
+}
 </script>
 
 <template>
-  <v-container>
-    <MediaGroupCard v-for="group of groups" :key="group.id" :group="group" class="mt-4" />
-    <UpsertMediaGroupDialog
-      :field="route.meta.field"
-      @saved="({ id }) => router.push(`${route.path}/${id}`)" />
-    <v-btn icon="mdi-plus" color="primary" class="fab" size="large" @click="openMediaGroupDialog()" />
+  <v-container class="h-100 d-flex flex-column">
+    <div v-if="loading" class="d-flex align-center justify-center flex-grow-1">
+      <v-progress-circular indeterminate size="100" />
+    </div>
+    <template v-else>
+      <MediaGroupCard v-for="group of groups" :key="group.id" :group="group" class="mt-4" />
+      <UpsertMediaGroupDialog :field="route.meta.field" @saved="onSave" />
+      <v-btn icon="mdi-plus" color="primary" class="fab" size="large" @click="openMediaGroupDialog()" />
+    </template>
   </v-container>
 </template>
