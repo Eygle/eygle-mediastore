@@ -8,14 +8,16 @@ import { MediaDto } from '@/dto/MediaDto'
 import MediaGroupDetails from '@/components/commons/MediaGroupDetails.vue'
 import MediaGroupCard from '@/components/commons/MediaGroupCard.vue'
 
+const route = useRoute()
 const { fetchAllMediasTaggedBy, fetchAllMediaGroupsTaggedBy } = useMediaGroupApi()
+
 const categories = ref<MediaGroupDto[]>([])
 const profiles = ref<MediaGroupDto[]>([])
 const loading = ref(false)
 
 onBeforeMount(async () => {
   loading.value = true
-  const tagId = +useRoute().params.id
+  const tagId = +route.params.id
   const [medias, groups]: [MediaDto[], MediaGroupDto[]] = await Promise.all([
     fetchAllMediasTaggedBy(tagId),
     fetchAllMediaGroupsTaggedBy(tagId),

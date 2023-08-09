@@ -5,12 +5,14 @@ import { useRoute } from 'vue-router'
 import MediaGroupDetails from '@/components/commons/MediaGroupDetails.vue'
 import { MediaGroupDto } from '@/dto/MediaGroupDto'
 
+const route = useRoute()
+
 const { getMediaGroupById } = useMediaGroupApi()
 
 const website = ref<MediaGroupDto | null>(null)
 
 onBeforeMount(async () => {
-  website.value = await getMediaGroupById(+useRoute().params.id)
+  website.value = await getMediaGroupById(+route.params.id)
 })
 </script>
 

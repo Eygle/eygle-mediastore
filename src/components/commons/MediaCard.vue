@@ -12,11 +12,11 @@ defineProps<{ media: MediaDto }>()
 <template>
   <v-card>
     <v-card-title class="d-flex justify-space-between">
-      {{ media.title }}
+      <p class="text-truncate">{{ media.title }}</p>
       <div>
         <v-tooltip v-if="media.toSee" text="To see">
           <template #activator="{ props }">
-            <v-icon icon="mdi-eye" color="blue" v-bind="props" />
+            <v-icon icon="mdi-eye" color="blue" class="ml-2" v-bind="props" />
           </template>
         </v-tooltip>
         <v-tooltip v-if="media.isBest" text="Best">
@@ -32,7 +32,7 @@ defineProps<{ media: MediaDto }>()
       <v-card class="mt-4" color="grey-darken-3" variant="flat">
         <v-card-text class="pb-2">
           <div v-for="file of media.files" class="d-flex justify-space-between mb-2">
-            <p dir="rtl" class="text-caption text-truncate">{{ file }}</p>
+            <p dir="rtl" class="text-caption text-truncate">{{ file.substring(1) }}</p>
             <v-tooltip text="Copied !" open-on-click :open-on-hover="false" close-on-content-click>
               <template #activator="{ props }">
                 <v-icon icon="mdi-content-copy" class="ml-2" @click="copy(file)" v-bind="props" />
@@ -58,3 +58,9 @@ defineProps<{ media: MediaDto }>()
     </v-card-text>
   </v-card>
 </template>
+
+<style lang="scss" scoped>
+p[dir='rtl']:after {
+  content: '/';
+}
+</style>

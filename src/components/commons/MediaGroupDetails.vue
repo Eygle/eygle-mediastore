@@ -11,10 +11,10 @@ defineProps<{ group: MediaGroupDto }>()
   <div>
     <h2 class="d-flex">
       {{ group.name }}
-      <span v-if="group.count" class="d-flex align-center ml-2 text-grey">
-        ({{ group.count }}
-        <span class="text-caption ml-2">/ {{ group.total }}</span>
-        )
+      <span v-if="group.count || group.total" class="d-flex align-center ml-2 text-grey">
+        <span>({{ group.count || group.total }}</span>
+        <span v-if="group.count" class="text-caption ml-2">/ {{ group.total }}</span>
+        <span>)</span>
       </span>
       <v-spacer />
       <v-tooltip v-if="group.toFollow" text="To follow">
@@ -39,7 +39,7 @@ defineProps<{ group: MediaGroupDto }>()
       <MediaCard v-for="media of group.media" :key="media.id" :media="media" class="mt-4" />
     </div>
 
-    <a v-if="group.externalLink" :href="group.externalLink" target="_blank">{{ group.externalLink }}</a>
+    <a v-if="group.externalLink" :href="group.externalLink" target="_blank" class="d-block mt-8">{{ group.externalLink }}</a>
 
     <div class="mt-8 pl-2 border-s-lg" v-if="group.comment">
       {{ group.comment }}

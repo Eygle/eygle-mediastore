@@ -3,7 +3,9 @@ import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { Layout } from '@/types/Layout'
 
-const layout = computed(() => useRoute()?.meta?.layout || Layout.Default)
+const route = useRoute()
+
+const layout = computed(() => route.meta?.layout || Layout.Default)
 </script>
 
 <template>
