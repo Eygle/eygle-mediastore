@@ -50,6 +50,11 @@ export class TagService {
     return this.mediaGroupService.getAllWithTag(tagId);
   }
 
+  async update(tag: Tag) {
+    const updated = await this.tagRepository.preload(tag);
+    return await this.tagRepository.save(updated);
+  }
+
   async mergeInto(target: number, tags: number[]) {
     const tag = await this.tagRepository.findOne({ where: { id: target } });
     if (!tag || !tags.length || !tags.every(Number.isInteger)) return false;
@@ -63,6 +68,6 @@ export class TagService {
       `UPDATE "mediastore"."media_group_tags_tag" AS t SET "tag_id" = $1 WHERE t."tag_id" IN (${inParams})`,
       [target, ...tags],
     );
-    return !!await this.tagRepository.delete(tags)
+    return !!(await this.tagRepository.delete(tags));
   }
 }

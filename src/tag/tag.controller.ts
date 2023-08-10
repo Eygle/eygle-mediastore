@@ -1,5 +1,6 @@
 import { Body, Controller, Get, Param, Patch, Query } from '@nestjs/common';
 import { TagService } from './tag.service';
+import { Tag } from './tag.entity';
 
 type TagQuery = {
   filters?: { name: string };
@@ -27,11 +28,16 @@ export class TagController {
     return this.tagService.getAllMediaGroupTaggedBy(+tagId);
   }
 
+  @Patch(':tagId')
+  updateTag(@Body() tag: Tag) {
+    return this.tagService.update(tag);
+  }
+
   @Patch(':tagId/merge-into')
   mergeTagsIntoOne(
     @Param() { tagId }: { tagId: string },
     @Body() tags: number[],
   ) {
-    return this.tagService.mergeInto(+tagId, tags)
+    return this.tagService.mergeInto(+tagId, tags);
   }
 }
