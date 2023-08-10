@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Query } from '@nestjs/common';
 import { TagService } from './tag.service';
 
 type TagQuery = {
@@ -18,12 +18,20 @@ export class TagController {
   }
 
   @Get(':tagId/media')
-  getAllMediaTaggedBy(@Param() { tagId }: { tagId: number }) {
-    return this.tagService.getAllMediaTaggedBy(tagId);
+  getAllMediaTaggedBy(@Param() { tagId }: { tagId: string }) {
+    return this.tagService.getAllMediaTaggedBy(+tagId);
   }
 
   @Get(':tagId/media-group')
-  getAllMediaGroupTaggedBy(@Param() { tagId }: { tagId: number }) {
-    return this.tagService.getAllMediaGroupTaggedBy(tagId);
+  getAllMediaGroupTaggedBy(@Param() { tagId }: { tagId: string }) {
+    return this.tagService.getAllMediaGroupTaggedBy(+tagId);
+  }
+
+  @Patch(':tagId/merge-into')
+  mergeTagsIntoOne(
+    @Param() { tagId }: { tagId: string },
+    @Body() tags: number[],
+  ) {
+    return this.tagService.mergeInto(+tagId, tags)
   }
 }

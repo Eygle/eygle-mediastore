@@ -49,4 +49,20 @@ export class TagService {
   getAllMediaGroupTaggedBy(tagId: number) {
     return this.mediaGroupService.getAllWithTag(tagId);
   }
+
+  async mergeInto(target: number, tags: number[]) {
+    const tag = await this.tagRepository.findOne({ where: { id: target } });
+    if (!tag || !tags.length || !tags.every(Number.isInteger)) return false;
+    const inParams = tags.map((_, idx) => `$${idx + 2}`).join(', ');
+
+    await this.tagRepository.query(
+      `UPDATE "mediastore"."media_tags_tag" AS t SET "tag_id" = $1 WHERE t."tag_id" IN (${inParams})`,
+      [target, ...tags],
+    );
+    await this.tagRepository.query(
+      `UPDATE "mediastore"."media_group_tags_tag" AS t SET "tag_id" = $1 WHERE t."tag_id" IN (${inParams})`,
+      [target, ...tags],
+    );
+    return !!await this.tagRepository.delete(tags)
+  }
 }

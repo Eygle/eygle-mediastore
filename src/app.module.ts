@@ -18,6 +18,7 @@ import { SnakeNamingStrategy } from "typeorm-naming-strategies";
       database: 'eygle',
       schema: 'mediastore',
       autoLoadEntities: true,
+      // logging: true,
       // synchronize: true,
       namingStrategy: new SnakeNamingStrategy()
     }),
