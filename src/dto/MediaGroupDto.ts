@@ -48,4 +48,12 @@ export class MediaGroupDto {
   @Expose()
   @Type(() => MediaDto)
   starring: MediaGroupDto[]
+
+  get nbBest() {
+    return this.media.filter(({ isBest }) => isBest).length
+  }
+
+  get nbToSee() {
+    return this.media.filter(({ toSee }) => toSee).length
+  }
 }

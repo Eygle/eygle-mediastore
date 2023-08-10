@@ -63,7 +63,7 @@ defineProps<{ media: MediaDto }>()
           </div>
         </v-card-text>
         <v-card-actions v-if="isHovering" v-bind="props" class="d-flex justify-end">
-          <v-btn class="ml-2" variant="text" @click="openMediaDialog(media)">Edit</v-btn>
+          <v-btn variant="text" @click="openMediaDialog(media)">Edit</v-btn>
         </v-card-actions>
       </template>
     </v-hover>

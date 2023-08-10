@@ -15,16 +15,21 @@ defineProps<{ group: MediaGroupDto }>()
   <v-card :to="`${route.path}/${group.id}`" :class="{ trimmed: group.trimmed, 'to-tag': group.toTag }">
     <v-hover>
       <template #default="{ isHovering, props }">
-        <v-card-title class="d-flex" v-bind="props">
-          {{ group.name }}
+        <v-card-title class="d-flex align-center" v-bind="props">
+          {{ group.name }} <span class="text-caption ml-2" v-if="group.count || group.total">({{ group.count || group.total }})</span>
           <v-spacer />
-          <span v-if="group.count || group.total">{{ group.count || group.total }}</span>
+          <div v-if="group.nbToSee" class="ml-4 d-flex align-center text-secondary">
+            <v-icon icon="mdi-eye" size="22" class="mr-1" /> {{ group.nbToSee }}
+          </div>
+          <div v-if="group.nbBest" class="ml-4 d-flex align-center text-primary">
+            <v-icon icon="mdi-star" size="22" class="mr-1" /> {{ group.nbBest }}
+          </div>
         </v-card-title>
         <v-card-text v-if="group.tags.length" v-bind="props">
           <TagChips :parent="group" />
         </v-card-text>
         <v-card-actions v-if="isHovering" v-bind="props" class="d-flex justify-end">
-          <v-btn class="ml-2" variant="text" @click.prevent="openMediaGroupDialog(group)">Edit</v-btn>
+          <v-btn variant="text" @click.prevent="openMediaGroupDialog(group)">Edit</v-btn>
         </v-card-actions>
       </template>
     </v-hover>
