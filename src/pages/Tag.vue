@@ -15,6 +15,7 @@ const categories = ref<MediaGroupDto[]>([])
 const profiles = ref<MediaGroupDto[]>([])
 const loading = ref(false)
 
+
 onBeforeMount(async () => {
   loading.value = true
   const tagId = +route.params.id

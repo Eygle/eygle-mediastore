@@ -50,10 +50,10 @@ export class MediaGroupDto {
   starring: MediaGroupDto[]
 
   get nbBest() {
-    return this.media.filter(({ isBest }) => isBest).length
+    return this.media?.filter(({ isBest }) => isBest).length
   }
 
   get nbToSee() {
-    return this.media.filter(({ toSee }) => toSee).length
+    return this.media?.filter(({ toSee }) => toSee).length
   }
 }

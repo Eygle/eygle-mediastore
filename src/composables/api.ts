@@ -83,6 +83,21 @@ export function useApi() {
     return res.data ? plainToInstance(MediaDto, res.data as unknown) : null
   }
 
+  async function updateTag(tag: TagDto): Promise<TagDto | null> {
+    const res = await rest.patch(`/tag/${tag.id}`, tag)
+    return res.data ? plainToInstance(TagDto, res.data as unknown) : null
+  }
+
+  async function deleteTag(tag: TagDto): Promise<TagDto | null> {
+    const res = await rest.delete(`/tag/${tag.id}`)
+    return res.data
+  }
+
+  async function mergeTags(selected: number, tags: number[]): Promise<boolean> {
+    const res = await rest.patch(`/tag/${selected}/merge-into`, tags)
+    return res.data
+  }
+
   return {
     createMediaGroup,
     fetchMediaGroups,
@@ -98,5 +113,8 @@ export function useApi() {
     updateMediaGroupTags,
     updateMedia,
     updateMediaTags,
+    mergeTags,
+    updateTag,
+    deleteTag,
   }
 }

@@ -9,9 +9,6 @@ defineProps<{ parent: MediaDto | MediaGroupDto; editable?: boolean }>()
 
 <template>
   <div v-if="parent.tags?.length" class="d-flex flex-wrap">
-    <div v-if="parent.media?.some(({ isBest }) => isBest)">
-      <v-chip color="primary" class="mr-2 mb-2">#best</v-chip>
-    </div>
     <div v-for="(tag, idx) of parent.tags" :key="`tag-${idx}`">
       <v-chip class="mr-2 mb-2">
         {{ tag.title }}

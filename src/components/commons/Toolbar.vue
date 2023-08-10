@@ -1,11 +1,9 @@
 <script lang="ts" setup>
-import { useToolbar } from '@/composables/toolbar'
 import { RouteName } from '@/types/RouteName'
 
-const { toolbar } = useToolbar()
 const formatTitle: { text: string; highlight?: boolean }[] = 'Eygle Mediastore'
-    .split(' ')
-    .flatMap((v) => [{ text: v.charAt(0).toUpperCase(), highlight: true }, { text: `${v.slice(1)} ` }])
+  .split(' ')
+  .flatMap((v) => [{ text: v.charAt(0).toUpperCase(), highlight: true }, { text: `${v.slice(1)} ` }])
 </script>
 
 <template>
@@ -19,6 +17,13 @@ const formatTitle: { text: string; highlight?: boolean }[] = 'Eygle Mediastore'
       </router-link>
       <v-spacer />
     </div>
-    <v-toolbar-title class="ml-8" v-text="toolbar.title" />
+    <v-divider vertical />
+    <div id="toolbar" class="d-flex align-center flex-grow-1 px-4" />
   </v-app-bar>
 </template>
+
+<style scoped>
+.title-container {
+  width: 256px;
+}
+</style>

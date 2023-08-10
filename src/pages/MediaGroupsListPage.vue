@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, onBeforeMount, ref } from 'vue'
+import { onBeforeMount, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { VDataIterator } from 'vuetify/labs/VDataIterator'
 import { MediaGroupDto } from '@/dto/MediaGroupDto'
@@ -18,15 +18,13 @@ const { openMediaGroupDialog } = useDialogs()
 const groups = ref<MediaGroupDto[]>([])
 const loading = ref(false)
 const page = ref(1)
-const itemsPerPage = 25
+const search = ref('')
 
-onBeforeMount(() => reload())
-
-const totalPages = computed(() => Math.ceil(groups.value.length / itemsPerPage))
+onBeforeMount(reload)
 
 async function reload(forceRefresh = false) {
   loading.value = true
-  groups.value = await getCached(route.meta.field, () => fetchMediaGroups(route.meta.field), forceRefresh)
+  groups.value = await getCached(route.name, () => fetchMediaGroups(route.meta.field!), forceRefresh)
   loading.value = false
 }
 
@@ -36,20 +34,31 @@ function onSave(group: MediaGroupDto) {
 
   groups.value.splice(idx, 1, group)
 }
+
+watch(page, () => window.scrollTo({ top: 0, behavior: 'smooth' }))
 </script>
 
 <template>
+  <teleport to="#toolbar">
+    <span class="text-capitalize text-h6">{{ route.name }}</span>
+    <v-chip v-if="!loading" class="ml-3">{{ groups.length }}</v-chip>
+    <v-spacer />
+    <v-text-field v-model="search" label="search" hide-details density="compact" />
+    <v-spacer />
+    <v-divider vertical class="mx-4 my-n2" />
+    <v-btn icon="mdi-reload" :loading="loading" variant="flat" @click="reload(true)" />
+  </teleport>
   <v-container class="h-100 d-flex flex-column">
     <div v-if="loading" class="d-flex align-center justify-center flex-grow-1">
       <v-progress-circular indeterminate size="100" />
     </div>
     <template v-else>
-      <v-data-iterator :items="groups" :page="page" :items-per-page="itemsPerPage">
+      <v-data-iterator :items="groups" :page="page" :search="search" items-per-page="25">
         <template #default="{ items }">
           <MediaGroupCard v-for="group of items" :key="group.raw.id" :group="group.raw" class="mt-4" />
         </template>
-        <template #footer>
-          <v-pagination v-if="totalPages > 1" v-model="page" :length="totalPages" class="mt-8 mb-4" />
+        <template #footer="{ pageCount, items }">
+          <v-pagination v-if="pageCount > 1" v-model="page" :length="pageCount" class="mt-8 mb-4" />
         </template>
       </v-data-iterator>
       <UpsertMediaGroupDialog :field="route.meta.field" @saved="onSave" />

@@ -2,21 +2,22 @@
 import { defineProps } from 'vue'
 import { MediaGroupDto } from '@/dto/MediaGroupDto'
 import TagChips from '@/components/commons/TagChips.vue'
-import { useRoute } from 'vue-router'
 import { useDialogs } from '@/composables/dialogs'
 
-const route = useRoute()
 const { openMediaGroupDialog } = useDialogs()
 
 defineProps<{ group: MediaGroupDto }>()
 </script>
 
 <template>
-  <v-card :to="`${route.path}/${group.id}`" :class="{ trimmed: group.trimmed, 'to-tag': group.toTag }">
+  <v-card
+    :to="{ name: group.field, params: { id: group.id } }"
+    :class="{ trimmed: group.trimmed, 'to-tag': group.toTag }">
     <v-hover>
       <template #default="{ isHovering, props }">
         <v-card-title class="d-flex align-center" v-bind="props">
-          {{ group.name }} <span class="text-caption ml-2" v-if="group.count || group.total">({{ group.count || group.total }})</span>
+          {{ group.name }}
+          <span class="text-caption ml-2" v-if="group.count || group.total">({{ group.count || group.total }})</span>
           <v-spacer />
           <div v-if="group.nbToSee" class="ml-4 d-flex align-center text-secondary">
             <v-icon icon="mdi-eye" size="22" class="mr-1" /> {{ group.nbToSee }}

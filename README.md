@@ -3,9 +3,6 @@
 ## TODO
 
 * Topbar
-  * Title 
-  * Search
-  * Reload
   * Back
   * Edit ?
   * Add ?
@@ -23,7 +20,6 @@
 * MediaGroup: Starring in
 * UpsertMedia / Group : add staring
 * UpsertMedia : add new tags to parent
-* Tags : merge tags and select which to keep
 * Toasts
 * Maybe : Related tags. When looking for a tag results then propose results with tags linked to this tag
 * Move media to another MediaGroup
