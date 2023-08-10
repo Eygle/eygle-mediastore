@@ -6,15 +6,22 @@ import { TagDto } from '@/dto/TagDto'
 import { VDataTable } from 'vuetify/labs/VDataTable'
 import MergeTagsDialog from '@/components/MergeTagsDialog.vue'
 import { RouteName } from '@/types/RouteName'
+import { instanceToInstance } from 'class-transformer'
 
 const route = useRoute()
-const { fetchTags } = useApi()
+const { fetchTags, updateTag, deleteTag } = useApi()
 
 const tags = ref<TagDto[]>([])
 const loading = ref(false)
+const updateLoading = ref(false)
 const search = ref('')
 const selectedIds = ref<number[]>([])
-const headers = [{ key: 'title' }, { key: 'edit', align: 'end', width: '40px' }, { key: 'delete', align: 'end', width: '40px'}]
+const headers = [
+  { key: 'title' },
+  { key: 'edit', align: 'end', width: '40px' },
+  { key: 'delete', align: 'end', width: '40px' },
+]
+const editForm = ref<TagDto | null>()
 
 const selected = computed(() => selectedIds.value.map((tagId) => tags.value.find(({ id }) => id === tagId)))
 
@@ -22,8 +29,35 @@ onBeforeMount(reload)
 
 async function reload() {
   loading.value = true
+  selectedIds.value = []
   tags.value = await fetchTags()
   loading.value = false
+}
+
+function toggleTagUpdate(tag: TagDto) {
+  if (editForm.value?.id === tag.id) {
+    editForm.value = null
+    return
+  }
+  editForm.value = instanceToInstance(tag)
+}
+
+async function updateCurrentTag() {
+  if (!editForm.value?.title) return
+  if (tags.value.find(({ title }) => title === editForm.value!.title.toLocaleLowerCase().trim())) {
+    console.log('Tag already exists!')
+    return
+  }
+  updateLoading.value = true
+  try {
+    if (await updateTag(editForm.value!)) {
+      tags.value.find(({ id }) => id === editForm.value!.id).title = editForm.value!.title
+      editForm.value = null
+    }
+  } catch (e) {
+    console.error(e)
+  }
+  updateLoading.value = false
 }
 </script>
 
@@ -58,10 +92,21 @@ async function reload() {
         show-select
         density="compact">
         <template #item.title="{ item }">
-          <router-link :to="{ name: RouteName.Tag, params: { id: item.raw.id } }">{{ item.raw.title }}</router-link>
+          <v-form v-if="editForm?.id === item.raw.id" @submit.prevent="updateCurrentTag()">
+            <v-text-field
+              v-model="editForm.title"
+              density="compact"
+              hide-details
+              :loading="updateLoading"
+              autofocus
+              @keydown.esc="editForm = null" />
+          </v-form>
+          <router-link v-else :to="{ name: RouteName.Tag, params: { id: item.raw.id } }">{{
+            item.raw.title
+          }}</router-link>
         </template>
         <template #item.edit="{ item }">
-          <v-btn icon="mdi-pencil" density="compact" variant="flat" />
+          <v-btn :icon="editForm?.id === item.raw.id ? 'mdi-close' : 'mdi-pencil'" density="compact" variant="flat" @click="toggleTagUpdate(item.raw)" />
         </template>
         <template #item.delete="{ item }">
           <v-btn icon="mdi-delete" density="compact" variant="flat" />
