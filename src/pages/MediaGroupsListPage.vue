@@ -1,9 +1,10 @@
 <script lang="ts" setup>
-import { onBeforeMount, ref } from 'vue'
+import { computed, onBeforeMount, ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { VDataIterator } from 'vuetify/labs/VDataIterator'
 import { MediaGroupDto } from '@/dto/MediaGroupDto'
 import MediaGroupCard from '@/components/commons/MediaGroupCard.vue'
 import UpsertMediaGroupDialog from '@/components/UpsertMediaGroupDialog.vue'
-import { useRoute, useRouter } from 'vue-router'
 import { useDialogs } from '@/composables/dialogs'
 import { useCache } from '@/composables/cache'
 import { useApi } from '@/composables/api'
@@ -16,8 +17,12 @@ const { openMediaGroupDialog } = useDialogs()
 
 const groups = ref<MediaGroupDto[]>([])
 const loading = ref(false)
+const page = ref(1)
+const itemsPerPage = 25
 
 onBeforeMount(() => reload())
+
+const totalPages = computed(() => Math.ceil(groups.value.length / itemsPerPage))
 
 async function reload(forceRefresh = false) {
   loading.value = true
@@ -39,7 +44,14 @@ function onSave(group: MediaGroupDto) {
       <v-progress-circular indeterminate size="100" />
     </div>
     <template v-else>
-      <MediaGroupCard v-for="group of groups" :key="group.id" :group="group" class="mt-4" />
+      <v-data-iterator :items="groups" :page="page" :items-per-page="itemsPerPage">
+        <template #default="{ items }">
+          <MediaGroupCard v-for="group of items" :key="group.raw.id" :group="group.raw" class="mt-4" />
+        </template>
+        <template #footer>
+          <v-pagination v-if="totalPages > 1" v-model="page" :length="totalPages" class="mt-8 mb-4" />
+        </template>
+      </v-data-iterator>
       <UpsertMediaGroupDialog :field="route.meta.field" @saved="onSave" />
       <v-btn icon="mdi-plus" color="primary" class="fab" size="large" @click="openMediaGroupDialog()" />
     </template>
