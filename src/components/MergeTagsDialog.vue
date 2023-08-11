@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { TagDto } from '@/dto/TagDto'
 import { useApi } from '@/composables/api'
 
@@ -26,6 +26,8 @@ async function save() {
   }
   loading.value = false
 }
+
+watch(opened, (to) => to && (selectedIdx.value = 0))
 </script>
 
 <template>
