@@ -7,11 +7,9 @@ import MediaGroupDetails from '@/components/commons/MediaGroupDetails.vue'
 import UpsertMediaGroupDialog from '@/components/UpsertMediaGroupDialog.vue'
 import UpsertMediaDialog from '@/components/UpsertMediaDialog.vue'
 import { useDialogs } from '@/composables/dialogs'
-import { useCache } from '@/composables/cache'
 
 const route = useRoute()
 const { getMediaGroupById } = useApi()
-const { getCached } = useCache()
 const { openMediaDialog, openMediaGroupDialog } = useDialogs()
 
 const group = ref<MediaGroupDto | null>(null)
@@ -19,9 +17,9 @@ const loading = ref(false)
 
 onBeforeMount(reload)
 
-async function reload(force = false) {
+async function reload() {
   loading.value = true
-  group.value = await getCached(route.name, () => getMediaGroupById(+route.params.id), force)
+  group.value = await getMediaGroupById(+route.params.id)
   loading.value = false
 }
 </script>
@@ -31,7 +29,7 @@ async function reload(force = false) {
     <v-spacer />
     <v-btn icon="mdi-pencil" variant="flat" @click="openMediaGroupDialog(group)" />
     <v-divider vertical class="mx-4 my-n2" />
-    <v-btn icon="mdi-reload" :loading="loading" variant="flat" @click="reload(true)" />
+    <v-btn icon="mdi-reload" :loading="loading" variant="flat" @click="reload()" />
   </teleport>
   <v-container class="h-100 d-flex flex-column">
     <div v-if="loading" class="d-flex align-center justify-center flex-grow-1">
