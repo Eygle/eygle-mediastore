@@ -58,7 +58,7 @@ defineProps<{ media: MediaDto }>()
             </router-link>
           </div>
 
-          <div class="mt-4 pl-2 border-s-lg" v-if="media.comment">
+          <div class="mt-4 pl-2 border-s-lg text-pre" v-if="media.comment">
             {{ media.comment }}
           </div>
         </v-card-text>

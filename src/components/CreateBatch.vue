@@ -77,6 +77,9 @@ async function processGenericBestByBatch(field: Field) {
       currentMedia = null
     } else if (line.startsWith('+')) {
       await extractPeople(line, mediaList[mediaList.length - 1], 'Starring')
+    } else {
+      const media = mediaList[mediaList.length - 1]
+      media.comment = media.comment ? `${media.comment}\n${line}` : line
     }
   }
   progress.value = 0
@@ -99,12 +102,12 @@ async function processBestByProfileBatch() {
     if (line.startsWith('#')) {
       parent = (await findMediaGroupByName(line.substring(1).trim())) || {}
       if (!parent.id) {
-        console.log('can\'t find parent', line.substring(1).trim())
+        console.log("can't find parent", line.substring(1).trim())
       }
       continue
     }
     mediaList.push(
-        plainToInstance(MediaDto, { parent: { id: parent.id }, files: [line.trim()], isBest: true, toSee: isToSee(line) }),
+      plainToInstance(MediaDto, { parent: { id: parent.id }, files: [line.trim()], isBest: true, toSee: isToSee(line) })
     )
   }
   progress.value = 0
@@ -125,7 +128,7 @@ async function processProfileBatch() {
   for (const line of entry.value.split('\n').filter((l) => Boolean(l.trim()))) {
     if (line.startsWith('#')) {
       profiles.push(
-          plainToInstance(MediaGroupDto, { name: line.substring(1).trim(), field: Field.Profile, toTag: toTag.value }),
+        plainToInstance(MediaGroupDto, { name: line.substring(1).trim(), field: Field.Profile, toTag: toTag.value })
       )
       continue
     }
@@ -180,12 +183,12 @@ async function extractPeople(line: string, data: MediaDto | MediaGroupDto, role 
 function extractTags(line: string) {
   const tags = [
     ...new Set(
-        line
-            .substring(1)
-            .trim()
-            .split(',')
-            .map((tag) => tag.trim().toLowerCase())
-            .filter(Boolean),
+      line
+        .substring(1)
+        .trim()
+        .split(',')
+        .map((tag) => tag.trim().toLowerCase())
+        .filter(Boolean)
     ),
   ]
   const idxBest = tags.indexOf('#best')

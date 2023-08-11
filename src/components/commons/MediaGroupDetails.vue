@@ -41,7 +41,7 @@ defineProps<{ group: MediaGroupDto }>()
 
     <a v-if="group.externalLink" :href="group.externalLink" target="_blank" class="d-block mt-8">{{ group.externalLink }}</a>
 
-    <div class="mt-8 pl-2 border-s-lg" v-if="group.comment">
+    <div class="mt-8 pl-2 border-s-lg text-pre" v-if="group.comment">
       {{ group.comment }}
     </div>
   </div>
