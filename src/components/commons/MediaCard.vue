@@ -4,6 +4,7 @@ import copy from 'copy-to-clipboard'
 import { MediaDto } from '@/dto/MediaDto'
 import TagChips from '@/components/commons/TagChips.vue'
 import { useDialogs } from '@/composables/dialogs'
+import { stringToDuration } from '@/utils/time'
 
 const { openMediaDialog } = useDialogs()
 
@@ -32,7 +33,7 @@ defineProps<{ media: MediaDto }>()
         <v-card-text v-bind="props" class="pt-4">
           <TagChips class="pb-4 mt-n2" :parent="media" />
 
-          <v-card class="d-flex" color="grey-darken-3" variant="flat">
+          <v-card v-if="media.files.length" class="d-flex" color="grey-darken-3" variant="flat">
             <v-card-text class="pb-2">
               <div v-for="file of media.files" class="d-flex justify-space-between mb-2">
                 <p dir="rtl" class="text-caption text-truncate">{{ file.substring(1) }}</p>
@@ -56,6 +57,14 @@ defineProps<{ media: MediaDto }>()
               }">
               {{ star.name }}
             </router-link>
+          </div>
+
+          <div v-if="media.progress.every(Boolean)" class="text-center">
+            <v-progress-linear
+              :model-value="stringToDuration(media.progress[0])"
+              :max="stringToDuration(media.progress[1])"
+              class="mb-2" />
+            {{ media.progress[0] }} / {{ media.progress[1] }}
           </div>
 
           <div class="mt-4 pl-2 border-s-lg text-pre" v-if="media.comment">

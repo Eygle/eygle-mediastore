@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { defineProps, ref, watch } from 'vue'
-import { instanceToInstance, plainToInstance } from 'class-transformer'
+import { instanceToInstance, instanceToPlain, plainToInstance } from 'class-transformer'
 import { MediaDto } from '@/dto/MediaDto'
 import { MediaGroupDto } from '@/dto/MediaGroupDto'
 import { useApi } from '@/composables/api'
