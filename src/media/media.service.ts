@@ -13,6 +13,7 @@ export class MediaService {
   ) {}
 
   async create(data: Partial<Media>) {
+    data.files = data.files.filter(Boolean)
     if (!data.title && data.files[0]) {
       data.title = path.basename(data.files[0]);
     }
@@ -58,6 +59,11 @@ export class MediaService {
   }
 
   async update(id: number, data) {
+    data.files = data.files.filter(Boolean)
+    if (!data.title && data.files[0]) {
+      data.title = path.basename(data.files[0]);
+    }
+
     for (const tag of data.tags || []) {
       tag.id = await this.tagService.getOrCreate(tag.title);
     }
