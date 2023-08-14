@@ -1,7 +1,8 @@
-import { Expose, Type } from 'class-transformer'
+import { Expose, Transform, TransformationType, Type } from 'class-transformer'
 import { TagDto } from '@/dto/TagDto'
 import { Field } from '@/types/Field'
 import { MediaDto } from '@/dto/MediaDto'
+import { dtoDateTransform } from '@/utils/dtoDateTransform'
 
 export class MediaGroupDto {
   @Expose()
@@ -23,6 +24,7 @@ export class MediaGroupDto {
   total?: number
 
   @Expose()
+  @Transform(dtoDateTransform)
   lastEntry: Date
 
   @Expose()
