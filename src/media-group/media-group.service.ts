@@ -4,6 +4,7 @@ import { In, Raw, Repository } from 'typeorm';
 import { MediaGroup } from './media-group.entity';
 import { TagService } from '../tag/tag.service';
 import { Field } from '../types/Field';
+import { Tag } from '../tag/tag.entity';
 
 @Injectable()
 export class MediaGroupService {
@@ -53,7 +54,10 @@ export class MediaGroupService {
     return this.mediaGroupRepository.findOne({
       where: { id },
       relations: { tags: true, media: { tags: true } },
-      order: { media: { title: 'asc', tags: { title: 'asc' } }, tags: { title: 'asc' } },
+      order: {
+        media: { title: 'asc', tags: { title: 'asc' } },
+        tags: { title: 'asc' },
+      },
     });
   }
 
@@ -72,10 +76,10 @@ export class MediaGroupService {
     for (const tag of data.tags || []) {
       tag.id = await this.tagService.getOrCreate(tag.title);
     }
-    data.id = id
-    const updated = await this.mediaGroupRepository.preload(data)
+    data.id = id;
+    const updated = await this.mediaGroupRepository.preload(data);
     if (await this.mediaGroupRepository.save(updated)) {
-      return this.findOneById(id)
+      return this.findOneById(id);
     }
   }
 
@@ -86,9 +90,23 @@ export class MediaGroupService {
     for (const tag of tags || []) {
       tag.id = await this.tagService.getOrCreate(tag.title);
     }
-    mediaGroup.tags = tags
+    mediaGroup.tags = tags;
     if (await this.mediaGroupRepository.save(mediaGroup)) {
-      return this.findOneById(id)
+      return this.findOneById(id);
     }
+  }
+
+  async addTags(id: number, tags: Tag[]) {
+    const mediaGroup = await this.mediaGroupRepository.findOne({
+      where: { id },
+      relations: { tags: true },
+    });
+    for (const tag of tags || []) {
+      if (!mediaGroup.tags.find(({ id }) => id === tag.id)) {
+        console.log('add parent tag:', tag.title)
+        mediaGroup.tags.push(tag)
+      }
+    }
+    return await this.mediaGroupRepository.save(mediaGroup);
   }
 }

@@ -4,16 +4,18 @@ import { In, Repository } from 'typeorm';
 import * as path from 'path';
 import { Media } from './media.entity';
 import { TagService } from '../tag/tag.service';
+import { MediaGroupService } from '../media-group/media-group.service';
 
 @Injectable()
 export class MediaService {
   constructor(
     @InjectRepository(Media) private mediaRepository: Repository<Media>,
+    private mediaGroupService: MediaGroupService,
     private tagService: TagService,
   ) {}
 
-  async create(data: Partial<Media>) {
-    data.files = data.files.filter(Boolean)
+  async create(data: Partial<Media>, addTagsToParent: boolean) {
+    data.files = data.files.filter(Boolean);
     if (!data.title && data.files[0]) {
       data.title = path.basename(data.files[0]);
     }
@@ -22,6 +24,10 @@ export class MediaService {
 
     for (const tag of entity.tags || []) {
       tag.id = await this.tagService.getOrCreate(tag.title);
+    }
+
+    if (addTagsToParent && entity.tags?.length) {
+      await this.mediaGroupService.addTags(entity.parent.id, entity.tags);
     }
 
     return this.mediaRepository.save(entity);
@@ -58,8 +64,8 @@ export class MediaService {
     });
   }
 
-  async update(id: number, data) {
-    data.files = data.files.filter(Boolean)
+  async update(id: number, data, addTagsToParent: boolean) {
+    data.files = data.files.filter(Boolean);
     if (!data.title && data.files[0]) {
       data.title = path.basename(data.files[0]);
     }
@@ -67,10 +73,21 @@ export class MediaService {
     for (const tag of data.tags || []) {
       tag.id = await this.tagService.getOrCreate(tag.title);
     }
-    data.id = id
-    const updated = await this.mediaRepository.preload(data)
+
+    data.id = id;
+    const updated = await this.mediaRepository.preload(data);
+
+    if (addTagsToParent && data.tags?.length) {
+      const media = await this.mediaRepository.findOne({
+        where: { id },
+        select: { id: true, parent: { id: true } },
+        relations: { parent: true },
+      });
+      await this.mediaGroupService.addTags(media.parent.id, data.tags)
+    }
+
     if (await this.mediaRepository.save(updated)) {
-      return this.findOneById(id)
+      return this.findOneById(id);
     }
   }
 

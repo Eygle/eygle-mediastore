@@ -5,6 +5,7 @@ type MediaGroupQuery = {
   filters?: {
     parent: string;
   };
+  addTagsToParent?: boolean
 };
 
 @Controller('media')
@@ -12,8 +13,8 @@ export class MediaController {
   constructor(private mediaService: MediaService) {}
 
   @Post()
-  create(@Body() body) {
-    return this.mediaService.create(body);
+  create(@Body() body, @Query() query: MediaGroupQuery) {
+    return this.mediaService.create(body, query.addTagsToParent || false);
   }
 
   @Get()
@@ -25,8 +26,8 @@ export class MediaController {
   }
 
   @Patch(':id')
-  update(@Param() { id }: { id: number }, @Body() body) {
-    return this.mediaService.update(+id, body)
+  update(@Param() { id }: { id: number }, @Body() body, @Query() query: MediaGroupQuery) {
+    return this.mediaService.update(+id, body, query.addTagsToParent || false)
   }
 
   @Patch(':id/tags')
