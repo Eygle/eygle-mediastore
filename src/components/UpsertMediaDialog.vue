@@ -7,7 +7,10 @@ import { useApi } from '@/composables/api'
 import TagsAutocomplete from '@/components/TagsAutocomplete.vue'
 import { useDialogs } from '@/composables/dialogs'
 import { rules } from '@/utils/form-validator'
+import { useRoute } from 'vue-router'
+import { RouteName } from '@/types/RouteName'
 
+const route = useRoute()
 const { createMedia, updateMedia } = useApi()
 const { upsertMediaDialogOpened: opened, media: source } = useDialogs()
 
@@ -17,6 +20,7 @@ const emits = defineEmits(['saved'])
 const form = ref(initForm())
 const loading = ref(false)
 const valid = ref(false)
+const addTagsToParent = ref([RouteName.Profile, RouteName.Star].includes(route.name as any))
 
 watch(source, () => (form.value = initForm()), { deep: true })
 
@@ -24,7 +28,9 @@ async function save() {
   if (!valid.value) return
   try {
     loading.value = true
-    const res = await (source.value ? updateMedia(form.value) : createMedia(form.value))
+    const res = await (source.value
+      ? updateMedia(form.value, addTagsToParent.value)
+      : createMedia(form.value, addTagsToParent.value))
     emits('saved', res)
     loading.value = false
     opened.value = false
@@ -67,6 +73,7 @@ function initForm(): MediaDto {
               <v-btn v-else class="ml-4" icon="mdi-minus" variant="text" @click="form.files.splice(idx, 1)" />
             </div>
           </div>
+          <v-checkbox v-model="addTagsToParent" label="Add tags to parent" hide-details class="d-flex justify-end" />
           <v-checkbox v-model="form.isBest" color="primary" label="Is best?" hide-details />
           <v-checkbox v-model="form.toSee" label="To see?" />
           <div class="d-flex align-center">
@@ -90,7 +97,9 @@ function initForm(): MediaDto {
       <v-card-actions>
         <v-spacer />
         <v-btn :disabled="loading" @click="opened = false">Cancel</v-btn>
-        <v-btn :loading="loading" color="primary" :disabled="!valid" @click="save">{{ source ? 'Edit' : 'Create' }}</v-btn>
+        <v-btn :loading="loading" color="primary" :disabled="!valid" @click="save">{{
+          source ? 'Edit' : 'Create'
+        }}</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>

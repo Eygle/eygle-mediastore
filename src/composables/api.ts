@@ -10,8 +10,16 @@ export function useApi() {
   const config = useConfig()
   const rest = axios.create({ baseURL: config.api, responseType: 'json' })
 
-  function createMedia(data: MediaDto) {
-    return rest.post('/media', instanceToPlain(data))
+  function createMedia(data: MediaDto, addTagsToParent: boolean) {
+    return rest.post(`/media${addTagsToParent ? '?addTagsToParent=true' : ''}`, instanceToPlain(data))
+  }
+
+  async function updateMedia(media: MediaDto, addTagsToParent: boolean): Promise<MediaDto | null> {
+    const res = await rest.patch(
+      `/media/${media.id}${addTagsToParent ? '?addTagsToParent=true' : ''}`,
+      instanceToPlain(media)
+    )
+    return res.data ? plainToInstance(MediaDto, res.data as unknown) : null
   }
 
   async function fetchMedias(parent: number) {
@@ -71,11 +79,6 @@ export function useApi() {
   async function updateMediaGroupTags(parent: MediaGroupDto, tags: TagDto[]): Promise<MediaGroupDto | null> {
     const res = await rest.patch(`/media-group/${parent.id}/tags`, tags)
     return res.data ? plainToInstance(MediaGroupDto, res.data as unknown) : null
-  }
-
-  async function updateMedia(media: MediaDto): Promise<MediaDto | null> {
-    const res = await rest.patch(`/media/${media.id}`, instanceToPlain(media))
-    return res.data ? plainToInstance(MediaDto, res.data as unknown) : null
   }
 
   async function updateMediaTags(parent: MediaDto, tags: TagDto[]): Promise<MediaDto | null> {

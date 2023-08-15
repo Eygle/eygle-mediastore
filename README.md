@@ -2,13 +2,6 @@
 
 ## TODO
 
-* Topbar
-  * Back
-  * Edit ?
-  * Add ?
-* pinia
-  * store lists in case of back navigation
-  * clean lists on navigationGuard
 * Help tagging using parent tags
 * Bests
 * To Tags
@@ -16,10 +9,9 @@
 * In progress
 * Stars Page
 * With comments
-* Complete MediaCard (progress, date ?, ...)
+* Complete MediaCard (date ?, ...)
 * MediaGroup: Starring in
 * UpsertMedia / Group : add staring
-* UpsertMedia : add new tags to parent
 * Toasts
 * Maybe : Related tags. When looking for a tag results then propose results with tags linked to this tag
 * Move media to another MediaGroup

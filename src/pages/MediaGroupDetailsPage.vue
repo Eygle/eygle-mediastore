@@ -2,13 +2,14 @@
 import { useApi } from '@/composables/api'
 import { onBeforeMount, ref } from 'vue'
 import { MediaGroupDto } from '@/dto/MediaGroupDto'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import MediaGroupDetails from '@/components/commons/MediaGroupDetails.vue'
 import UpsertMediaGroupDialog from '@/components/UpsertMediaGroupDialog.vue'
 import UpsertMediaDialog from '@/components/UpsertMediaDialog.vue'
 import { useDialogs } from '@/composables/dialogs'
 
 const route = useRoute()
+const router = useRouter()
 const { getMediaGroupById } = useApi()
 const { openMediaDialog, openMediaGroupDialog } = useDialogs()
 
@@ -26,6 +27,7 @@ async function reload() {
 
 <template>
   <teleport to="#toolbar">
+    <v-btn icon="mdi-arrow-left" variant="flat" @click="router.back()" />
     <v-spacer />
     <v-btn icon="mdi-pencil" variant="flat" @click="openMediaGroupDialog(group)" />
     <v-divider vertical class="mx-4 my-n2" />

@@ -1,20 +1,22 @@
 <script lang="ts" setup>
-import { useApi } from '@/composables/api'
 import { onBeforeMount, ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { useApi } from '@/composables/api'
 import { MediaGroupDto } from '@/dto/MediaGroupDto'
-import { useRoute } from 'vue-router'
 import { Field } from '@/types/Field'
 import { MediaDto } from '@/dto/MediaDto'
 import MediaGroupDetails from '@/components/commons/MediaGroupDetails.vue'
 import MediaGroupCard from '@/components/commons/MediaGroupCard.vue'
 
 const route = useRoute()
+const router = useRouter()
 const { fetchAllMediasTaggedBy, fetchAllMediaGroupsTaggedBy } = useApi()
 
 const categories = ref<MediaGroupDto[]>([])
 const profiles = ref<MediaGroupDto[]>([])
 const loading = ref(false)
 
+console.log('inside tag !')
 
 onBeforeMount(async () => {
   loading.value = true
@@ -45,6 +47,9 @@ onBeforeMount(async () => {
 
 <template>
   <v-container>
+    <teleport to="#toolbar">
+      <v-btn icon="mdi-arrow-left" variant="flat" @click="router.back()" />
+    </teleport>
     <div v-if="loading"></div>
     <div v-else>
       <div v-if="categories.length">
