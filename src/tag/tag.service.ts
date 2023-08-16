@@ -79,32 +79,38 @@ export class TagService {
       `SELECT mt."media_id" FROM "mediastore"."media_tags_tag" mt WHERE mt."tag_id" = $1`,
       [target],
     );
-    await this.tagRepository.query(
-      `DELETE FROM "mediastore"."media_tags_tag" mt
-        WHERE mt."tag_id" IN (${inParams(1, tags.length)})
-        AND mt."media_id" IN (${inParams(
-          tags.length + 1,
-          mediaWithTarget.length,
-        )})`,
-      [...tags, ...mediaWithTarget.map(({ media_id }) => media_id)],
-    );
+    if (mediaWithTarget.length) {
+      await this.tagRepository.query(
+        `DELETE
+         FROM "mediastore"."media_tags_tag" mt
+         WHERE mt."tag_id" IN (${inParams(1, tags.length)})
+           AND mt."media_id" IN (${inParams(
+             tags.length + 1,
+             mediaWithTarget.length,
+           )})`,
+        [...tags, ...mediaWithTarget.map(({ media_id }) => media_id)],
+      );
+    }
 
     const mediaGroupsWithTarget = await this.tagRepository.query(
       `SELECT mgt."media_group_id" FROM "mediastore"."media_group_tags_tag" mgt WHERE mgt."tag_id" = $1`,
       [target],
     );
-    await this.tagRepository.query(
-      `DELETE FROM "mediastore"."media_group_tags_tag" mgt
-       WHERE mgt."tag_id" IN (${inParams(1, tags.length)})
-         AND mgt."media_group_id" IN (${inParams(
-           tags.length + 1,
-           mediaGroupsWithTarget.length,
-         )})`,
-      [
-        ...tags,
-        ...mediaGroupsWithTarget.map(({ media_group_id }) => media_group_id),
-      ],
-    );
+    if (mediaGroupsWithTarget.length) {
+      await this.tagRepository.query(
+        `DELETE
+         FROM "mediastore"."media_group_tags_tag" mgt
+         WHERE mgt."tag_id" IN (${inParams(1, tags.length)})
+           AND mgt."media_group_id" IN (${inParams(
+             tags.length + 1,
+             mediaGroupsWithTarget.length,
+           )})`,
+        [
+          ...tags,
+          ...mediaGroupsWithTarget.map(({ media_group_id }) => media_group_id),
+        ],
+      );
+    }
 
     await this.tagRepository.query(
       `UPDATE "mediastore"."media_tags_tag" t
