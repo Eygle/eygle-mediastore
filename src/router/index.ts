@@ -13,21 +13,35 @@ const router = createRouter({
       component: () => import('../pages/MediaGroupsListPage.vue'),
       meta: { field: Field.Category, navbar: true, icon: 'mdi-dots-grid' },
     },
-    { path: '/categories/:id', name: RouteName.Category, component: () => import('../pages/MediaGroupDetailsPage.vue') },
+    {
+      path: '/categories/:id',
+      name: RouteName.Category,
+      component: () => import('../pages/MediaGroupDetailsPage.vue'),
+    },
     {
       path: '/profiles',
       name: RouteName.Profiles,
       component: () => import('../pages/MediaGroupsListPage.vue'),
       meta: { field: Field.Profile, navbar: true, icon: 'mdi-account-group' },
     },
-    { path: '/profiles/:id', name: RouteName.Profile, component: () => import('../pages/MediaGroupDetailsPage.vue') },
+    {
+      path: '/profiles/:id',
+      name: RouteName.Profile,
+      component: () => import('../pages/MediaGroupDetailsPage.vue'),
+      meta: { taggableParent: true },
+    },
     {
       path: '/stars',
       name: RouteName.Stars,
       component: () => import('../pages/MediaGroupsListPage.vue'),
       meta: { field: Field.Star, navbar: true, icon: 'mdi-card-account-details-star' },
     },
-    { path: '/stars/:id', name: RouteName.Star, component: () => import('../pages/MediaGroupDetailsPage.vue') },
+    {
+      path: '/stars/:id',
+      name: RouteName.Star,
+      component: () => import('../pages/MediaGroupDetailsPage.vue'),
+      meta: { taggableParent: true },
+    },
     {
       path: '/websites',
       name: RouteName.Websites,

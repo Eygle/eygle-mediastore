@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { defineProps, ref, watch } from 'vue'
-import { instanceToInstance, instanceToPlain, plainToInstance } from 'class-transformer'
+import { instanceToInstance, plainToInstance } from 'class-transformer'
 import { MediaDto } from '@/dto/MediaDto'
 import { MediaGroupDto } from '@/dto/MediaGroupDto'
 import { useApi } from '@/composables/api'
@@ -8,7 +8,6 @@ import TagsAutocomplete from '@/components/TagsAutocomplete.vue'
 import { useDialogs } from '@/composables/dialogs'
 import { rules } from '@/utils/form-validator'
 import { useRoute } from 'vue-router'
-import { RouteName } from '@/types/RouteName'
 
 const route = useRoute()
 const { createMedia, updateMedia } = useApi()
@@ -20,7 +19,6 @@ const emits = defineEmits(['saved'])
 const form = ref(initForm())
 const loading = ref(false)
 const valid = ref(false)
-const addTagsToParent = ref([RouteName.Profile, RouteName.Star].includes(route.name as any))
 
 watch(source, () => (form.value = initForm()), { deep: true })
 
@@ -29,8 +27,8 @@ async function save() {
   try {
     loading.value = true
     const res = await (source.value
-      ? updateMedia(form.value, addTagsToParent.value)
-      : createMedia(form.value, addTagsToParent.value))
+      ? updateMedia(form.value, route.meta.taggableParent)
+      : createMedia(form.value, route.meta.taggableParent))
     emits('saved', res)
     loading.value = false
     opened.value = false
@@ -73,7 +71,6 @@ function initForm(): MediaDto {
               <v-btn v-else class="ml-4" icon="mdi-minus" variant="text" @click="form.files.splice(idx, 1)" />
             </div>
           </div>
-          <v-checkbox v-model="addTagsToParent" label="Add tags to parent" hide-details class="d-flex justify-end" />
           <v-checkbox v-model="form.isBest" color="primary" label="Is best?" hide-details />
           <v-checkbox v-model="form.toSee" label="To see?" />
           <div class="d-flex align-center">
