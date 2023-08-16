@@ -43,7 +43,7 @@ watch(page, () => window.scrollTo({ top: 0, behavior: 'smooth' }))
     <span class="text-capitalize text-h6">{{ route.name }}</span>
     <v-chip v-if="!loading" class="ml-3">{{ groups.length }}</v-chip>
     <v-spacer />
-    <v-text-field v-model="search" label="search" hide-details density="compact" />
+    <v-text-field v-model="search" label="search" hide-details density="compact" clearable />
     <v-spacer />
     <v-divider vertical class="mx-4 my-n2" />
     <v-btn icon="mdi-reload" :loading="loading" variant="flat" @click="reload(true)" />

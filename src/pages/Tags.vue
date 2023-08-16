@@ -67,7 +67,7 @@ async function updateCurrentTag() {
     <span class="text-capitalize text-h6">{{ route.name }}</span>
     <v-chip v-if="!loading" class="ml-3">{{ tags.length }}</v-chip>
     <v-spacer />
-    <v-text-field v-model="search" label="search" hide-details density="compact" />
+    <v-text-field v-model="search" label="search" hide-details density="compact" clearable />
     <v-spacer />
     <MergeTagsDialog :tags="selected" @save="reload">
       <template #activator="{ props }">
