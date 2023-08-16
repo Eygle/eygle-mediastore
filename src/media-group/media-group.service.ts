@@ -103,7 +103,6 @@ export class MediaGroupService {
     });
     for (const tag of tags || []) {
       if (!mediaGroup.tags.find(({ id }) => id === tag.id)) {
-        console.log('add parent tag:', tag.title)
         mediaGroup.tags.push(tag)
       }
     }

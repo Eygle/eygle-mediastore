@@ -5,6 +5,7 @@ import * as path from 'path';
 import { Media } from './media.entity';
 import { TagService } from '../tag/tag.service';
 import { MediaGroupService } from '../media-group/media-group.service';
+import { MediaGroup } from '../media-group/media-group.entity';
 
 @Injectable()
 export class MediaService {
@@ -46,15 +47,31 @@ export class MediaService {
   }
 
   async getAllWithTag(tagId: number): Promise<Media[]> {
-    const res = await this.mediaRepository.find({
+    const ids = await this.mediaRepository.find({
       where: { tags: { id: tagId } },
       select: { id: true },
     });
-    return this.mediaRepository.find({
-      where: { id: In(res.map(({ id }) => id)) },
-      relations: { tags: true, parent: true, starring: true },
-      order: { parent: { name: 'asc' }, title: 'asc', tags: { title: 'asc' } },
+    const mediaList = await this.mediaRepository.find({
+      where: { id: In(ids.map(({ id }) => id)) },
+      relations: { tags: true, parent: { tags: true }, starring: true },
+      order: {
+        parent: { name: 'asc', tags: { title: 'asc' } },
+        title: 'asc',
+        tags: { title: 'asc' },
+      },
     });
+
+    return mediaList.reduce((acc: any[], media) => {
+      const parent: MediaGroup =
+        acc.find(({ id }) => id === media.parent.id) || media.parent;
+      if (parent === media.parent) {
+        acc.push(parent);
+        parent.media = [];
+      }
+      parent.media.push(media);
+      delete media.parent;
+      return acc;
+    }, [] as MediaGroup[]);
   }
 
   getAllFromParent(parentId: number): Promise<Media[]> {
@@ -83,7 +100,7 @@ export class MediaService {
         select: { id: true, parent: { id: true } },
         relations: { parent: true },
       });
-      await this.mediaGroupService.addTags(media.parent.id, data.tags)
+      await this.mediaGroupService.addTags(media.parent.id, data.tags);
     }
 
     if (await this.mediaRepository.save(updated)) {
