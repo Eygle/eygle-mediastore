@@ -26,8 +26,22 @@ export class TagService {
     return n.identifiers[0].id;
   }
 
-  getAll() {
-    return this.tagRepository.find({ order: { title: 'asc' } });
+  async getAll() {
+    const countMediasByTags = await this.tagRepository.query(`
+      SELECT mt.tag_id, COUNT(*) total FROM "mediastore"."media_tags_tag" mt GROUP BY mt."tag_id"`);
+    const countMediaGroupsByTags = await this.tagRepository.query(`
+      SELECT mgt.tag_id, COUNT(*) total FROM "mediastore"."media_group_tags_tag" mgt GROUP BY mgt."tag_id"`);
+    return (await this.tagRepository.find({ order: { title: 'asc' } })).map(
+      (tag: any) => ({
+        ...tag,
+        count:
+          +countMediasByTags.find(({ tag_id }) => tag_id === tag.id)?.total ||
+          0 +
+            +countMediaGroupsByTags.find(({ tag_id }) => tag_id === tag.id)
+              ?.total ||
+          0,
+      }),
+    );
   }
 
   findByName(name: string) {
@@ -86,7 +100,10 @@ export class TagService {
            tags.length + 1,
            mediaGroupsWithTarget.length,
          )})`,
-      [...tags, ...mediaGroupsWithTarget.map(({ media_group_id }) => media_group_id)],
+      [
+        ...tags,
+        ...mediaGroupsWithTarget.map(({ media_group_id }) => media_group_id),
+      ],
     );
 
     await this.tagRepository.query(
