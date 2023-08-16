@@ -5,6 +5,8 @@ import { MediaDto } from '@/dto/MediaDto'
 import TagChips from '@/components/commons/TagChips.vue'
 import { useDialogs } from '@/composables/dialogs'
 import { stringToDuration } from '@/utils/time'
+import { RouteName } from '@/types/RouteName'
+import { Field } from '@/types/Field'
 
 const { openMediaDialog } = useDialogs()
 

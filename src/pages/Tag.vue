@@ -52,9 +52,9 @@ onBeforeMount(async () => {
     <div v-if="loading"></div>
     <div v-else>
       <template v-if="categories.length">
-        <h1 class="text-center mb-4">Categories</h1>
+        <h1 class="text-center">Categories</h1>
         <template v-for="category of categories">
-          <router-link :to="{ name: RouteName.Category, params: { id: category.id } }" class="text-h5">{{ category.name }}</router-link>
+          <router-link :to="{ name: RouteName.Category, params: { id: category.id } }" class="text-h5 d-block mt-8">{{ category.name }}</router-link>
           <MediaCard v-for="media of category.media" :key="media.id" :media="media" no-action class="mt-4" />
         </template>
         <v-divider class="my-8" />
