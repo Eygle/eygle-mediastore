@@ -6,4 +6,7 @@ export class TagDto {
 
   @Expose()
   title: string
+
+  @Expose()
+  count?: number
 }

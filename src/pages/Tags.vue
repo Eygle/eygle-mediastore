@@ -17,7 +17,8 @@ const updateLoading = ref(false)
 const search = ref('')
 const selectedIds = ref<number[]>([])
 const headers = [
-  { key: 'title' },
+  { key: 'title', title: 'Tag' },
+  { key: 'count', title: 'Count' },
   { key: 'edit', align: 'end', width: '40px' },
   { key: 'delete', align: 'end', width: '40px' },
 ]
