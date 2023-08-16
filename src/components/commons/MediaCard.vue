@@ -8,12 +8,12 @@ import { stringToDuration } from '@/utils/time'
 
 const { openMediaDialog } = useDialogs()
 
-defineProps<{ media: MediaDto }>()
+defineProps<{ media: MediaDto; noAction?: boolean }>()
 </script>
 
 <template>
   <v-card>
-    <v-hover>
+    <v-hover :disabled="noAction">
       <template #default="{ isHovering, props }">
         <v-card-title class="d-flex justify-space-between" v-bind="props">
           <p class="text-truncate">{{ media.title }}</p>

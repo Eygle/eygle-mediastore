@@ -61,9 +61,9 @@ export function useApi() {
     })
   }
 
-  async function fetchAllMediasTaggedBy(id: number): Promise<MediaDto[]> {
+  async function fetchAllMediasTaggedBy(id: number): Promise<MediaGroupDto[]> {
     const res = await rest.get(`/tag/${id}/media`)
-    return res.data?.map((d) => plainToInstance(MediaDto, d)) || []
+    return res.data?.map((d) => plainToInstance(MediaGroupDto, d)) || []
   }
 
   async function fetchAllMediaGroupsTaggedBy(id: number): Promise<MediaGroupDto[]> {

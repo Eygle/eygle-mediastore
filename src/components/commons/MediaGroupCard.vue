@@ -6,14 +6,14 @@ import { useDialogs } from '@/composables/dialogs'
 
 const { openMediaGroupDialog } = useDialogs()
 
-defineProps<{ group: MediaGroupDto }>()
+defineProps<{ group: MediaGroupDto; noAction?: boolean }>()
 </script>
 
 <template>
   <v-card
     :to="{ name: group.field, params: { id: group.id } }"
     :class="{ trimmed: group.trimmed, 'to-tag': group.toTag }">
-    <v-hover>
+    <v-hover :disabled="noAction">
       <template #default="{ isHovering, props }">
         <v-card-title class="d-flex align-center" v-bind="props">
           {{ group.name }}
@@ -26,8 +26,9 @@ defineProps<{ group: MediaGroupDto }>()
             <v-icon icon="mdi-star" size="22" class="mr-1" /> {{ group.nbBest }}
           </div>
         </v-card-title>
-        <v-card-text v-if="group.tags.length" v-bind="props">
+        <v-card-text :class="{ 'pb-0': !group.tags?.length }" v-bind="props">
           <TagChips :parent="group" />
+          <slot />
         </v-card-text>
         <v-card-actions v-if="isHovering" v-bind="props" class="d-flex justify-end">
           <v-btn variant="text" @click.prevent="openMediaGroupDialog(group)">Edit</v-btn>
