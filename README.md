@@ -1,22 +1,5 @@
 # eygle-mediastore-front
 
-## TODO
-
-* Help tagging using parent tags
-* Bests
-* To Tags
-* To See
-* In progress
-* Stars Page
-* With comments
-* Complete MediaCard (date ?, ...)
-* MediaGroup: Starring in
-* UpsertMedia / Group : add staring
-* Toasts
-* Maybe : Related tags. When looking for a tag results then propose results with tags linked to this tag
-* Move media to another MediaGroup
-* Add media link
-
 ## Project Setup
 
 ```sh
