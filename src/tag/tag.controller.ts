@@ -18,6 +18,11 @@ export class TagController {
     return this.tagService.getAll();
   }
 
+  @Get(':tagId')
+  getById(@Param() { tagId }: { tagId: string }) {
+    return this.tagService.getById(+tagId);
+  }
+
   @Get(':tagId/media')
   getAllMediaTaggedBy(@Param() { tagId }: { tagId: string }) {
     return this.tagService.getAllMediaTaggedBy(+tagId);

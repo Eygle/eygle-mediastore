@@ -44,6 +44,10 @@ export class TagService {
     );
   }
 
+  getById(id: number) {
+    return this.tagRepository.findOne({ where: { id } });
+  }
+
   findByName(name: string) {
     return this.tagRepository.find({
       where: {
