@@ -73,6 +73,10 @@ export class TagService {
     return await this.tagRepository.save(updated);
   }
 
+  delete(id: number) {
+    return this.tagRepository.delete(id);
+  }
+
   async mergeInto(target: number, tags: number[]) {
     const tag = await this.tagRepository.findOne({ where: { id: target } });
     if (!tag || !tags.length || !tags.every(Number.isInteger)) return false;

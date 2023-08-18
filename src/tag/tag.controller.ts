@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Patch, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Query } from "@nestjs/common";
 import { TagService } from './tag.service';
 import { Tag } from './tag.entity';
 
@@ -36,6 +36,11 @@ export class TagController {
   @Patch(':tagId')
   updateTag(@Body() tag: Tag) {
     return this.tagService.update(tag);
+  }
+
+  @Delete(':tagId')
+  deleteTag(@Param() { tagId }: { tagId: string }) {
+    return this.tagService.delete(+tagId);
   }
 
   @Patch(':tagId/merge-into')
