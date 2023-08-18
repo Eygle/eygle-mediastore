@@ -57,6 +57,7 @@ const groupsByFields = computed(() =>
     <teleport to="#toolbar">
       <v-btn icon="mdi-arrow-left" variant="flat" @click="router.back()" />
       <span class="text-capitalize text-h6">{{ tag?.title }}</span>
+      <v-chip v-if="!loading" class="ml-3">{{ groups.reduce((count, g) => count + g.media?.length || 1, 0) }}</v-chip>
     </teleport>
     <div v-if="loading"></div>
     <div v-else class="mt-n8">

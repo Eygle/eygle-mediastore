@@ -7,9 +7,12 @@ import { VDataTable } from 'vuetify/labs/VDataTable'
 import MergeTagsDialog from '@/components/MergeTagsDialog.vue'
 import { RouteName } from '@/types/RouteName'
 import { instanceToInstance } from 'class-transformer'
+import ConfirmDialog from '@/components/ConfirmDialog.vue'
+import useConfirm from '@/composables/confirm'
 
 const route = useRoute()
 const { fetchTags, updateTag, deleteTag } = useApi()
+const { confirm } = useConfirm()
 
 const tags = ref<TagDto[]>([])
 const loading = ref(false)
@@ -60,6 +63,11 @@ async function updateCurrentTag() {
   }
   updateLoading.value = false
 }
+
+async function remove(tag) {
+  await deleteTag(tag)
+  return reload()
+}
 </script>
 
 <template>
@@ -107,12 +115,21 @@ async function updateCurrentTag() {
           }}</router-link>
         </template>
         <template #item.edit="{ item }">
-          <v-btn :icon="editForm?.id === item.raw.id ? 'mdi-close' : 'mdi-pencil'" density="compact" variant="flat" @click="toggleTagUpdate(item.raw)" />
+          <v-btn
+            :icon="editForm?.id === item.raw.id ? 'mdi-close' : 'mdi-pencil'"
+            density="compact"
+            variant="flat"
+            @click="toggleTagUpdate(item.raw)" />
         </template>
         <template #item.delete="{ item }">
-          <v-btn icon="mdi-delete" density="compact" variant="flat" />
+          <v-btn
+            icon="mdi-delete"
+            density="compact"
+            variant="flat"
+            @click="confirm('Delete tag', `Do you want to delete '${item.raw.title}'?`, () => remove(item.raw))" />
         </template>
       </v-data-table>
     </div>
   </v-container>
+  <ConfirmDialog />
 </template>
