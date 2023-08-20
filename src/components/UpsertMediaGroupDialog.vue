@@ -7,9 +7,11 @@ import TagsAutocomplete from '@/components/TagsAutocomplete.vue'
 import { useApi } from '@/composables/api'
 import { useDialogs } from '@/composables/dialogs'
 import { rules } from '@/utils/form-validator'
+import useToast from '@/composables/toast'
 
 const { createMediaGroup, updateMediaGroup } = useApi()
 const { upsertMediaGroupDialogOpened: opened, mediaGroup: source } = useDialogs()
+const { toastError } = useToast()
 
 const props = defineProps<{ field?: Field }>()
 const emits = defineEmits(['saved'])
@@ -30,6 +32,7 @@ async function save() {
     loading.value = false
     opened.value = false
   } catch (e) {
+    toastError()
     console.error(e)
   }
 }

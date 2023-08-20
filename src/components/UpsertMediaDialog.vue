@@ -8,10 +8,12 @@ import TagsAutocomplete from '@/components/TagsAutocomplete.vue'
 import { useDialogs } from '@/composables/dialogs'
 import { rules } from '@/utils/form-validator'
 import { useRoute } from 'vue-router'
+import useToast from '@/composables/toast'
 
 const route = useRoute()
 const { createMedia, updateMedia } = useApi()
 const { upsertMediaDialogOpened: opened, media: source } = useDialogs()
+const { toastError } = useToast()
 
 const props = defineProps<{ parent: MediaGroupDto }>()
 const emits = defineEmits(['saved'])
@@ -33,6 +35,7 @@ async function save() {
     loading.value = false
     opened.value = false
   } catch (e) {
+    toastError()
     console.error(e)
   }
 }

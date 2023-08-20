@@ -9,10 +9,12 @@ import { RouteName } from '@/types/RouteName'
 import { instanceToInstance } from 'class-transformer'
 import ConfirmDialog from '@/components/ConfirmDialog.vue'
 import useConfirm from '@/composables/confirm'
+import useToast from '@/composables/toast'
 
 const route = useRoute()
 const { fetchTags, updateTag, deleteTag } = useApi()
 const { confirm } = useConfirm()
+const { toastError } = useToast()
 
 const tags = ref<TagDto[]>([])
 const loading = ref(false)
@@ -49,7 +51,7 @@ function toggleTagUpdate(tag: TagDto) {
 async function updateCurrentTag() {
   if (!editForm.value?.title) return
   if (tags.value.find(({ title }) => title === editForm.value!.title.toLocaleLowerCase().trim())) {
-    console.log('Tag already exists!')
+    toastError('Tag already exists')
     return
   }
   updateLoading.value = true
@@ -59,6 +61,7 @@ async function updateCurrentTag() {
       editForm.value = null
     }
   } catch (e) {
+    toastError()
     console.error(e)
   }
   updateLoading.value = false

@@ -1,17 +1,14 @@
 <script lang="ts" setup>
 import useToast from '@/composables/toast'
 
-const timeout = 10000
-const { opened, message, color } = useToast()
+const { opened, message, color, timeout } = useToast()
 </script>
 
 <template>
   <v-snackbar v-model="opened" :color="color" :timeout="timeout">
-    <div class="d-flex align-center justify-space-between">
-      <div>{{ message }}</div>
-      <v-btn icon @click="opened = false">
-        <v-icon>mdi-close</v-icon>
-      </v-btn>
-    </div>
+    {{ message }}
+    <template #actions>
+      <v-icon @click="opened = false"> mdi-close </v-icon>
+    </template>
   </v-snackbar>
 </template>

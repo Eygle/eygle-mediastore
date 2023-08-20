@@ -4,8 +4,10 @@ import { MediaDto } from '@/dto/MediaDto'
 import { MediaGroupDto } from '@/dto/MediaGroupDto'
 import TagsAutocomplete from '@/components/TagsAutocomplete.vue'
 import { useApi } from '@/composables/api'
+import useToast from '@/composables/toast'
 
 const { updateMediaTags, updateMediaGroupTags } = useApi()
+const { toastError } = useToast()
 
 const props = defineProps<{ parent: MediaDto | MediaGroupDto }>()
 
@@ -36,6 +38,7 @@ async function save() {
       opened.value = false
     }
   } catch (e) {
+    toastError()
     console.error(e)
   }
   loading.value = false

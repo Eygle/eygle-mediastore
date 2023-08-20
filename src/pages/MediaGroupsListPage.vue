@@ -8,12 +8,14 @@ import UpsertMediaGroupDialog from '@/components/UpsertMediaGroupDialog.vue'
 import { useDialogs } from '@/composables/dialogs'
 import { useCache } from '@/composables/cache'
 import { useApi } from '@/composables/api'
+import useToast from '@/composables/toast'
 
 const router = useRouter()
 const route = useRoute()
 const { fetchMediaGroups } = useApi()
 const { getCached } = useCache()
 const { openMediaGroupDialog } = useDialogs()
+const { toastError } = useToast()
 
 const groups = ref<MediaGroupDto[]>([])
 const loading = ref(false)
@@ -24,7 +26,12 @@ onBeforeMount(reload)
 
 async function reload(forceRefresh = false) {
   loading.value = true
-  groups.value = await getCached(route.name, () => fetchMediaGroups(route.meta.field!), forceRefresh)
+  try {
+    groups.value = await getCached(route.name, () => fetchMediaGroups(route.meta.field!), forceRefresh)
+  } catch (e) {
+    console.error(e)
+    toastError()
+  }
   loading.value = false
 }
 

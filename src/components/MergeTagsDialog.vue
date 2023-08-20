@@ -2,11 +2,13 @@
 import { ref, watch } from 'vue'
 import { TagDto } from '@/dto/TagDto'
 import { useApi } from '@/composables/api'
+import useToast from '@/composables/toast'
 
 const props = defineProps<{ tags: TagDto[] }>()
 const emits = defineEmits(['save'])
 
 const { mergeTags } = useApi()
+const { toastError } = useToast()
 
 const opened = ref(false)
 const selectedIdx = ref<number>(0)
@@ -23,6 +25,7 @@ async function save() {
     }
   } catch (e) {
     console.error(e)
+    toastError(e)
   }
   loading.value = false
 }
