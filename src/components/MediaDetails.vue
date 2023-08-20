@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { defineProps } from 'vue'
 import { MediaDto } from '@/dto/MediaDto'
-import TagChips from '@/components/commons/TagChips.vue'
+import TagChips from '@/components/TagChips.vue'
 
 defineProps<{ media: MediaDto }>()
 </script>

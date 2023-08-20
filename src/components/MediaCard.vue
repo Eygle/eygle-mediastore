@@ -2,7 +2,7 @@
 import { defineProps } from 'vue'
 import copy from 'copy-to-clipboard'
 import { MediaDto } from '@/dto/MediaDto'
-import TagChips from '@/components/commons/TagChips.vue'
+import TagChips from '@/components/TagChips.vue'
 import { useDialogs } from '@/composables/dialogs'
 import { stringToDuration } from '@/utils/time'
 import { RouteName } from '@/types/RouteName'

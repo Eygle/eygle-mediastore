@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { defineProps } from 'vue'
 import { MediaDto } from '@/dto/MediaDto'
-import UpsertTagsDialog from '@/components/commons/UpsertTagsDialog.vue'
+import UpsertTagsDialog from '@/components/UpsertTagsDialog.vue'
 import { MediaGroupDto } from '@/dto/MediaGroupDto'
 
 defineProps<{ parent: MediaDto | MediaGroupDto; editable?: boolean }>()

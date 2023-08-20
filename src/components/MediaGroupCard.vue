@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { defineProps } from 'vue'
 import { MediaGroupDto } from '@/dto/MediaGroupDto'
-import TagChips from '@/components/commons/TagChips.vue'
+import TagChips from '@/components/TagChips.vue'
 import { useDialogs } from '@/composables/dialogs'
 
 const { openMediaGroupDialog } = useDialogs()

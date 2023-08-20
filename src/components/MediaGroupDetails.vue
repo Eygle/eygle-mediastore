@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import { defineProps } from 'vue'
 import { MediaGroupDto } from '@/dto/MediaGroupDto'
-import TagChips from '@/components/commons/TagChips.vue'
-import MediaCard from '@/components/commons/MediaCard.vue'
+import TagChips from '@/components/TagChips.vue'
+import MediaCard from '@/components/MediaCard.vue'
 
 defineProps<{ group: MediaGroupDto }>()
 </script>

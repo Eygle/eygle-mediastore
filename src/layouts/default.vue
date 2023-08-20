@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 
-import Toolbar from '@/components/commons/Toolbar.vue'
-import Toast from '@/components/commons/Toast.vue'
-import Navbar from '@/components/commons/Navbar.vue'
+import Toolbar from '@/components/Toolbar.vue'
+import Toast from '@/components/Toast.vue'
+import Navbar from '@/components/Navbar.vue'
 
 const miniVariant = ref(false)
 </script>

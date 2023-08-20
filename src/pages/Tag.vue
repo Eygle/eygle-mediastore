@@ -4,8 +4,8 @@ import { useRoute, useRouter } from 'vue-router'
 import { useApi } from '@/composables/api'
 import { MediaGroupDto } from '@/dto/MediaGroupDto'
 import { Field } from '@/types/Field'
-import MediaGroupCard from '@/components/commons/MediaGroupCard.vue'
-import MediaCard from '@/components/commons/MediaCard.vue'
+import MediaGroupCard from '@/components/MediaGroupCard.vue'
+import MediaCard from '@/components/MediaCard.vue'
 import { TagDto } from '@/dto/TagDto'
 
 const route = useRoute()
