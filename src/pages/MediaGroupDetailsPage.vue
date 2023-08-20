@@ -4,8 +4,8 @@ import { onBeforeMount, ref } from 'vue'
 import { MediaGroupDto } from '@/dto/MediaGroupDto'
 import { useRoute, useRouter } from 'vue-router'
 import MediaGroupDetails from '@/components/MediaGroupDetails.vue'
-import UpsertMediaGroupDialog from '@/components/UpsertMediaGroupDialog.vue'
-import UpsertMediaDialog from '@/components/UpsertMediaDialog.vue'
+import UpsertMediaGroupDialog from '@/components/dialogs/UpsertMediaGroupDialog.vue'
+import UpsertMediaDialog from '@/components/dialogs/UpsertMediaDialog.vue'
 import { useDialogs } from '@/composables/dialogs'
 
 const route = useRoute()

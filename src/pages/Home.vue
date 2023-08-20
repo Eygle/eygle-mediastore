@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
-import CreateBatch from '@/components/CreateBatch.vue'
+import CreateBatchDialog from '@/components/dialogs/CreateBatchDialog.vue'
 
 const isCreateBatchOpened = ref(false)
 </script>
@@ -8,7 +8,7 @@ const isCreateBatchOpened = ref(false)
 <template>
   <v-container>
     <v-btn variant="text" @click="isCreateBatchOpened = true">Create Batch</v-btn>
-    <CreateBatch v-model="isCreateBatchOpened" />
+    <CreateBatchDialog v-model="isCreateBatchOpened" />
 
   </v-container>
 </template>
