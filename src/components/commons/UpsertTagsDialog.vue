@@ -50,7 +50,7 @@ watch(opened, () => (tags.value = [...props.parent.tags]))
       <v-btn icon="mdi-plus" variant="text" density="compact" v-bind="props" @click.prevent.stop />
     </template>
 
-    <v-card min-height="440px">
+    <v-card>
       <v-card-title>Manage tags</v-card-title>
       <v-card-text>
         <p class="mb-4">{{ parent.title || parent.name }}</p>
