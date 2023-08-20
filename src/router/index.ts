@@ -19,6 +19,17 @@ const router = createRouter({
       component: () => import('../pages/MediaGroupDetailsPage.vue'),
     },
     {
+      path: '/movies',
+      name: RouteName.Movies,
+      component: () => import('../pages/MediaGroupsListPage.vue'),
+      meta: { field: Field.Movie, navbar: true, icon: 'mdi-movie-open' },
+    },
+    {
+      path: '/movies/:id',
+      name: RouteName.Movie,
+      component: () => import('../pages/MediaGroupDetailsPage.vue'),
+    },
+    {
       path: '/profiles',
       name: RouteName.Profiles,
       component: () => import('../pages/MediaGroupsListPage.vue'),
