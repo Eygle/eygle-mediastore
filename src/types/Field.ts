@@ -1,6 +1,6 @@
 export enum Field {
   Category = 'category',
-  Movie = 'move',
+  Movie = 'movie',
   Profile = 'profile',
   Star = 'star',
   TV = 'tv',

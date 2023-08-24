@@ -31,11 +31,12 @@ export class MediaGroupService {
   }
 
   getAllByField(field: Field) {
-    return this.mediaGroupRepository.find({
-      where: { field },
-      relations: { tags: true, media: true },
-      order: { name: 'asc', tags: { title: 'asc' } },
-    });
+    return this.mediaGroupRepository.createQueryBuilder('groups')
+      .where({ field })
+      .leftJoinAndSelect('groups.tags', 'tag')
+      .leftJoinAndSelect('groups.media', 'media')
+      .orderBy('LOWER(groups.name)', 'ASC')
+      .getMany()
   }
 
   async getAllWithTag(tagId: number): Promise<MediaGroup[]> {
@@ -103,7 +104,7 @@ export class MediaGroupService {
     });
     for (const tag of tags || []) {
       if (!mediaGroup.tags.find(({ id }) => id === tag.id)) {
-        mediaGroup.tags.push(tag)
+        mediaGroup.tags.push(tag);
       }
     }
     return await this.mediaGroupRepository.save(mediaGroup);
