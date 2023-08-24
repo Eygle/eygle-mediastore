@@ -20,6 +20,7 @@ const tags = ref<TagDto[]>([])
 const loading = ref(false)
 const updateLoading = ref(false)
 const search = ref('')
+const page = ref(1)
 const selectedIds = ref<number[]>([])
 const headers = [
   { key: 'title', title: 'Tag' },
@@ -97,12 +98,15 @@ async function remove(tag) {
     <div v-else class="mt-8 h-100">
       <v-data-table
         v-model="selectedIds"
+        v-model:page="page"
         :items="tags"
         :headers="headers"
         :search="search"
+        :page="page"
         items-per-page="25"
         show-select
-        density="compact">
+        density="compact"
+      >
         <template #item.title="{ item }">
           <v-form v-if="editForm?.id === item.raw.id" @submit.prevent="updateCurrentTag()">
             <v-text-field
