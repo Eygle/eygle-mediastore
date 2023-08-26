@@ -32,9 +32,32 @@ async function reload() {
 <template>
   <teleport to="#toolbar">
     <v-btn icon="mdi-arrow-left" variant="flat" @click="router.back()" />
-    <v-spacer />
-    <v-btn icon="mdi-pencil" variant="flat" @click="openMediaGroupDialog(group)" />
-    <v-divider vertical class="mx-4 my-n2" />
+    <template v-if="group">
+      <span class="text-capitalize text-h6">{{ group.name }}</span>
+      <v-chip v-if="!loading && (group.count || group.total)" class="ml-3">
+        <span>{{ group.count || group.total }}</span>
+        <span v-if="group.count" class="ml-1">/ {{ group.total }}</span>
+      </v-chip>
+      <v-spacer />
+      <v-tooltip v-if="group.toFollow" text="To follow">
+        <template #activator="{ props }">
+          <v-icon icon="mdi-youtube-subscription" color="primary" v-bind="props" />
+        </template>
+      </v-tooltip>
+      <v-tooltip v-if="group.toTag" text="To tag">
+        <template #activator="{ props }">
+          <v-icon icon="mdi-tag-plus" color="orange-lighten-2" class="ml-4" v-bind="props" />
+        </template>
+      </v-tooltip>
+      <v-tooltip v-if="group.trimmed" text="Trimmed">
+        <template #activator="{ props }">
+          <v-icon icon="mdi-content-cut" color="green-lighten-2" class="ml-4" v-bind="props" />
+        </template>
+      </v-tooltip>
+      <v-divider vertical class="mx-4 my-n2" />
+      <v-btn icon="mdi-pencil" variant="flat" @click="openMediaGroupDialog(group)" />
+      <v-divider vertical class="mx-4 my-n2" />
+    </template>
     <v-btn icon="mdi-reload" :loading="loading" variant="flat" @click="reload()" />
   </teleport>
   <v-container class="h-100 d-flex flex-column">
@@ -43,44 +66,18 @@ async function reload() {
     </div>
     <template v-else>
       <div v-if="!group"></div>
-      <div v-else>
-        <h2 class="d-flex">
-          {{ group.name }}
-          <span v-if="group.count || group.total" class="d-flex align-center ml-2 text-grey">
-            <span>({{ group.count || group.total }}</span>
-            <span v-if="group.count" class="text-caption ml-2">/ {{ group.total }}</span>
-            <span>)</span>
-          </span>
-          <v-spacer />
-          <v-tooltip v-if="group.toFollow" text="To follow">
-            <template #activator="{ props }">
-              <v-icon icon="mdi-youtube-subscription" color="primary" v-bind="props" />
-            </template>
-          </v-tooltip>
-          <v-tooltip v-if="group.toTag" text="To tag">
-            <template #activator="{ props }">
-              <v-icon icon="mdi-tag-plus" color="orange-lighten-2" class="ml-2" v-bind="props" />
-            </template>
-          </v-tooltip>
-          <v-tooltip v-if="group.trimmed" text="Trimmed">
-            <template #activator="{ props }">
-              <v-icon icon="mdi-content-cut" color="green-lighten-2" class="ml-2" v-bind="props" />
-            </template>
-          </v-tooltip>
-        </h2>
-        <TagChips :parent="group" class="mt-8" />
-
-        <div class="mt-8">
-          <MediaCard v-for="media of group.media" :key="media.id" :media="media" class="mt-4" />
-        </div>
-
-        <a v-if="group.externalLink" :href="group.externalLink" target="_blank" class="d-block mt-8">{{
-          group.externalLink
-        }}</a>
-
-        <div class="mt-8 pl-2 border-s-lg text-pre" v-if="group.comment">
+      <div v-else class="pt-4">
+        <TagChips :parent="group" />
+        <a v-if="group?.externalLink" :href="group.externalLink" target="_blank" class="d-block mt-4">
+          {{ group.externalLink }}
+        </a>
+        <div v-if="group.lastEntry" class="text-grey mt-4">Last entry: {{ group.lastEntryRelativeTime }}</div>
+        <div class="mt-4 pl-2 border-s-lg text-pre" v-if="group.comment">
           {{ group.comment }}
         </div>
+        <v-divider v-if="group?.tags.length || group?.externalLink || group?.lastEntry || group?.comment" class="my-8" />
+
+        <MediaCard v-for="media of group.media" :key="media.id" :media="media" class="mt-4" />
       </div>
       <UpsertMediaGroupDialog v-if="group" :source="group" @saved="(data) => (group = data)" />
       <UpsertMediaDialog v-if="group" :parent="group" @saved="reload" />
