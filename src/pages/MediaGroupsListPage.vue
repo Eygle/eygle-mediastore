@@ -13,7 +13,7 @@ import useToast from '@/composables/toast'
 const router = useRouter()
 const route = useRoute()
 const { fetchMediaGroups } = useApi()
-const { getCached } = useCache()
+const { getCached, drop } = useCache()
 const { openMediaGroupDialog } = useDialogs()
 const { toastError } = useToast()
 
@@ -27,7 +27,7 @@ onBeforeMount(reload)
 async function reload(forceRefresh = false) {
   loading.value = true
   try {
-    groups.value = await getCached(route.name, () => fetchMediaGroups(route.meta.field!), forceRefresh)
+    groups.value = await getCached(route.name!, () => fetchMediaGroups(route.meta.field!), forceRefresh)
   } catch (e) {
     console.error(e)
     toastError()
@@ -37,7 +37,10 @@ async function reload(forceRefresh = false) {
 
 function onSave(group: MediaGroupDto) {
   const idx = groups.value.findIndex(({ id }) => id === group.id)
-  if (idx === -1) return router.push(`${route.path}/${group.id}`)
+  if (idx === -1) {
+    drop(route.name!)
+    return router.push(`${route.path}/${group.id}`)
+  }
 
   groups.value.splice(idx, 1, group)
 }
@@ -64,7 +67,7 @@ watch(page, () => window.scrollTo({ top: 0, behavior: 'smooth' }))
         <template #default="{ items }">
           <MediaGroupCard v-for="group of items" :key="group.raw.id" :group="group.raw" class="mt-4" />
         </template>
-        <template #footer="{ pageCount, items }">
+        <template #footer="{ pageCount }">
           <v-pagination v-if="pageCount > 1" v-model="page" :length="pageCount" class="mt-8 mb-4" />
         </template>
       </v-data-iterator>
