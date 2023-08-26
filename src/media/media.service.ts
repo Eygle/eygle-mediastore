@@ -1,11 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { In, Repository } from 'typeorm';
+import { In, Not, Repository } from 'typeorm';
 import * as path from 'path';
 import { Media } from './media.entity';
 import { TagService } from '../tag/tag.service';
 import { MediaGroupService } from '../media-group/media-group.service';
 import { MediaGroup } from '../media-group/media-group.entity';
+import { Tag } from '../tag/tag.entity';
 
 @Injectable()
 export class MediaService {
@@ -79,6 +80,16 @@ export class MediaService {
       where: { parent: { id: parentId } },
       relations: { tags: true, starring: true },
     });
+  }
+
+  getAllInProgress(): Promise<Media[]> {
+    return this.mediaRepository
+      .createQueryBuilder('media')
+      .where('media.progress IS NOT NULL')
+      .where(`media.progress != '{null,null}'`)
+      .leftJoinAndSelect('media.tags', 'tag')
+      .leftJoinAndSelect('media.starring', 'starring')
+      .getMany();
   }
 
   async update(id: number, data, addTagsToParent: boolean) {
