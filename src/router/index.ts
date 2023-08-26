@@ -85,6 +85,12 @@ const router = createRouter({
       component: () => import('../pages/MediaListPage.vue'),
       meta: { navbar: true, icon: 'mdi-star' },
     },
+    {
+      path: '/commented',
+      name: RouteName.Commented,
+      component: () => import('../pages/MediaListPage.vue'),
+      meta: { navbar: true, icon: 'mdi-comment' },
+    },
   ],
 })
 
