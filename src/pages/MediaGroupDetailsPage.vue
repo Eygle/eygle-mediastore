@@ -1,12 +1,13 @@
 <script lang="ts" setup>
 import { useApi } from '@/composables/api'
-import { onBeforeMount, ref } from 'vue'
+import { onBeforeMount, provide, ref } from 'vue'
 import { MediaGroupDto } from '@/dto/MediaGroupDto'
 import { useRoute, useRouter } from 'vue-router'
 import MediaGroupDetails from '@/components/MediaGroupDetails.vue'
 import UpsertMediaGroupDialog from '@/components/dialogs/UpsertMediaGroupDialog.vue'
 import UpsertMediaDialog from '@/components/dialogs/UpsertMediaDialog.vue'
 import { useDialogs } from '@/composables/dialogs'
+import { Provide } from '@/types/Provide'
 
 const route = useRoute()
 const router = useRouter()
@@ -15,6 +16,8 @@ const { openMediaDialog, openMediaGroupDialog } = useDialogs()
 
 const group = ref<MediaGroupDto | null>(null)
 const loading = ref(false)
+
+provide(Provide.TagsSuggestions, group)
 
 onBeforeMount(reload)
 
