@@ -25,7 +25,7 @@ const routes = router.getRoutes().filter((r) => r.meta.navbar)
           <template #prepend>
             <v-icon :icon="route.meta.icon" />
           </template>
-          <v-list-item-title v-text="route.name" class="text-capitalize" />
+          <v-list-item-title v-text="route.name!.toString().replace('-', ' ')" class="text-capitalize" />
         </v-list-item>
       </template>
     </v-list>

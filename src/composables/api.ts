@@ -22,9 +22,9 @@ export function useApi() {
     return res.data ? plainToInstance(MediaDto, res.data as unknown) : null
   }
 
-  async function fetchMedias(parent: number) {
-    const res = await rest.get(`/media/?filters[parent]=${parent}`)
-    return res.data.map((data) => plainToInstance(MediaGroupDto, data))
+  async function fetchMediaList(endpoint: string) {
+    const res = await rest.get<unknown[]>(`/media/${endpoint}`)
+    return res.data.map((data) => plainToInstance(MediaDto, data))
   }
 
   async function createMediaGroup(data: MediaGroupDto): Promise<MediaGroupDto | null> {
@@ -33,7 +33,7 @@ export function useApi() {
   }
 
   async function fetchMediaGroups(field: Field) {
-    const res = await rest.get(`/media-group/${field}`)
+    const res = await rest.get<unknown[]>(`/media-group/${field}`)
     return res.data.map((data) => plainToInstance(MediaGroupDto, data))
   }
 
@@ -53,12 +53,12 @@ export function useApi() {
   }
 
   async function fetchTags() {
-    const res = await rest.get('/tag')
+    const res = await rest.get<unknown[]>('/tag')
     return res.data?.map((d) => plainToInstance(TagDto, d)) || []
   }
 
   async function findTagsByName(name: string) {
-    const res = await rest.get(`/tag?filters[name]=${name}`)
+    const res = await rest.get<unknown[]>(`/tag?filters[name]=${name}`)
     return (res.data?.map((d) => plainToInstance(TagDto, d)) || []).sort((a, b) => {
       if (a.title.startsWith(name) && !b.title.startsWith(name)) return -1
       if (b.title.startsWith(name) && !a.title.startsWith(name)) return 1
@@ -67,12 +67,12 @@ export function useApi() {
   }
 
   async function fetchAllMediasTaggedBy(id: number): Promise<MediaGroupDto[]> {
-    const res = await rest.get(`/tag/${id}/media`)
+    const res = await rest.get<unknown[]>(`/tag/${id}/media`)
     return res.data?.map((d) => plainToInstance(MediaGroupDto, d)) || []
   }
 
   async function fetchAllMediaGroupsTaggedBy(id: number): Promise<MediaGroupDto[]> {
-    const res = await rest.get(`/tag/${id}/media-group`)
+    const res = await rest.get<unknown[]>(`/tag/${id}/media-group`)
     return res.data?.map((d) => plainToInstance(MediaGroupDto, d)) || []
   }
 
@@ -112,7 +112,7 @@ export function useApi() {
     getMediaGroupById,
     findMediaGroupByName,
     createMedia,
-    fetchMedias,
+    fetchMediaList,
     getTagById,
     fetchTags,
     findTagsByName,

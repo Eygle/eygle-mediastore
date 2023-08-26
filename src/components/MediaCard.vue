@@ -4,7 +4,7 @@ import copy from 'copy-to-clipboard'
 import { MediaDto } from '@/dto/MediaDto'
 import TagChips from '@/components/TagChips.vue'
 import { useDialogs } from '@/composables/dialogs'
-import { stringToDuration } from '@/utils/time'
+import { durationToString, stringToDuration } from '@/utils/time'
 import { RouteName } from '@/types/RouteName'
 import { Field } from '@/types/Field'
 
@@ -63,12 +63,18 @@ defineProps<{ media: MediaDto; noAction?: boolean }>()
                 </router-link>
               </div>
 
-              <div v-if="media.progress.every(Boolean)" class="text-center">
+              <div v-if="media.progress.every(Boolean)" class="text-center mt-4">
                 <v-progress-linear
                   :model-value="stringToDuration(media.progress[0])"
                   :max="stringToDuration(media.progress[1])"
                   class="mb-2" />
-                {{ media.progress[0] }} / {{ media.progress[1] }}
+                <div class="d-flex align-center justify-center">
+                  {{ media.progress[0] }} / {{ media.progress[1] }}
+                  <span class="text-grey-darken-1 text-caption ml-2">
+                    (Remaining:
+                    {{ durationToString(stringToDuration(media.progress[1]) - stringToDuration(media.progress[0])) }})
+                  </span>
+                </div>
               </div>
 
               <div class="mt-4 pl-2 border-s-lg text-pre" v-if="media.comment">

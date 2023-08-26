@@ -67,6 +67,12 @@ const router = createRouter({
       meta: { navbar: true, icon: 'mdi-label', divider: true },
     },
     { path: '/tags/:id', name: RouteName.Tag, component: () => import('../pages/Tag.vue') },
+    {
+      path: '/in-progress',
+      name: RouteName.InProgress,
+      component: () => import('../pages/MediaListPage.vue'),
+      meta: { navbar: true, icon: 'mdi-timer-sand', divider: true },
+    }
   ],
 })
 
