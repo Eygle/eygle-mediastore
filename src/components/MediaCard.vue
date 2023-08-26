@@ -78,7 +78,7 @@ defineProps<{ media: MediaDto; noAction?: boolean }>()
           </div>
           <v-expand-x-transition>
             <div v-if="isHovering">
-              <v-btn icon="mdi-pencil" size="x-large" variant="flat" class="mx-4" @click="openMediaDialog(media)" />
+              <v-btn icon="mdi-pencil" variant="text" class="mr-2" @click="openMediaDialog(media)" />
             </div>
           </v-expand-x-transition>
         </div>

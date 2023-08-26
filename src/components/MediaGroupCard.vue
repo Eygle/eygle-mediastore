@@ -37,12 +37,7 @@ defineProps<{ group: MediaGroupDto; noAction?: boolean }>()
           </div>
           <v-expand-x-transition>
             <div v-if="isHovering">
-              <v-btn
-                icon="mdi-pencil"
-                size="x-large"
-                variant="flat"
-                class="mx-4"
-                @click.prevent="openMediaGroupDialog(group)" />
+              <v-btn icon="mdi-pencil" variant="text" class="mr-2" @click.prevent="openMediaGroupDialog(group)" />
             </div>
           </v-expand-x-transition>
         </div>
