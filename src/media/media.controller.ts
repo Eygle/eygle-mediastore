@@ -35,6 +35,11 @@ export class MediaController {
     return this.mediaService.getAllToSee();
   }
 
+  @Get('/best')
+  getBest() {
+    return this.mediaService.getAllBest();
+  }
+
   @Patch(':id')
   update(@Param() { id }: { id: number }, @Body() body, @Query() query: MediaGroupQuery) {
     return this.mediaService.update(+id, body, query.addTagsToParent || false)

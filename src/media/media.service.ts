@@ -1,12 +1,11 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { In, Not, Repository } from 'typeorm';
-import * as path from 'path';
-import { Media } from './media.entity';
-import { TagService } from '../tag/tag.service';
-import { MediaGroupService } from '../media-group/media-group.service';
-import { MediaGroup } from '../media-group/media-group.entity';
-import { Tag } from '../tag/tag.entity';
+import { Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { In, Repository } from "typeorm";
+import * as path from "path";
+import { Media } from "./media.entity";
+import { TagService } from "../tag/tag.service";
+import { MediaGroupService } from "../media-group/media-group.service";
+import { MediaGroup } from "../media-group/media-group.entity";
 
 @Injectable()
 export class MediaService {
@@ -97,7 +96,15 @@ export class MediaService {
       where: { toSee: true },
       relations: { tags: true, starring: true },
       order: { tags: { title: 'asc' } },
-    })
+    });
+  }
+
+  getAllBest(): Promise<Media[]> {
+    return this.mediaRepository.find({
+      where: { isBest: true },
+      relations: { tags: true, starring: true },
+      order: { tags: { title: 'asc' } },
+    });
   }
 
   async update(id: number, data, addTagsToParent: boolean) {
