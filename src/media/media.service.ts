@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { In, Repository } from 'typeorm';
+import { In, IsNull, Not, Repository } from 'typeorm';
+import { FindOptionsWhere } from 'typeorm/find-options/FindOptionsWhere';
 import * as path from 'path';
 import { Media } from './media.entity';
 import { TagService } from '../tag/tag.service';
@@ -52,16 +53,7 @@ export class MediaService {
       where: { tags: { id: tagId } },
       select: { id: true },
     });
-    const mediaList = await this.mediaRepository.find({
-      where: { id: In(ids.map(({ id }) => id)) },
-      relations: { tags: true, parent: { tags: true }, starring: true },
-      order: {
-        parent: { name: 'asc', tags: { title: 'asc' } },
-        title: 'asc',
-        tags: { title: 'asc' },
-      },
-    });
-    return groupByParents(mediaList);
+    return this.getAllGroupedByParents({ id: In(ids.map(({ id }) => id)) })
   }
 
   getAllFromParent(parentId: number): Promise<Media[]> {
@@ -89,29 +81,15 @@ export class MediaService {
   }
 
   async getAllToSee(): Promise<MediaGroup[]> {
-    const mediaList = await this.mediaRepository.find({
-      where: { toSee: true },
-      relations: { tags: true, starring: true, parent: { tags: true } },
-      order: {
-        parent: { name: 'asc', tags: { title: 'asc' } },
-        title: 'asc',
-        tags: { title: 'asc' },
-      },
-    });
-    return groupByParents(mediaList);
+    return this.getAllGroupedByParents({ toSee: true });
   }
 
   async getAllBest(): Promise<MediaGroup[]> {
-    const mediaList = await this.mediaRepository.find({
-      where: { isBest: true },
-      relations: { tags: true, starring: true, parent: { tags: true } },
-      order: {
-        parent: { name: 'asc', tags: { title: 'asc' } },
-        title: 'asc',
-        tags: { title: 'asc' },
-      },
-    });
-    return groupByParents(mediaList);
+    return this.getAllGroupedByParents({ isBest: true });
+  }
+
+  async getAllCommented(): Promise<MediaGroup[]> {
+    return this.getAllGroupedByParents({ comment: Not(IsNull()) });
   }
 
   async update(id: number, data, addTagsToParent: boolean) {
@@ -152,5 +130,18 @@ export class MediaService {
     if (await this.mediaRepository.save(mediaGroup)) {
       return this.findOneById(id);
     }
+  }
+
+  private async getAllGroupedByParents(where: FindOptionsWhere<Media>) {
+    const mediaList = await this.mediaRepository.find({
+      where,
+      relations: { tags: true, starring: true, parent: { tags: true } },
+      order: {
+        parent: { name: 'asc', tags: { title: 'asc' } },
+        title: 'asc',
+        tags: { title: 'asc' },
+      },
+    });
+    return groupByParents(mediaList);
   }
 }

@@ -1,11 +1,19 @@
-import { Body, Controller, Get, Param, Patch, Post, Query } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { MediaService } from './media.service';
 
 type MediaGroupQuery = {
   filters?: {
     parent: string;
   };
-  addTagsToParent?: boolean
+  addTagsToParent?: boolean;
 };
 
 @Controller('media')
@@ -20,7 +28,7 @@ export class MediaController {
   @Get()
   getAll(@Query() query: MediaGroupQuery) {
     if (query.filters?.parent) {
-      return this.mediaService.getAllFromParent(+query.filters.parent)
+      return this.mediaService.getAllFromParent(+query.filters.parent);
     }
     return this.mediaService.getAll();
   }
@@ -40,13 +48,22 @@ export class MediaController {
     return this.mediaService.getAllBest();
   }
 
+  @Get('/commented')
+  getCommented() {
+    return this.mediaService.getAllCommented();
+  }
+
   @Patch(':id')
-  update(@Param() { id }: { id: number }, @Body() body, @Query() query: MediaGroupQuery) {
-    return this.mediaService.update(+id, body, query.addTagsToParent || false)
+  update(
+    @Param() { id }: { id: number },
+    @Body() body,
+    @Query() query: MediaGroupQuery,
+  ) {
+    return this.mediaService.update(+id, body, query.addTagsToParent || false);
   }
 
   @Patch(':id/tags')
   updateTags(@Param() { id }: { id: number }, @Body() body) {
-    return this.mediaService.updateTags(id, body)
+    return this.mediaService.updateTags(id, body);
   }
 }
