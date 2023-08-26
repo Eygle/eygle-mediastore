@@ -2,10 +2,10 @@ import { Expose } from 'class-transformer'
 
 export class TagDto {
   @Expose()
-  id: number
+  id!: number
 
   @Expose()
-  title: string
+  title!: string
 
   @Expose()
   count?: number

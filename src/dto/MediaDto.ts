@@ -5,19 +5,19 @@ import { durationToString, stringToDuration } from '@/utils/time'
 
 export class MediaDto {
   @Expose()
-  id: number
+  id!: number
 
   @Expose()
-  title: string
+  title!: string
 
   @Expose()
-  files: string[]
+  files!: string[]
 
   @Expose()
-  toSee: boolean
+  toSee!: boolean
 
   @Expose()
-  isBest: boolean
+  isBest!: boolean
 
   @Expose()
   @Transform(({ value, type }) => {
@@ -25,17 +25,17 @@ export class MediaDto {
     if (type === TransformationType.CLASS_TO_PLAIN) return [stringToDuration(value[0]), stringToDuration(value[1])]
     return [durationToString(value?.[0]), durationToString(value?.[1])]
   })
-  progress: [string | null, string | null]
+  progress!: [string | null, string | null]
 
   @Expose()
-  comment: string
+  comment?: string
 
   @Expose()
-  parent: MediaGroupDto
+  parent!: MediaGroupDto
 
   @Expose()
-  tags: TagDto[]
+  tags!: TagDto[]
 
   @Expose()
-  starring: MediaGroupDto[]
+  starring?: MediaGroupDto[]
 }
