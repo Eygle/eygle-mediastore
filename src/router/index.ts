@@ -72,7 +72,13 @@ const router = createRouter({
       name: RouteName.InProgress,
       component: () => import('../pages/MediaListPage.vue'),
       meta: { navbar: true, icon: 'mdi-timer-sand', divider: true },
-    }
+    },
+    {
+      path: '/to-see',
+      name: RouteName.ToSee,
+      component: () => import('../pages/MediaListPage.vue'),
+      meta: { navbar: true, icon: 'mdi-eye' },
+    },
   ],
 })
 

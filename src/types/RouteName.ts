@@ -13,4 +13,5 @@ export enum RouteName {
   Tags = 'tags',
   Tag = 'tag',
   InProgress = 'in-progress',
+  ToSee = 'to-see',
 }
