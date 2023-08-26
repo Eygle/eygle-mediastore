@@ -92,6 +92,14 @@ export class MediaService {
       .getMany();
   }
 
+  getAllToSee(): Promise<Media[]> {
+    return this.mediaRepository.find({
+      where: { toSee: true },
+      relations: { tags: true, starring: true },
+      order: { tags: { title: 'asc' } },
+    })
+  }
+
   async update(id: number, data, addTagsToParent: boolean) {
     data.files = data.files.filter(Boolean);
     if (!data.title && data.files[0]) {

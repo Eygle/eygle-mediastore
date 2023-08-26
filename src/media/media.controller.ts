@@ -30,6 +30,11 @@ export class MediaController {
     return this.mediaService.getAllInProgress();
   }
 
+  @Get('/to-see')
+  getToSee() {
+    return this.mediaService.getAllToSee();
+  }
+
   @Patch(':id')
   update(@Param() { id }: { id: number }, @Body() body, @Query() query: MediaGroupQuery) {
     return this.mediaService.update(+id, body, query.addTagsToParent || false)
