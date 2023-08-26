@@ -1,11 +1,12 @@
-import { Injectable } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import { In, Repository } from "typeorm";
-import * as path from "path";
-import { Media } from "./media.entity";
-import { TagService } from "../tag/tag.service";
-import { MediaGroupService } from "../media-group/media-group.service";
-import { MediaGroup } from "../media-group/media-group.entity";
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { In, Repository } from 'typeorm';
+import * as path from 'path';
+import { Media } from './media.entity';
+import { TagService } from '../tag/tag.service';
+import { MediaGroupService } from '../media-group/media-group.service';
+import { MediaGroup } from '../media-group/media-group.entity';
+import { groupByParents } from '../utils/group-by-parents';
 
 @Injectable()
 export class MediaService {
@@ -46,7 +47,7 @@ export class MediaService {
     });
   }
 
-  async getAllWithTag(tagId: number): Promise<Media[]> {
+  async getAllWithTag(tagId: number): Promise<MediaGroup[]> {
     const ids = await this.mediaRepository.find({
       where: { tags: { id: tagId } },
       select: { id: true },
@@ -60,18 +61,7 @@ export class MediaService {
         tags: { title: 'asc' },
       },
     });
-
-    return mediaList.reduce((acc: any[], media) => {
-      const parent: MediaGroup =
-        acc.find(({ id }) => id === media.parent.id) || media.parent;
-      if (parent === media.parent) {
-        acc.push(parent);
-        parent.media = [];
-      }
-      parent.media.push(media);
-      delete media.parent;
-      return acc;
-    }, [] as MediaGroup[]);
+    return groupByParents(mediaList);
   }
 
   getAllFromParent(parentId: number): Promise<Media[]> {
@@ -81,30 +71,47 @@ export class MediaService {
     });
   }
 
-  getAllInProgress(): Promise<Media[]> {
-    return this.mediaRepository
+  async getAllInProgress(): Promise<MediaGroup[]> {
+    const mediaList = await this.mediaRepository
       .createQueryBuilder('media')
       .where('media.progress IS NOT NULL')
       .where(`media.progress != '{null,null}'`)
       .leftJoinAndSelect('media.tags', 'tag')
       .leftJoinAndSelect('media.starring', 'starring')
+      .leftJoinAndSelect('media.parent', 'parent')
+      .leftJoinAndSelect('parent.tags', 'parent_tag')
+      .addOrderBy('parent.name', 'ASC')
+      .addOrderBy('parent_tag.title', 'ASC')
+      .addOrderBy('media.title', 'ASC')
+      .addOrderBy('tag.title', 'ASC')
       .getMany();
+    return groupByParents(mediaList);
   }
 
-  getAllToSee(): Promise<Media[]> {
-    return this.mediaRepository.find({
+  async getAllToSee(): Promise<MediaGroup[]> {
+    const mediaList = await this.mediaRepository.find({
       where: { toSee: true },
-      relations: { tags: true, starring: true },
-      order: { tags: { title: 'asc' } },
+      relations: { tags: true, starring: true, parent: { tags: true } },
+      order: {
+        parent: { name: 'asc', tags: { title: 'asc' } },
+        title: 'asc',
+        tags: { title: 'asc' },
+      },
     });
+    return groupByParents(mediaList);
   }
 
-  getAllBest(): Promise<Media[]> {
-    return this.mediaRepository.find({
+  async getAllBest(): Promise<MediaGroup[]> {
+    const mediaList = await this.mediaRepository.find({
       where: { isBest: true },
-      relations: { tags: true, starring: true },
-      order: { tags: { title: 'asc' } },
+      relations: { tags: true, starring: true, parent: { tags: true } },
+      order: {
+        parent: { name: 'asc', tags: { title: 'asc' } },
+        title: 'asc',
+        tags: { title: 'asc' },
+      },
     });
+    return groupByParents(mediaList);
   }
 
   async update(id: number, data, addTagsToParent: boolean) {
