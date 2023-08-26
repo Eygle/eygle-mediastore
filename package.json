@@ -13,7 +13,7 @@
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
-    "deploy": "nest build && scp -r dist package*.json tsconfig*.json pm2.config.js eygle@192.168.0.21:/var/www/eygle-mediastore-back"
+    "deploy": "nest build && scp -r dist package*.json tsconfig*.json pm2.config.js eygle@192.168.0.21:/var/www/eygle-mediastore-back && ssh eygle@192.168.0.21 \"export PATH='/home/eygle/.nvm/versions/node/v16.13.0/bin'; pm2 restart eygle-mediastore-back\""
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
