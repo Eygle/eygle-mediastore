@@ -54,7 +54,7 @@ export class MediaGroupService {
   findOneById(id: number) {
     return this.mediaGroupRepository.findOne({
       where: { id },
-      relations: { tags: true, media: { tags: true } },
+      relations: { tags: true, media: { tags: true, starring: true } },
       order: {
         media: { title: 'asc', tags: { title: 'asc' } },
         tags: { title: 'asc' },
