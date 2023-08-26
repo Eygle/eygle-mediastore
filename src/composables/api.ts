@@ -24,7 +24,7 @@ export function useApi() {
 
   async function fetchMediaList(endpoint: string) {
     const res = await rest.get<unknown[]>(`/media/${endpoint}`)
-    return res.data.map((data) => plainToInstance(MediaDto, data))
+    return res.data.map((data) => plainToInstance(MediaGroupDto, data))
   }
 
   async function createMediaGroup(data: MediaGroupDto): Promise<MediaGroupDto | null> {
