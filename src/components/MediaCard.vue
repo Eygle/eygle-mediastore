@@ -43,7 +43,7 @@ defineProps<{ media: MediaDto; noAction?: boolean }>()
                     <p dir="rtl" class="text-caption text-truncate">{{ file.substring(1) }}</p>
                     <v-tooltip text="Copied !" open-on-click :open-on-hover="false" close-on-content-click>
                       <template #activator="{ props }">
-                        <v-icon icon="mdi-content-copy" class="ml-2" @click="copy(file)" v-bind="props" />
+                        <v-icon icon="mdi-content-copy" class="ml-2" @click.prevent.stop="copy(file)" v-bind="props" />
                       </template>
                     </v-tooltip>
                   </div>
