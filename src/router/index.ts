@@ -79,6 +79,12 @@ const router = createRouter({
       component: () => import('../pages/MediaListPage.vue'),
       meta: { navbar: true, icon: 'mdi-eye' },
     },
+    {
+      path: '/best',
+      name: RouteName.Best,
+      component: () => import('../pages/MediaListPage.vue'),
+      meta: { navbar: true, icon: 'mdi-star' },
+    },
   ],
 })
 
