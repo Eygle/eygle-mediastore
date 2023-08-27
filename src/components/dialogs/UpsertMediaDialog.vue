@@ -75,7 +75,8 @@ function initForm(): MediaDto {
             </div>
           </div>
           <v-checkbox v-model="form.isBest" color="primary" label="Is best?" hide-details />
-          <v-checkbox v-model="form.toSee" label="To see?" />
+          <v-checkbox v-model="form.toSee" label="To see?" hide-details />
+          <v-checkbox v-model="form.toTag" label="To tag?" />
           <div class="d-flex align-center">
             <v-text-field
               v-model="form.progress[0]"
@@ -91,6 +92,7 @@ function initForm(): MediaDto {
               placeholder="[hh:][mm:]ss"
               :rules="[rules.duration()]" />
           </div>
+          <v-text-field v-model="form.externalLink" label="Link" />
           <v-textarea v-model="form.comment" label="Comment" />
         </v-form>
       </v-card-text>
