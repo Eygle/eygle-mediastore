@@ -34,7 +34,7 @@ export class MediaDto {
   progress!: [string | null, string | null]
 
   @Expose()
-  comment?: string
+  comment!: string | null
 
   @Expose()
   @Type(() => MediaGroupDto)
