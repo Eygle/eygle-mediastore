@@ -37,6 +37,16 @@ export class MediaGroupController {
     return this.mediaGroupService.findAllByName(name);
   }
 
+  @Get('/to-tag')
+  getToTag() {
+    return this.mediaGroupService.getAllToTag();
+  }
+
+  @Get('/commented')
+  getCommented() {
+    return this.mediaGroupService.getAllCommented();
+  }
+
   @Get(':field')
   getByField(@Param() { field }: { field: Field }) {
     return this.mediaGroupService.getAllByField(field);

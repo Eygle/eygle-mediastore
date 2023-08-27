@@ -48,6 +48,11 @@ export class MediaController {
     return this.mediaService.getAllBest();
   }
 
+  @Get('/to-tag')
+  getToTag() {
+    return this.mediaService.getAllToTag();
+  }
+
   @Get('/commented')
   getCommented() {
     return this.mediaService.getAllCommented();

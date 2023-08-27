@@ -1,6 +1,6 @@
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { In, Raw, Repository } from 'typeorm';
+import { In, IsNull, Not, Raw, Repository } from "typeorm";
 import { MediaGroup } from './media-group.entity';
 import { TagService } from '../tag/tag.service';
 import { Field } from '../types/Field';
@@ -48,7 +48,7 @@ export class MediaGroupService {
     });
     return this.mediaGroupRepository.find({
       where: { id: In(res.map(({ id }) => id)) },
-      relations: { tags: true },
+      relations: { tags: true, starring: true },
       order: { name: 'asc', tags: { title: 'asc' } },
     });
   }
@@ -88,6 +88,22 @@ export class MediaGroupService {
         ),
         field: In([Field.Profile, Field.Star]),
       },
+    });
+  }
+
+  async getAllToTag(): Promise<MediaGroup[]> {
+    return this.mediaGroupRepository.find({
+      where: { toTag: true },
+      relations: { tags: true, starring: true },
+      order: { name: 'asc', tags: { title: 'asc' } },
+    });
+  }
+
+  async getAllCommented(): Promise<MediaGroup[]> {
+    return this.mediaGroupRepository.find({
+      where: { comment: Not(IsNull()) },
+      relations: { tags: true, starring: true },
+      order: { name: 'asc', tags: { title: 'asc' } },
     });
   }
 
