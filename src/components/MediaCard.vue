@@ -16,11 +16,11 @@ defineProps<{ media: MediaDto; noAction?: boolean }>()
 </script>
 
 <template>
-  <v-card>
+  <v-card border>
     <v-hover :disabled="noAction">
       <template #default="{ isHovering, props }">
-        <div class="d-flex align-center" v-bind="props">
-          <div class="flex-grow-1">
+        <div class="d-flex align-center w-100" v-bind="props">
+          <div class="flex-grow-1 w-100">
             <v-card-title class="d-flex justify-space-between">
               <p class="text-truncate">{{ media.title }}</p>
               <StatusIcon :media="media" />
@@ -28,8 +28,8 @@ defineProps<{ media: MediaDto; noAction?: boolean }>()
             <v-card-text class="pt-4">
               <TagChips class="pb-4 mt-n2" :parent="media" />
 
-              <v-card v-if="media.files.length" class="d-flex" color="grey-darken-3" variant="flat">
-                <v-card-text class="pb-2">
+              <v-card v-if="media.files.length" class="d-flex w-100" color="grey-darken-3" variant="flat">
+                <v-card-text class="pb-2 w-100">
                   <div v-for="file of media.files" class="d-flex justify-space-between mb-2">
                     <p dir="rtl" class="text-caption text-truncate">{{ file.substring(1) }}</p>
                     <v-tooltip text="Copied !" open-on-click :open-on-hover="false" close-on-content-click>
