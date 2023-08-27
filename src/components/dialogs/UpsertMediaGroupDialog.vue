@@ -28,6 +28,9 @@ async function save() {
   try {
     if (!valid.value) return
     loading.value = true
+    if (!model.value.comment) {
+      model.value.comment = null
+    }
     const res = await (source.value ? updateMediaGroup(model.value) : createMediaGroup(model.value))
     emits('saved', res)
     loading.value = false

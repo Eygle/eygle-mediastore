@@ -10,6 +10,7 @@ import { Provide } from '@/types/Provide'
 import TagChips from '@/components/TagChips.vue'
 import MediaCard from '@/components/MediaCard.vue'
 import StatusIcon from '@/components/StatusIcon.vue'
+import StarringList from '@/components/StarringList.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -55,6 +56,7 @@ async function reload() {
       <div v-if="!group"></div>
       <div v-else class="pt-4">
         <TagChips :parent="group" />
+        <StarringList v-if="group.starring.length" :value="group.starring" class="mt-4" />
         <div v-if="group.comment || group.externalLink || group.lastEntry" class="d-flex mt-4 justify-space-between">
           <div :class="{ 'pl-2 border-s-lg text-pre': group.comment }">{{ group.comment }}</div>
           <div class="text-right">

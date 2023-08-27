@@ -38,7 +38,7 @@ export class MediaGroupDto {
   toTag!: boolean
 
   @Expose()
-  comment?: string
+  comment: string|null
 
   @Expose()
   @Type(() => TagDto)

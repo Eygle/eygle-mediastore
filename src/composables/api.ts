@@ -27,6 +27,11 @@ export function useApi() {
     return res.data.map((data) => plainToInstance(MediaGroupDto, data))
   }
 
+  async function fetchMediaGroupsList(endpoint: string) {
+    const res = await rest.get<unknown[]>(`/media-group/${endpoint}`)
+    return res.data.map((data) => plainToInstance(MediaGroupDto, data))
+  }
+
   async function createMediaGroup(data: MediaGroupDto): Promise<MediaGroupDto | null> {
     const res = await rest.post<unknown>('/media-group', instanceToPlain(data))
     return res?.data ? plainToInstance(MediaGroupDto, res.data as unknown) : null
@@ -119,6 +124,7 @@ export function useApi() {
     findMediaGroupsByName,
     createMedia,
     fetchMediaList,
+    fetchMediaGroupsList,
     getTagById,
     fetchTags,
     findTagsByName,

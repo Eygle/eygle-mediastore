@@ -7,6 +7,7 @@ declare module 'vue-router' {
     icon?: string
     title?: string
     field?: Field
-    taggableParent?: true
+    taggableParent?: boolean
+    groups?: boolean
   }
 }
