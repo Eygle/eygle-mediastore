@@ -8,6 +8,7 @@ import { durationToString, stringToDuration } from '@/utils/time'
 import { RouteName } from '@/types/RouteName'
 import { Field } from '@/types/Field'
 import StatusIcon from '@/components/StatusIcon.vue'
+import StarringList from '@/components/StarringList.vue'
 
 const { openMediaDialog } = useDialogs()
 
@@ -40,18 +41,7 @@ defineProps<{ media: MediaDto; noAction?: boolean }>()
                 </v-card-text>
               </v-card>
 
-              <div v-if="media.starring?.length" class="mt-4">
-                Starring:
-                <router-link
-                  v-for="star of media.starring"
-                  :key="`star-${star.id}`"
-                  :to="{
-                    name: star.field === Field.Profile ? RouteName.Profile : RouteName.Star,
-                    params: { id: star.id },
-                  }">
-                  {{ star.name }}
-                </router-link>
-              </div>
+              <StarringList v-if="media.starring?.length" :value="media.starring" class="mt-4" />
 
               <div v-if="media.progress.every(Boolean)" class="text-center mt-4">
                 <v-progress-linear

@@ -1,4 +1,4 @@
-import { Expose, Transform, TransformationType } from 'class-transformer'
+import { Expose, Transform, TransformationType, Type } from 'class-transformer'
 import { TagDto } from '@/dto/TagDto'
 import { MediaGroupDto } from '@/dto/MediaGroupDto'
 import { durationToString, stringToDuration } from '@/utils/time'
@@ -37,11 +37,15 @@ export class MediaDto {
   comment?: string
 
   @Expose()
+  @Type(() => MediaGroupDto)
   parent!: MediaGroupDto
 
   @Expose()
+  @Type(() => TagDto)
   tags!: TagDto[]
 
   @Expose()
-  starring?: MediaGroupDto[]
+  @Type(() => MediaGroupDto)
+  @Transform(({ value }) => value ?? [], { toClassOnly: true })
+  starring!: MediaGroupDto[]
 }

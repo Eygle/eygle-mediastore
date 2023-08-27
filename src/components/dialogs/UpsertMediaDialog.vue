@@ -9,6 +9,7 @@ import { useDialogs } from '@/composables/dialogs'
 import { rules } from '@/utils/form-validator'
 import { useRoute } from 'vue-router'
 import useToast from '@/composables/toast'
+import StarringAutocomplete from '@/components/StarringAutocomplete.vue'
 
 const route = useRoute()
 const { createMedia, updateMedia } = useApi()
@@ -74,6 +75,7 @@ function initForm(): MediaDto {
               <v-btn v-else class="ml-4" icon="mdi-minus" variant="text" @click="form.files.splice(idx, 1)" />
             </div>
           </div>
+          <StarringAutocomplete v-model="form.starring" hide-details class="mt-4" />
           <v-checkbox v-model="form.isBest" color="primary" label="Is best?" hide-details />
           <v-checkbox v-model="form.toSee" label="To see?" hide-details />
           <v-checkbox v-model="form.toTag" label="To tag?" />

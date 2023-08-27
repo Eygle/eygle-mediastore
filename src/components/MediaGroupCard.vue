@@ -4,6 +4,7 @@ import { MediaGroupDto } from '@/dto/MediaGroupDto'
 import TagChips from '@/components/TagChips.vue'
 import { useDialogs } from '@/composables/dialogs'
 import StatusIcon from '@/components/StatusIcon.vue'
+import StarringList from '@/components/StarringList.vue'
 
 const { openMediaGroupDialog } = useDialogs()
 
@@ -53,6 +54,7 @@ defineProps<{ group: MediaGroupDto; noAction?: boolean }>()
             </v-card-title>
             <v-card-text :class="{ 'pb-0': !group.tags?.length }">
               <TagChips :parent="group" />
+              <StarringList v-if="group.starring?.length" :value="group.starring" class="mt-4" />
               <slot />
             </v-card-text>
           </div>

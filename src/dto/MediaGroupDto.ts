@@ -49,7 +49,8 @@ export class MediaGroupDto {
   media!: MediaDto[]
 
   @Expose()
-  @Type(() => MediaDto)
+  @Type(() => MediaGroupDto)
+  @Transform(({ value }) => value ?? [], { toClassOnly: true })
   starring!: MediaGroupDto[]
 
   get nbBest() {

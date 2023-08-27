@@ -8,6 +8,7 @@ import { useApi } from '@/composables/api'
 import { useDialogs } from '@/composables/dialogs'
 import { rules } from '@/utils/form-validator'
 import useToast from '@/composables/toast'
+import StarringAutocomplete from '@/components/StarringAutocomplete.vue'
 
 const { createMediaGroup, updateMediaGroup } = useApi()
 const { upsertMediaGroupDialogOpened: opened, mediaGroup: source } = useDialogs()
@@ -40,7 +41,7 @@ async function save() {
 function initForm(): MediaGroupDto {
   return source.value
     ? instanceToInstance(source.value!)
-    : plainToInstance(MediaGroupDto, { field: props.field, tags: [] })
+    : plainToInstance(MediaGroupDto, { field: props.field, tags: [], starring: [] })
 }
 </script>
 
@@ -64,6 +65,7 @@ function initForm(): MediaGroupDto {
             {{ tag.title }}
             <v-icon icon="mdi-close-circle ml-1 mr-n1" size="18" @click="model.tags.splice(idx, 1)" />
           </v-chip>
+          <StarringAutocomplete v-model="model.starring" hide-details class="mt-4" />
           <v-checkbox v-model="model.trimmed" label="Trimmed" hide-details />
           <div class="d-flex align-center mb-4">
             <v-text-field
