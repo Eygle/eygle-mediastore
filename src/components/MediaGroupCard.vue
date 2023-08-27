@@ -8,7 +8,7 @@ import StarringList from '@/components/StarringList.vue'
 
 const { openMediaGroupDialog } = useDialogs()
 
-defineProps<{ group: MediaGroupDto; noAction?: boolean }>()
+defineProps<{ group: MediaGroupDto; noAction?: boolean; includeComment?: boolean }>()
 </script>
 
 <template>
@@ -55,6 +55,9 @@ defineProps<{ group: MediaGroupDto; noAction?: boolean }>()
             <v-card-text :class="{ 'pb-0': !group.tags?.length }">
               <TagChips :parent="group" />
               <StarringList v-if="group.starring?.length" :value="group.starring" class="mt-4" />
+              <div v-if="includeComment && group.comment" class="mt-4 pl-2 border-s-lg text-pre">
+                {{ group.comment }}
+              </div>
               <slot />
             </v-card-text>
           </div>

@@ -32,7 +32,7 @@ const tabs = computed(() => groupsByFields.value.map((group) => group[0].field))
     <v-window v-else v-model="tab">
       <v-window-item v-for="(field, idx) of tabs" :value="idx">
         <template v-for="group of groupsByFields[idx]">
-          <MediaGroupCard v-if="[Field.Profile, Field.Star].includes(field)" :group="group" class="mt-4 pb-4">
+          <MediaGroupCard v-if="[Field.Profile, Field.Star].includes(field)" :group="group" include-comment class="mt-4 pb-4">
             <MediaCard v-for="media of group.media" :key="`media-${media.id}`" :media="media" no-action class="mt-4" />
           </MediaGroupCard>
           <template v-else>
