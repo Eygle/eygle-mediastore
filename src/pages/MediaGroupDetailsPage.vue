@@ -55,13 +55,16 @@ async function reload() {
       <div v-if="!group"></div>
       <div v-else class="pt-4">
         <TagChips :parent="group" />
-        <a v-if="group?.externalLink" :href="group.externalLink" target="_blank" class="d-block mt-4">
-          {{ group.externalLink }}
-        </a>
-        <div v-if="group.lastEntry" class="text-grey mt-4">Last entry: {{ group.lastEntryRelativeTime }}</div>
-        <div class="mt-4 pl-2 border-s-lg text-pre" v-if="group.comment">
-          {{ group.comment }}
+        <div v-if="group.comment || group.externalLink || group.lastEntry" class="d-flex mt-4 justify-space-between">
+          <div class="pl-2 border-s-lg text-pre">{{ group.comment }}</div>
+          <div class="text-right">
+            <a v-if="group?.externalLink" :href="group.externalLink" target="_blank" class="d-block">
+              {{ group.externalLink }}
+            </a>
+            <div v-if="group.lastEntry" class="text-grey">Last entry: {{ group.lastEntryRelativeTime }}</div>
+          </div>
         </div>
+
         <v-divider v-if="group?.tags.length || group?.externalLink || group?.lastEntry || group?.comment" class="my-8" />
 
         <MediaCard v-for="media of group.media" :key="media.id" :media="media" class="mt-4" />
