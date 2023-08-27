@@ -15,7 +15,9 @@ const tag = ref<TagDto | null>()
 const groups = ref<MediaGroupDto[]>([])
 const loading = ref(false)
 
-onBeforeMount(async () => {
+onBeforeMount(reload)
+
+async function reload() {
   loading.value = true
   const tagId = +route.params.id
   const [tagInfo, fromMedia, fromGroups]: [TagDto | null, MediaGroupDto[], MediaGroupDto[]] = await Promise.all([
@@ -27,17 +29,16 @@ onBeforeMount(async () => {
   tag.value = tagInfo
   groups.value = mergeMediaAndParents(fromMedia, fromGroups)
   loading.value = false
-})
+}
 </script>
 
 <template>
-  <v-container>
+  <v-container class="h-100">
     <teleport to="#toolbar">
       <v-btn icon="mdi-arrow-left" variant="flat" @click="router.back()" />
       <span class="text-capitalize text-h6">{{ tag?.title }}</span>
       <v-chip v-if="!loading" class="ml-3">{{ groups.reduce((count, g) => count + g.media?.length || 1, 0) }}</v-chip>
     </teleport>
-    <div v-if="loading"></div>
-    <MediaGroupsByFields v-else :groups="groups" />
+    <MediaGroupsByFields :groups="groups" :loading="loading" @refresh="reload" />
   </v-container>
 </template>

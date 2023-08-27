@@ -51,10 +51,7 @@ async function reload(forceRefresh = false) {
     <v-divider vertical class="mx-4 my-n2" />
     <v-btn icon="mdi-reload" :loading="loading" variant="flat" @click="reload(true)" />
   </teleport>
-  <v-container class="h-100 d-flex flex-column">
-    <div v-if="loading" class="d-flex align-center justify-center flex-grow-1">
-      <v-progress-circular indeterminate size="100" />
-    </div>
-    <MediaGroupsByFields v-else :groups="groups" />
+  <v-container class="h-100">
+    <MediaGroupsByFields :groups="groups" :loading="loading" @refresh="reload(true)" />
   </v-container>
 </template>
