@@ -31,12 +31,14 @@ export class MediaGroupService {
   }
 
   getAllByField(field: Field) {
-    return this.mediaGroupRepository.createQueryBuilder('groups')
+    return this.mediaGroupRepository
+      .createQueryBuilder('groups')
       .where({ field })
       .leftJoinAndSelect('groups.tags', 'tag')
       .leftJoinAndSelect('groups.media', 'media')
+      .leftJoinAndSelect('groups.starring', 'starring')
       .orderBy('LOWER(groups.name)', 'ASC')
-      .getMany()
+      .getMany();
   }
 
   async getAllWithTag(tagId: number): Promise<MediaGroup[]> {
@@ -54,7 +56,11 @@ export class MediaGroupService {
   findOneById(id: number) {
     return this.mediaGroupRepository.findOne({
       where: { id },
-      relations: { tags: true, media: { tags: true, starring: true } },
+      relations: {
+        tags: true,
+        media: { tags: true, starring: true },
+        starring: true,
+      },
       order: {
         media: { title: 'asc', tags: { title: 'asc' } },
         tags: { title: 'asc' },
@@ -69,6 +75,18 @@ export class MediaGroupService {
           (alias) =>
             `LOWER(${alias}) LIKE '${name.toLocaleLowerCase().trim()}'`,
         ),
+      },
+    });
+  }
+
+  findAllByName(name: string) {
+    return this.mediaGroupRepository.find({
+      where: {
+        name: Raw(
+          (alias) =>
+            `LOWER(${alias}) LIKE '${name.toLocaleLowerCase().trim()}%'`,
+        ),
+        field: In([Field.Profile, Field.Star]),
       },
     });
   }

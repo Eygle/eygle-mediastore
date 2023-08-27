@@ -58,6 +58,10 @@ export class MediaGroup {
   @OneToMany(() => Media, (media) => media.parent)
   media: Media[];
 
+  @ManyToMany(() => MediaGroup)
+  @JoinTable()
+  starring: MediaGroup[];
+
   @CreateDateColumn()
   createdAd: Date;
 
