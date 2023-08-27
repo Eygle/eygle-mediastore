@@ -56,7 +56,7 @@ async function reload() {
       <div v-else class="pt-4">
         <TagChips :parent="group" />
         <div v-if="group.comment || group.externalLink || group.lastEntry" class="d-flex mt-4 justify-space-between">
-          <div class="pl-2 border-s-lg text-pre">{{ group.comment }}</div>
+          <div :class="{ 'pl-2 border-s-lg text-pre': group.comment }">{{ group.comment }}</div>
           <div class="text-right">
             <a v-if="group?.externalLink" :href="group.externalLink" target="_blank" class="d-block">
               {{ group.externalLink }}
