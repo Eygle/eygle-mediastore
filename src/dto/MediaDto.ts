@@ -20,6 +20,12 @@ export class MediaDto {
   isBest!: boolean
 
   @Expose()
+  toTag!: boolean
+
+  @Expose()
+  externalLink?: string
+
+  @Expose()
   @Transform(({ value, type }) => {
     if (type === TransformationType.CLASS_TO_CLASS) return value || [null, null]
     if (type === TransformationType.CLASS_TO_PLAIN) return [stringToDuration(value[0]), stringToDuration(value[1])]

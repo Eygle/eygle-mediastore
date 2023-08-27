@@ -64,7 +64,7 @@ const router = createRouter({
       path: '/tags',
       name: RouteName.Tags,
       component: () => import('../pages/Tags.vue'),
-      meta: { navbar: true, icon: 'mdi-label', divider: true },
+      meta: { navbar: true, icon: 'mdi-tag', divider: true },
     },
     { path: '/tags/:id', name: RouteName.Tag, component: () => import('../pages/Tag.vue') },
     {
@@ -84,6 +84,12 @@ const router = createRouter({
       name: RouteName.Best,
       component: () => import('../pages/MediaListPage.vue'),
       meta: { navbar: true, icon: 'mdi-star' },
+    },
+    {
+      path: '/to-tag',
+      name: RouteName.ToTag,
+      component: () => import('../pages/MediaListPage.vue'),
+      meta: { navbar: true, icon: 'mdi-tag-plus' },
     },
     {
       path: '/commented',

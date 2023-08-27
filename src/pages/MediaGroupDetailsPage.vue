@@ -9,6 +9,7 @@ import { useDialogs } from '@/composables/dialogs'
 import { Provide } from '@/types/Provide'
 import TagChips from '@/components/TagChips.vue'
 import MediaCard from '@/components/MediaCard.vue'
+import StatusIcon from '@/components/StatusIcon.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -39,21 +40,7 @@ async function reload() {
         <span v-if="group.count" class="ml-1">/ {{ group.total }}</span>
       </v-chip>
       <v-spacer />
-      <v-tooltip v-if="group.toFollow" text="To follow">
-        <template #activator="{ props }">
-          <v-icon icon="mdi-youtube-subscription" color="primary" v-bind="props" />
-        </template>
-      </v-tooltip>
-      <v-tooltip v-if="group.toTag" text="To tag">
-        <template #activator="{ props }">
-          <v-icon icon="mdi-tag-plus" color="orange-lighten-2" class="ml-4" v-bind="props" />
-        </template>
-      </v-tooltip>
-      <v-tooltip v-if="group.trimmed" text="Trimmed">
-        <template #activator="{ props }">
-          <v-icon icon="mdi-content-cut" color="green-lighten-2" class="ml-4" v-bind="props" />
-        </template>
-      </v-tooltip>
+      <StatusIcon :group="group" spaced />
       <v-divider vertical class="mx-4 my-n2" />
       <v-btn icon="mdi-pencil" variant="flat" @click="openMediaGroupDialog(group)" />
       <v-divider vertical class="mx-4 my-n2" />

@@ -3,6 +3,7 @@ import { defineProps } from 'vue'
 import { MediaGroupDto } from '@/dto/MediaGroupDto'
 import TagChips from '@/components/TagChips.vue'
 import { useDialogs } from '@/composables/dialogs'
+import StatusIcon from '@/components/StatusIcon.vue'
 
 const { openMediaGroupDialog } = useDialogs()
 
@@ -10,9 +11,7 @@ defineProps<{ group: MediaGroupDto; noAction?: boolean }>()
 </script>
 
 <template>
-  <v-card
-    :to="{ name: group.field, params: { id: group.id } }"
-    :class="{ trimmed: group.trimmed, 'to-tag': group.toTag }">
+  <v-card :to="{ name: group.field, params: { id: group.id } }">
     <v-hover :disabled="noAction">
       <template #default="{ isHovering, props }">
         <div class="d-flex align-center" v-bind="props">
@@ -23,12 +22,34 @@ defineProps<{ group: MediaGroupDto; noAction?: boolean }>()
                 ({{ group.count || group.total }})
               </span>
               <v-spacer />
-              <div v-if="group.nbToSee" class="ml-4 d-flex align-center text-secondary">
-                <v-icon icon="mdi-eye" size="22" class="mr-1" /> {{ group.nbToSee }}
-              </div>
-              <div v-if="group.nbBest" class="ml-4 d-flex align-center text-primary">
-                <v-icon icon="mdi-star" size="22" class="mr-1" /> {{ group.nbBest }}
-              </div>
+              <StatusIcon :group="group" />
+
+              <v-tooltip v-if="group.nbToSee" :text="`${group.nbToSee} media to see`">
+                <template #activator="{ props }">
+                  <v-badge
+                    :content="group.nbToSee"
+                    v-bind="props"
+                    color="secondary"
+                    bordered
+                    class="pt-2 ml-2"
+                    :class="group.nbToSee < 10 ? 'pr-1' : 'pr-3'">
+                    <v-icon icon="mdi-eye" color="secondary" />
+                  </v-badge>
+                </template>
+              </v-tooltip>
+              <v-tooltip v-if="group.nbBest" :text="`${group.nbBest} best media`">
+                <template #activator="{ props }">
+                  <v-badge
+                    :content="group.nbBest"
+                    v-bind="props"
+                    color="primary"
+                    bordered
+                    class="pt-2 ml-2"
+                    :class="group.nbBest < 10 ? 'pr-1' : 'pr-3'">
+                    <v-icon icon="mdi-star" color="primary" />
+                  </v-badge>
+                </template>
+              </v-tooltip>
             </v-card-title>
             <v-card-text :class="{ 'pb-0': !group.tags?.length }">
               <TagChips :parent="group" />
@@ -45,13 +66,3 @@ defineProps<{ group: MediaGroupDto; noAction?: boolean }>()
     </v-hover>
   </v-card>
 </template>
-
-<style lang="scss" scoped>
-.trimmed {
-  background-color: rgba(76, 175, 80, 0.1);
-}
-
-.to-tag {
-  background-color: rgba(255, 152, 0, 0.1);
-}
-</style>

@@ -7,6 +7,7 @@ import { useDialogs } from '@/composables/dialogs'
 import { durationToString, stringToDuration } from '@/utils/time'
 import { RouteName } from '@/types/RouteName'
 import { Field } from '@/types/Field'
+import StatusIcon from '@/components/StatusIcon.vue'
 
 const { openMediaDialog } = useDialogs()
 
@@ -21,18 +22,7 @@ defineProps<{ media: MediaDto; noAction?: boolean }>()
           <div class="flex-grow-1">
             <v-card-title class="d-flex justify-space-between">
               <p class="text-truncate">{{ media.title }}</p>
-              <div>
-                <v-tooltip v-if="media.toSee" text="To see">
-                  <template #activator="{ props }">
-                    <v-icon icon="mdi-eye" color="blue" class="ml-2" v-bind="props" />
-                  </template>
-                </v-tooltip>
-                <v-tooltip v-if="media.isBest" text="Best">
-                  <template #activator="{ props }">
-                    <v-icon icon="mdi-star" color="primary" class="ml-2" v-bind="props" />
-                  </template>
-                </v-tooltip>
-              </div>
+              <StatusIcon :media="media" />
             </v-card-title>
             <v-card-text class="pt-4">
               <TagChips class="pb-4 mt-n2" :parent="media" />
@@ -79,6 +69,9 @@ defineProps<{ media: MediaDto; noAction?: boolean }>()
 
               <div class="mt-4 pl-2 border-s-lg text-pre" v-if="media.comment">
                 {{ media.comment }}
+              </div>
+              <div v-if="media.externalLink" class="mt-4 text-right">
+                <a :href="media.externalLink" target="_blank">{{ media.externalLink }}</a>
               </div>
             </v-card-text>
           </div>
