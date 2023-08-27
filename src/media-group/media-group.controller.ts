@@ -47,6 +47,11 @@ export class MediaGroupController {
     return this.mediaGroupService.getAllCommented();
   }
 
+  @Get('/to-follow')
+  getToFollow() {
+    return this.mediaGroupService.getAllToFollow();
+  }
+
   @Get(':field')
   getByField(@Param() { field }: { field: Field }) {
     return this.mediaGroupService.getAllByField(field);

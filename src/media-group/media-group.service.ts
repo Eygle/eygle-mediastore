@@ -107,6 +107,14 @@ export class MediaGroupService {
     });
   }
 
+  async getAllToFollow(): Promise<MediaGroup[]> {
+    return this.mediaGroupRepository.find({
+      where: { toFollow: true },
+      relations: { tags: true, starring: true },
+      order: { name: 'asc', tags: { title: 'asc' } },
+    });
+  }
+
   async update(id: number, data: Partial<MediaGroup>) {
     for (const tag of data.tags || []) {
       tag.id = await this.tagService.getOrCreate(tag.title);
