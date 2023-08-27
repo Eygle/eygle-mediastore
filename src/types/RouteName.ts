@@ -17,4 +17,5 @@ export enum RouteName {
   Best = 'best',
   ToTag = 'to-tag',
   Commented = 'commented',
+  ToFollow = 'to-follow',
 }

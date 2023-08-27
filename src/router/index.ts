@@ -97,6 +97,12 @@ const router = createRouter({
       component: () => import('../pages/MediaGroupsByFieldsPage.vue'),
       meta: { navbar: true, icon: 'mdi-comment', groups: true },
     },
+    {
+      path: '/to-follow',
+      name: RouteName.ToFollow,
+      component: () => import('../pages/MediaGroupsListPage.vue'),
+      meta: { navbar: true, icon: 'mdi-youtube-subscription', field: RouteName.ToFollow },
+    },
   ],
 })
 

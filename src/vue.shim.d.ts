@@ -6,7 +6,7 @@ declare module 'vue-router' {
     navbar?: boolean
     icon?: string
     title?: string
-    field?: Field
+    field?: Field | 'to-follow'
     taggableParent?: boolean
     groups?: boolean
   }
