@@ -1,6 +1,16 @@
-import { Column, CreateDateColumn, Entity, Index, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
-import { Tag } from "../tag/tag.entity";
-import { MediaGroup } from "../media-group/media-group.entity";
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  Index,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
+import { Tag } from '../tag/tag.entity';
+import { MediaGroup } from '../media-group/media-group.entity';
 
 @Entity()
 export class Media {
@@ -20,6 +30,13 @@ export class Media {
   @Column({ default: false })
   @Index()
   isBest: boolean;
+
+  @Column({ default: false })
+  @Index()
+  toTag: boolean;
+
+  @Column({ nullable: true })
+  externalLink: string;
 
   @Column('int', { array: true, nullable: true })
   @Index()
@@ -41,8 +58,8 @@ export class Media {
   starring: MediaGroup[];
 
   @CreateDateColumn()
-  createdAd: Date
+  createdAd: Date;
 
   @UpdateDateColumn()
-  updatedAt: Date
+  updatedAt: Date;
 }
