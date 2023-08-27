@@ -38,7 +38,7 @@ async function reload() {
       <span class="text-capitalize text-h6">{{ group.name }}</span>
       <v-chip v-if="!loading && (group.count || group.total)" class="ml-3">
         <span>{{ group.count || group.total }}</span>
-        <span v-if="group.count" class="ml-1">/ {{ group.total }}</span>
+        <span v-if="group.total && group.count" class="ml-1">/ {{ group.total }}</span>
       </v-chip>
       <v-spacer />
       <StatusIcon :group="group" spaced />
