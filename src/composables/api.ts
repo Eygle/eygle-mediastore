@@ -57,8 +57,10 @@ export function useApi() {
     return res.data ? plainToInstance(MediaGroupDto, res.data as unknown) : null
   }
 
-  async function findMediaGroupsByName(name: string) {
-    const res = await rest.get<MediaGroupDto[]>(`/media-group/search/${name}`)
+  async function findMediaGroupsByName(name: string, fields?: Field[]) {
+    const res = await rest.get<MediaGroupDto[]>(
+      `/media-group/search/${name}${fields ? `?fields=${fields.join(',')}` : ''}`
+    )
     return res.data.map((data) => plainToInstance(MediaGroupDto, data))
   }
 

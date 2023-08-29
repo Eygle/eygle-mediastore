@@ -8,7 +8,7 @@ import { useApi } from '@/composables/api'
 import { useDialogs } from '@/composables/dialogs'
 import { rules } from '@/utils/form-validator'
 import useToast from '@/composables/toast'
-import StarringAutocomplete from '@/components/StarringAutocomplete.vue'
+import MediaGroupAutocomplete from '@/components/MediaGroupAutocomplete.vue'
 import useConfirm from '@/composables/confirm'
 import ConfirmDialog from '@/components/dialogs/ConfirmDialog.vue'
 
@@ -46,10 +46,6 @@ async function save() {
 }
 
 function initForm(): MediaGroupDto {
-  console.log('has source value', !!source.value)
-  console.log('init form', source.value
-      ? instanceToInstance(source.value!)
-      : plainToInstance(MediaGroupDto, { field: props.field, tags: [], starring: [], ...defaultValues.value }))
   return source.value
     ? instanceToInstance(source.value!)
     : plainToInstance(MediaGroupDto, { field: props.field, tags: [], starring: [], ...defaultValues.value })
@@ -89,7 +85,13 @@ function confirmDelete() {
             {{ tag.title }}
             <v-icon icon="mdi-close-circle ml-1 mr-n1" size="18" @click="model.tags.splice(idx, 1)" />
           </v-chip>
-          <StarringAutocomplete v-model="model.starring" hide-details class="mt-4" />
+          <MediaGroupAutocomplete
+            v-model="model.starring"
+            :fields="[Field.Profile, Field.Star]"
+            label="Starring"
+            multiple
+            hide-details
+            class="mt-4" />
           <v-checkbox v-model="model.trimmed" label="Trimmed" hide-details />
           <div class="d-flex align-center mb-4">
             <v-text-field
