@@ -8,6 +8,7 @@ import { TagService } from '../tag/tag.service';
 import { MediaGroupService } from '../media-group/media-group.service';
 import { MediaGroup } from '../media-group/media-group.entity';
 import { groupByParents } from '../utils/group-by-parents';
+import { Field } from '../types/Field';
 
 @Injectable()
 export class MediaService {
@@ -53,7 +54,7 @@ export class MediaService {
       where: { tags: { id: tagId } },
       select: { id: true },
     });
-    return this.getAllGroupedByParents({ id: In(ids.map(({ id }) => id)) })
+    return this.getAllGroupedByParents({ id: In(ids.map(({ id }) => id)) });
   }
 
   getAllFromParent(parentId: number): Promise<Media[]> {
@@ -124,14 +125,20 @@ export class MediaService {
   }
 
   async updateTags(id: number, tags) {
-    const mediaGroup = await this.mediaRepository.findOne({
+    const media = await this.mediaRepository.findOne({
       where: { id },
+      relations: { parent: true },
     });
     for (const tag of tags || []) {
       tag.id = await this.tagService.getOrCreate(tag.title);
     }
-    mediaGroup.tags = tags;
-    if (await this.mediaRepository.save(mediaGroup)) {
+    media.tags = tags;
+
+    if ([Field.Profile, Field.Star].includes(media.parent?.field)) {
+      await this.mediaGroupService.addTags(media.parent.id, media.tags);
+    }
+
+    if (await this.mediaRepository.save(media)) {
       return this.findOneById(id);
     }
   }
