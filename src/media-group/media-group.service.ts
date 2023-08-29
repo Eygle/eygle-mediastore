@@ -38,6 +38,7 @@ export class MediaGroupService {
       .leftJoinAndSelect('groups.media', 'media')
       .leftJoinAndSelect('groups.starring', 'starring')
       .orderBy('LOWER(groups.name)', 'ASC')
+      .addOrderBy('tag.title', 'ASC')
       .getMany();
   }
 
