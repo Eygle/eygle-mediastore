@@ -40,7 +40,7 @@ watchDebounced(
     :label="label"
     :multiple="multiple"
     :chips="multiple"
-    auto-select-first
+    :auto-select-first="!multiple"
     item-title="name"
     return-object />
 </template>
