@@ -5,6 +5,7 @@ import {
   Index,
   JoinTable,
   ManyToMany,
+  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -21,7 +22,8 @@ export class MediaGroup {
   @Column()
   name: string;
 
-  @Column({ type: 'enum', enum: Field })
+  @Column({ type: 'enum', enum: Field, nullable: true })
+  @Index()
   field: Field;
 
   @Column({ default: false })
@@ -61,6 +63,13 @@ export class MediaGroup {
   @ManyToMany(() => MediaGroup)
   @JoinTable()
   starring: MediaGroup[];
+
+  @ManyToOne(() => MediaGroup, { nullable: true })
+  @Index()
+  parent: MediaGroup;
+
+  @OneToMany(() => MediaGroup, (group) => group.parent)
+  groups: MediaGroup[];
 
   @CreateDateColumn()
   createdAd: Date;

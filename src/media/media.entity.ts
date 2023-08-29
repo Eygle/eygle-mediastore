@@ -42,7 +42,7 @@ export class Media {
   @Index()
   progress: number[];
 
-  @ManyToOne(() => MediaGroup)
+  @ManyToOne(() => MediaGroup, { nullable: true })
   @Index()
   parent: MediaGroup;
 

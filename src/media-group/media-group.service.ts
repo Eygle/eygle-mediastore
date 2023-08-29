@@ -1,6 +1,6 @@
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { In, IsNull, Not, Raw, Repository } from "typeorm";
+import { In, IsNull, Not, Raw, Repository } from 'typeorm';
 import { MediaGroup } from './media-group.entity';
 import { TagService } from '../tag/tag.service';
 import { Field } from '../types/Field';
@@ -59,12 +59,15 @@ export class MediaGroupService {
       where: { id },
       relations: {
         tags: true,
-        media: { tags: true, starring: true },
+        media: { tags: true, starring: true, parent: true },
+        groups: { tags: true, parent: true, media: true },
+        parent: true,
         starring: true,
       },
       order: {
         media: { title: 'asc', tags: { title: 'asc' } },
         tags: { title: 'asc' },
+        groups: { tags: { title: 'asc' } },
       },
     });
   }
@@ -80,14 +83,14 @@ export class MediaGroupService {
     });
   }
 
-  findAllByName(name: string) {
+  findAllByName(name: string, fields: Field[]) {
     return this.mediaGroupRepository.find({
       where: {
         name: Raw(
           (alias) =>
             `LOWER(${alias}) LIKE '${name.toLocaleLowerCase().trim()}%'`,
         ),
-        field: In([Field.Profile, Field.Star]),
+        ...(fields ? { field: In([Field.Profile, Field.Star]) } : undefined),
       },
     });
   }

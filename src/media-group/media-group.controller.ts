@@ -1,12 +1,13 @@
 import {
   Body,
-  Controller, Delete,
+  Controller,
+  Delete,
   Get,
   Param,
   Patch,
   Post,
-  Query
-} from "@nestjs/common";
+  Query,
+} from '@nestjs/common';
 import { MediaGroupService } from './media-group.service';
 import { Field } from '../types/Field';
 
@@ -33,8 +34,11 @@ export class MediaGroupController {
   }
 
   @Get('/search/:name')
-  searchByName(@Param() { name }: { name: string }) {
-    return this.mediaGroupService.findAllByName(name);
+  searchByName(
+    @Param() { name }: { name: string },
+    @Query() { fields }: { fields?: Field[] },
+  ) {
+    return this.mediaGroupService.findAllByName(name, fields);
   }
 
   @Get('/to-tag')

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { MediaGroup } from '../media-group/media-group.entity';
-import { In, Repository } from 'typeorm';
+import { In, IsNull, Not, Repository } from 'typeorm';
 import { Field } from '../types/Field';
 
 @Injectable()
@@ -14,8 +14,11 @@ export class AdminService {
   // Following bug where tags where not added to parent throughout UpsertTagsDialog
   async synchronizeParentTags() {
     const groups = await this.mediaGroupRepository.find({
-      where: { field: In([Field.Profile, Field.Star]) },
-      relations: { tags: true, media: { tags: true } },
+      where: [
+        { field: In([Field.Profile, Field.Star]) },
+        { parent: Not(IsNull()) },
+      ],
+      relations: { tags: true, media: { tags: true, parent: true } },
     });
 
     const res = [];
