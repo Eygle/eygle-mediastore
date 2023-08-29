@@ -71,6 +71,7 @@ function confirmDelete() {
       <v-card-title>{{ source ? 'Edit' : 'Create' }} media</v-card-title>
       <v-card-text>
         <v-form v-model="valid">
+          <MediaGroupAutocomplete v-if="source" v-model="form.parent" label="parent" />
           <v-text-field v-model="form.title" label="Title" />
           <TagsAutocomplete v-model:input="tagInput" :exclude="form.tags" @add-tag="(tag) => form.tags.push(tag)" />
           <v-chip v-for="(tag, idx) of form.tags" class="mr-2 mt-2">

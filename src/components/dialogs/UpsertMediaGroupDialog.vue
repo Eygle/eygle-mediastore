@@ -75,6 +75,7 @@ function confirmDelete() {
             label="Field"
             hide-details="auto"
             class="mb-4" />
+          <MediaGroupAutocomplete v-if="source" v-model="model.parent" label="Parent" />
           <v-text-field v-model="model.name" label="Name" autofocus :rules="[rules.required()]" hide-details="auto" />
           <TagsAutocomplete
             v-model:input="tagInput"
