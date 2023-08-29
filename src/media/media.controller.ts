@@ -1,12 +1,12 @@
 import {
   Body,
-  Controller,
+  Controller, Delete,
   Get,
   Param,
   Patch,
   Post,
-  Query,
-} from '@nestjs/common';
+  Query
+} from "@nestjs/common";
 import { MediaService } from './media.service';
 
 type MediaGroupQuery = {
@@ -70,5 +70,10 @@ export class MediaController {
   @Patch(':id/tags')
   updateTags(@Param() { id }: { id: number }, @Body() body) {
     return this.mediaService.updateTags(id, body);
+  }
+
+  @Delete(':id')
+  delete(@Param() { id }: { id: string }) {
+    return this.mediaService.delete(+id);
   }
 }

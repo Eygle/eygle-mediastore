@@ -152,4 +152,8 @@ export class MediaGroupService {
     }
     return await this.mediaGroupRepository.save(mediaGroup);
   }
+
+  delete(id: number) {
+    return this.mediaGroupRepository.delete(id);
+  }
 }

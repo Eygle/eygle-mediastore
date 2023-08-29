@@ -155,4 +155,8 @@ export class MediaService {
     });
     return groupByParents(mediaList);
   }
+
+  delete(id: number) {
+    return this.mediaRepository.delete(id);
+  }
 }
