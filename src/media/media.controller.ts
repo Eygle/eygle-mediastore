@@ -1,19 +1,19 @@
 import {
   Body,
-  Controller, Delete,
+  Controller,
+  Delete,
   Get,
   Param,
   Patch,
   Post,
-  Query
-} from "@nestjs/common";
+  Query,
+} from '@nestjs/common';
 import { MediaService } from './media.service';
 
 type MediaGroupQuery = {
   filters?: {
     parent: string;
   };
-  addTagsToParent?: boolean;
 };
 
 @Controller('media')
@@ -21,8 +21,8 @@ export class MediaController {
   constructor(private mediaService: MediaService) {}
 
   @Post()
-  create(@Body() body, @Query() query: MediaGroupQuery) {
-    return this.mediaService.create(body, query.addTagsToParent || false);
+  create(@Body() body) {
+    return this.mediaService.create(body);
   }
 
   @Get()
@@ -59,12 +59,8 @@ export class MediaController {
   }
 
   @Patch(':id')
-  update(
-    @Param() { id }: { id: number },
-    @Body() body,
-    @Query() query: MediaGroupQuery,
-  ) {
-    return this.mediaService.update(+id, body, query.addTagsToParent || false);
+  update(@Param() { id }: { id: number }, @Body() body) {
+    return this.mediaService.update(+id, body);
   }
 
   @Patch(':id/tags')

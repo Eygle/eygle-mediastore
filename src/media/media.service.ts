@@ -8,7 +8,7 @@ import { TagService } from '../tag/tag.service';
 import { MediaGroupService } from '../media-group/media-group.service';
 import { MediaGroup } from '../media-group/media-group.entity';
 import { groupByParents } from '../utils/group-by-parents';
-import { Field } from '../types/Field';
+import { Tag } from '../tag/tag.entity';
 
 @Injectable()
 export class MediaService {
@@ -18,7 +18,7 @@ export class MediaService {
     private tagService: TagService,
   ) {}
 
-  async create(data: Partial<Media>, addTagsToParent: boolean) {
+  async create(data: Partial<Media>) {
     data.files = data.files.filter(Boolean);
     if (!data.title && data.files[0]) {
       data.title = path.basename(data.files[0]);
@@ -30,7 +30,7 @@ export class MediaService {
       tag.id = await this.tagService.getOrCreate(tag.title);
     }
 
-    if (addTagsToParent && entity.tags?.length) {
+    if (entity.tags?.length) {
       await this.mediaGroupService.addTags(entity.parent.id, entity.tags);
     }
 
@@ -97,7 +97,7 @@ export class MediaService {
     return this.getAllGroupedByParents({ comment: Not(IsNull()) });
   }
 
-  async update(id: number, data, addTagsToParent: boolean) {
+  async update(id: number, data: Media) {
     data.files = data.files.filter(Boolean);
     if (!data.title && data.files[0]) {
       data.title = path.basename(data.files[0]);
@@ -110,7 +110,7 @@ export class MediaService {
     data.id = id;
     const updated = await this.mediaRepository.preload(data);
 
-    if (addTagsToParent && data.tags?.length) {
+    if (data.tags?.length) {
       const media = await this.mediaRepository.findOne({
         where: { id },
         select: { id: true, parent: { id: true } },
@@ -124,7 +124,7 @@ export class MediaService {
     }
   }
 
-  async updateTags(id: number, tags) {
+  async updateTags(id: number, tags: Tag[]) {
     const media = await this.mediaRepository.findOne({
       where: { id },
       relations: { parent: true },
@@ -134,7 +134,7 @@ export class MediaService {
     }
     media.tags = tags;
 
-    if ([Field.Profile, Field.Star].includes(media.parent?.field)) {
+    if (media.parent && media.tags?.length) {
       await this.mediaGroupService.addTags(media.parent.id, media.tags);
     }
 

@@ -146,8 +146,13 @@ export class MediaGroupService {
   async addTags(id: number, tags: Tag[]) {
     const mediaGroup = await this.mediaGroupRepository.findOne({
       where: { id },
-      relations: { tags: true },
+      relations: { tags: true, parent: true },
     });
+    if (
+      ![Field.Profile, Field.Star].includes(mediaGroup.field) &&
+      !mediaGroup.parent
+    )
+      return;
     for (const tag of tags || []) {
       if (!mediaGroup.tags.find(({ id }) => id === tag.id)) {
         mediaGroup.tags.push(tag);
