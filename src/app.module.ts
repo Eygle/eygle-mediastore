@@ -6,6 +6,7 @@ import { MediaModule } from './media/media.module';
 import { MediaGroupModule } from './media-group/media-group.module';
 import { TagModule } from './tag/tag.module';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
+import { AdminModule } from './admin/admin.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
     MediaModule,
     MediaGroupModule,
     TagModule,
+    AdminModule,
   ],
   controllers: [AppController],
   providers: [AppService],
