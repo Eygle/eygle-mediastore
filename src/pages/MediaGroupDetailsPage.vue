@@ -30,6 +30,14 @@ async function reload() {
   group.value = await getMediaGroupById(+route.params.id)
   loading.value = false
 }
+
+function onSave(saved: MediaGroupDto) {
+  if (saved.id === group.value?.id) {
+    group.value = saved
+  } else {
+    router.push({ name: route.name!, params: { id: saved.id } })
+  }
+}
 </script>
 
 <template>
@@ -80,7 +88,7 @@ async function reload() {
         <v-divider v-if="group.groups?.length && group.media?.length" class="my-8" />
         <MediaCard v-for="media of group.media" :key="media.id" :media="media" class="mt-4" @tags-saved="reload" />
       </div>
-      <UpsertMediaGroupDialog v-if="group" @saved="(data) => (group = data)" />
+      <UpsertMediaGroupDialog v-if="group" @saved="onSave" />
       <UpsertMediaDialog v-if="group" :parent="group" @saved="reload" />
       <v-btn icon="mdi-plus" color="primary" class="fab top" size="large" @click="openMediaDialog()" />
     </template>
