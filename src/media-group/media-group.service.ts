@@ -67,7 +67,7 @@ export class MediaGroupService {
       order: {
         media: { title: 'asc', tags: { title: 'asc' } },
         tags: { title: 'asc' },
-        groups: { tags: { title: 'asc' } },
+        groups: { name: 'asc', tags: { title: 'asc' } },
       },
     });
   }
