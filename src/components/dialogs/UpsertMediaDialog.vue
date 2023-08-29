@@ -37,9 +37,7 @@ async function save() {
     if (!form.value.comment) {
       form.value.comment = null
     }
-    const res = await (source.value
-      ? updateMedia(form.value, route.meta.taggableParent)
-      : createMedia(form.value, route.meta.taggableParent))
+    const res = await (source.value ? updateMedia(form.value) : createMedia(form.value))
     emits('saved', res)
     loading.value = false
     opened.value = false

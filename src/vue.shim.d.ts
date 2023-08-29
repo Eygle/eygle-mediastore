@@ -7,7 +7,6 @@ declare module 'vue-router' {
     icon?: string
     title?: string
     field?: Field | 'to-follow'
-    taggableParent?: boolean
     groups?: boolean
   }
 }
