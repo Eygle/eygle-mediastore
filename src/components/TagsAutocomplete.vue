@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { defineProps, reactive, ref, watch } from 'vue'
+import { computed, defineProps, reactive, ref, watch } from 'vue'
 import { onClickOutside, watchDebounced } from '@vueuse/core'
 import { TagDto } from '@/dto/TagDto'
 import { useApi } from '@/composables/api'
@@ -7,10 +7,14 @@ import { plainToInstance } from 'class-transformer'
 
 const { findTagsByName } = useApi()
 
-const props = defineProps<{ exclude: TagDto[]; autofocus?: boolean }>()
-const emits = defineEmits<{ (e: 'addTag', value: TagDto): void }>()
+const props = defineProps<{ input: string, exclude: TagDto[]; autofocus?: boolean }>()
+const emits = defineEmits<{ (e: 'update:input', value: string): void, (e: 'addTag', value: TagDto): void }>()
 
-const input = ref<string>('')
+const input = computed({
+  get: () => props.input,
+  set: (value) => emits('update:input', value),
+})
+
 const list = ref<HTMLElement>()
 const textField = ref<HTMLElement>()
 const opened = ref(false)

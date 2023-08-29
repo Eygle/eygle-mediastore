@@ -22,6 +22,7 @@ const emits = defineEmits(['saved'])
 const form = ref(initForm())
 const loading = ref(false)
 const valid = ref(false)
+const tagInput = ref('')
 
 watch(source, () => (form.value = initForm()), { deep: true })
 
@@ -52,13 +53,13 @@ function initForm(): MediaDto {
 </script>
 
 <template>
-  <v-dialog v-model="opened" width="700" persistent="">
+  <v-dialog v-model="opened" width="700" persistent>
     <v-card>
       <v-card-title>{{ source ? 'Edit' : 'Create' }} media</v-card-title>
       <v-card-text>
         <v-form v-model="valid">
           <v-text-field v-model="form.title" label="Title" />
-          <TagsAutocomplete :exclude="form.tags" @add-tag="(tag) => form.tags.push(tag)" />
+          <TagsAutocomplete v-model:input="tagInput" :exclude="form.tags" @add-tag="(tag) => form.tags.push(tag)" />
           <v-chip v-for="(tag, idx) of form.tags" class="mr-2 mt-2">
             {{ tag.title }}
             <v-icon icon="mdi-close-circle ml-1 mr-n1" size="18" @click="form.tags.splice(idx, 1)" />
@@ -104,7 +105,7 @@ function initForm(): MediaDto {
       <v-card-actions>
         <v-spacer />
         <v-btn :disabled="loading" @click="opened = false">Cancel</v-btn>
-        <v-btn :loading="loading" color="primary" :disabled="!valid" @click="save">{{
+        <v-btn :loading="loading" color="primary" :disabled="!valid || !!tagInput" @click="save">{{
           source ? 'Edit' : 'Create'
         }}</v-btn>
       </v-card-actions>

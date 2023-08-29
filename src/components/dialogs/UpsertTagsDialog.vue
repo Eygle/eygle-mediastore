@@ -16,6 +16,7 @@ const suggest = inject<Ref<MediaGroupDto | MediaDto> | null>(Provide.TagsSuggest
 
 const opened = ref(false)
 const loading = ref(false)
+const input = ref('')
 const tags = ref([...props.parent.tags])
 
 const addedTags = computed(() =>
@@ -61,7 +62,12 @@ watch(opened, () => (tags.value = [...props.parent.tags]))
       <v-card-title>Manage tags</v-card-title>
       <v-card-text>
         <p class="mb-4">{{ parent.title || parent.name }}</p>
-        <TagsAutocomplete :exclude="tags" autofocus @add-tag="(tag) => tags.push(tag)" class="mb-4" />
+        <TagsAutocomplete
+          v-model:input="input"
+          :exclude="tags"
+          autofocus
+          @add-tag="(tag) => tags.push(tag)"
+          class="mb-4" />
 
         <v-chip v-for="(tag, idx) of tags" class="mr-2 mb-2">
           {{ tag.title }}
@@ -100,7 +106,7 @@ watch(opened, () => (tags.value = [...props.parent.tags]))
       <v-card-actions>
         <v-spacer />
         <v-btn variant="text" text="Cancel" :disabled="loading" @click="opened = false" />
-        <v-btn variant="text" text="Save" color="primary" :loading="loading" @click="save" />
+        <v-btn variant="text" text="Save" color="primary" :loading="loading" :disabled="!!input" @click="save" />
       </v-card-actions>
     </v-card>
   </v-dialog>

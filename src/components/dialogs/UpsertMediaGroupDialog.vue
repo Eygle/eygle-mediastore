@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { defineProps, onMounted, ref, VueElement, watch } from 'vue'
+import { defineProps, ref, watch } from 'vue'
 import { instanceToInstance, plainToInstance } from 'class-transformer'
 import { MediaGroupDto } from '@/dto/MediaGroupDto'
 import { Field } from '@/types/Field'
@@ -21,6 +21,7 @@ const fieldsOptions = Object.entries(Field).map(([title, value]) => ({ title, va
 const loading = ref(false)
 const model = ref(initForm())
 const valid = ref(false)
+const tagInput = ref('')
 
 watch(source, () => (model.value = initForm()), { deep: true })
 
@@ -63,7 +64,11 @@ function initForm(): MediaGroupDto {
             hide-details="auto"
             class="mb-4" />
           <v-text-field v-model="model.name" label="Name" autofocus :rules="[rules.required()]" hide-details="auto" />
-          <TagsAutocomplete :exclude="model.tags" @add-tag="(tag) => model.tags.push(tag)" class="mt-4" />
+          <TagsAutocomplete
+            v-model:input="tagInput"
+            :exclude="model.tags"
+            @add-tag="(tag) => model.tags.push(tag)"
+            class="mt-4" />
           <v-chip v-for="(tag, idx) of model.tags" class="mr-2 mt-2">
             {{ tag.title }}
             <v-icon icon="mdi-close-circle ml-1 mr-n1" size="18" @click="model.tags.splice(idx, 1)" />
@@ -102,9 +107,9 @@ function initForm(): MediaGroupDto {
         <v-card-actions>
           <v-spacer />
           <v-btn :disabled="loading" @click="opened = false">Cancel</v-btn>
-          <v-btn :loading="loading" color="primary" :disabled="!valid" @click="save">{{
-            source ? 'Edit' : 'Create'
-          }}</v-btn>
+          <v-btn :loading="loading" color="primary" :disabled="!valid || !!tagInput" @click="save">
+            {{ source ? 'Edit' : 'Create' }}
+          </v-btn>
         </v-card-actions>
       </v-form>
     </v-card>
