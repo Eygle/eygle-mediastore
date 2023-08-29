@@ -22,6 +22,11 @@ export function useApi() {
     return res.data ? plainToInstance(MediaDto, res.data as unknown) : null
   }
 
+  async function deleteMedia(id: number): Promise<boolean> {
+    const res = await rest.delete<boolean>(`/media/${id}`)
+    return res.data
+  }
+
   async function fetchMediaList(endpoint: string) {
     const res = await rest.get<unknown[]>(`/media/${endpoint}`)
     return res.data.map((data) => plainToInstance(MediaGroupDto, data))
@@ -91,6 +96,11 @@ export function useApi() {
     return res.data ? plainToInstance(MediaGroupDto, res.data as unknown) : null
   }
 
+  async function deleteMediaGroup(id: number): Promise<boolean> {
+    const res = await rest.delete<boolean>(`/media-group/${id}`)
+    return res.data
+  }
+
   async function updateMediaGroupTags(parent: MediaGroupDto, tags: TagDto[]): Promise<MediaGroupDto | null> {
     const res = await rest.patch(`/media-group/${parent.id}/tags`, tags)
     return res.data ? plainToInstance(MediaGroupDto, res.data as unknown) : null
@@ -131,8 +141,10 @@ export function useApi() {
     fetchAllMediasTaggedBy,
     fetchAllMediaGroupsTaggedBy,
     updateMediaGroup,
+    deleteMediaGroup,
     updateMediaGroupTags,
     updateMedia,
+    deleteMedia,
     updateMediaTags,
     mergeTags,
     updateTag,

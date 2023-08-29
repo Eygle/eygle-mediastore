@@ -71,7 +71,7 @@ async function reload() {
 
         <MediaCard v-for="media of group.media" :key="media.id" :media="media" class="mt-4" @tags-saved="reload" />
       </div>
-      <UpsertMediaGroupDialog v-if="group" :source="group" @saved="(data) => (group = data)" />
+      <UpsertMediaGroupDialog v-if="group" @saved="(data) => (group = data)" />
       <UpsertMediaDialog v-if="group" :parent="group" @saved="reload" />
       <v-btn icon="mdi-plus" color="primary" class="fab top" size="large" @click="openMediaDialog()" />
     </template>

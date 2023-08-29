@@ -9,9 +9,12 @@ import { useDialogs } from '@/composables/dialogs'
 import { rules } from '@/utils/form-validator'
 import useToast from '@/composables/toast'
 import StarringAutocomplete from '@/components/StarringAutocomplete.vue'
+import useConfirm from '@/composables/confirm'
+import ConfirmDialog from '@/components/dialogs/ConfirmDialog.vue'
 
-const { createMediaGroup, updateMediaGroup } = useApi()
+const { createMediaGroup, updateMediaGroup, deleteMediaGroup } = useApi()
 const { upsertMediaGroupDialogOpened: opened, mediaGroup: source } = useDialogs()
+const { confirm } = useConfirm()
 const { toastError } = useToast()
 
 const props = defineProps<{ field?: Field }>()
@@ -46,6 +49,15 @@ function initForm(): MediaGroupDto {
   return source.value
     ? instanceToInstance(source.value!)
     : plainToInstance(MediaGroupDto, { field: props.field, tags: [], starring: [] })
+}
+
+function confirmDelete() {
+  if (!source.value) return
+  confirm('Delete media group', `Do you want to delete '${source.value?.name}'?`, async () => {
+    await deleteMediaGroup(source.value!.id)
+    emits('saved')
+    opened.value = false
+  })
 }
 </script>
 
@@ -105,6 +117,7 @@ function initForm(): MediaGroupDto {
           <v-textarea v-model="model.comment" label="Comment" />
         </v-card-text>
         <v-card-actions>
+          <v-btn v-if="source" color="error" @click="confirmDelete">Delete</v-btn>
           <v-spacer />
           <v-btn :disabled="loading" @click="opened = false">Cancel</v-btn>
           <v-btn :loading="loading" color="primary" :disabled="!valid || !!tagInput" @click="save">
@@ -114,4 +127,5 @@ function initForm(): MediaGroupDto {
       </v-form>
     </v-card>
   </v-dialog>
+  <ConfirmDialog />
 </template>

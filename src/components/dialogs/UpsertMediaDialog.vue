@@ -10,10 +10,13 @@ import { rules } from '@/utils/form-validator'
 import { useRoute } from 'vue-router'
 import useToast from '@/composables/toast'
 import StarringAutocomplete from '@/components/StarringAutocomplete.vue'
+import useConfirm from '@/composables/confirm'
+import ConfirmDialog from '@/components/dialogs/ConfirmDialog.vue'
 
 const route = useRoute()
-const { createMedia, updateMedia } = useApi()
+const { createMedia, updateMedia, deleteMedia } = useApi()
 const { upsertMediaDialogOpened: opened, media: source } = useDialogs()
+const { confirm } = useConfirm()
 const { toastError } = useToast()
 
 const props = defineProps<{ parent: MediaGroupDto }>()
@@ -49,6 +52,15 @@ function initForm(): MediaDto {
   return source.value
     ? instanceToInstance(source.value!)
     : plainToInstance(MediaDto, { tags: [], files: [null], progress: [null, null], parent: { id: props.parent.id } })
+}
+
+function confirmDelete() {
+  if (!source.value) return
+  confirm('Delete media', `Do you want to delete '${source.value.title}'?`, async () => {
+    await deleteMedia(source.value!.id)
+    emits('saved')
+    opened.value = false
+  })
 }
 </script>
 
@@ -103,6 +115,7 @@ function initForm(): MediaDto {
         </v-form>
       </v-card-text>
       <v-card-actions>
+        <v-btn v-if="source" color="error" @click="confirmDelete">Delete</v-btn>
         <v-spacer />
         <v-btn :disabled="loading" @click="opened = false">Cancel</v-btn>
         <v-btn :loading="loading" color="primary" :disabled="!valid || !!tagInput" @click="save">{{
@@ -111,4 +124,5 @@ function initForm(): MediaDto {
       </v-card-actions>
     </v-card>
   </v-dialog>
+  <ConfirmDialog />
 </template>

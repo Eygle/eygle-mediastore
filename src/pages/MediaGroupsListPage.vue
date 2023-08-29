@@ -36,6 +36,9 @@ async function reload(forceRefresh = false) {
 }
 
 function onSave(group: MediaGroupDto) {
+  if (!group) {
+    return reload(true)
+  }
   const idx = groups.value.findIndex(({ id }) => id === group.id)
   if (idx === -1) {
     drop(route.name!)
