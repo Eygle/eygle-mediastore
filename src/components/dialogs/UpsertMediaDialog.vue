@@ -70,27 +70,28 @@ function confirmDelete() {
       <v-card-text>
         <v-form v-model="valid">
           <MediaGroupAutocomplete v-if="source" v-model="form.parent" label="parent" />
-          <v-text-field v-model="form.title" label="Title" />
+          <div class="mb-2">
+            <div v-for="(_, idx) in form.files" :key="idx" class="d-flex align-center">
+              <v-text-field
+                  v-model="form.files[idx]"
+                  :label="`File ${idx + 1}`"
+                  :rules="idx === 0 ? [rules.required()] : undefined"
+                  autofocus />
+              <v-btn
+                  v-if="idx === form.files.length - 1"
+                  class="ml-4"
+                  icon="mdi-plus"
+                  variant="text"
+                  @click="form.files.push(null)" />
+              <v-btn v-else class="ml-4" icon="mdi-minus" variant="text" @click="form.files.splice(idx, 1)" />
+            </div>
+          </div>
           <TagsAutocomplete v-model:input="tagInput" :exclude="form.tags" @add-tag="(tag) => form.tags.push(tag)" />
           <v-chip v-for="(tag, idx) of form.tags" class="mr-2 mt-2">
             {{ tag.title }}
             <v-icon icon="mdi-close-circle ml-1 mr-n1" size="18" @click="form.tags.splice(idx, 1)" />
           </v-chip>
-          <div class="mt-5">
-            <div v-for="(_, idx) in form.files" :key="idx" class="d-flex align-center">
-              <v-text-field
-                v-model="form.files[idx]"
-                :label="`File ${idx + 1}`"
-                :rules="idx === 0 ? [rules.required()] : undefined" />
-              <v-btn
-                v-if="idx === form.files.length - 1"
-                class="ml-4"
-                icon="mdi-plus"
-                variant="text"
-                @click="form.files.push(null)" />
-              <v-btn v-else class="ml-4" icon="mdi-minus" variant="text" @click="form.files.splice(idx, 1)" />
-            </div>
-          </div>
+          <v-text-field v-model="form.title" label="Title" class="mt-4" hide-details />
           <MediaGroupAutocomplete
             v-model="form.starring"
             :fields="[Field.Profile, Field.Star]"
