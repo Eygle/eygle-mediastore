@@ -11,6 +11,7 @@ const { updateMediaTags, updateMediaGroupTags } = useApi()
 const { toastError } = useToast()
 
 const props = defineProps<{ parent: MediaDto | MediaGroupDto }>()
+const emits = defineEmits(['saved'])
 const suggest = inject<Ref<MediaGroupDto | MediaDto> | null>(Provide.TagsSuggestions, null)
 
 const opened = ref(false)
@@ -34,6 +35,7 @@ async function save() {
     } else {
       res = await updateMediaTags(props.parent, tags.value)
     }
+    emits('saved')
 
     if (res) {
       props.parent.tags = res.tags

@@ -69,7 +69,7 @@ async function reload() {
 
         <v-divider v-if="group?.tags.length || group?.externalLink || group?.lastEntry || group?.comment" class="my-8" />
 
-        <MediaCard v-for="media of group.media" :key="media.id" :media="media" class="mt-4" />
+        <MediaCard v-for="media of group.media" :key="media.id" :media="media" class="mt-4" @tags-saved="reload" />
       </div>
       <UpsertMediaGroupDialog v-if="group" :source="group" @saved="(data) => (group = data)" />
       <UpsertMediaDialog v-if="group" :parent="group" @saved="reload" />

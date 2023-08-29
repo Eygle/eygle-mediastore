@@ -5,6 +5,7 @@ import UpsertTagsDialog from '@/components/dialogs/UpsertTagsDialog.vue'
 import { MediaGroupDto } from '@/dto/MediaGroupDto'
 
 defineProps<{ parent: MediaDto | MediaGroupDto; editable?: boolean }>()
+const emits = defineEmits(['saved'])
 </script>
 
 <template>
@@ -14,6 +15,6 @@ defineProps<{ parent: MediaDto | MediaGroupDto; editable?: boolean }>()
         {{ tag.title }}
       </v-chip>
     </div>
-    <UpsertTagsDialog v-if="!editable" :parent="parent" />
+    <UpsertTagsDialog v-if="!editable" :parent="parent" @saved="emits('saved')" />
   </div>
 </template>

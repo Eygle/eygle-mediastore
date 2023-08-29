@@ -13,6 +13,7 @@ import StarringList from '@/components/StarringList.vue'
 const { openMediaDialog } = useDialogs()
 
 defineProps<{ media: MediaDto; noAction?: boolean }>()
+const emits = defineEmits(['tags-saved'])
 </script>
 
 <template>
@@ -26,7 +27,7 @@ defineProps<{ media: MediaDto; noAction?: boolean }>()
               <StatusIcon :media="media" />
             </v-card-title>
             <v-card-text class="pt-4">
-              <TagChips class="pb-4 mt-n2" :parent="media" />
+              <TagChips class="pb-4 mt-n2" :parent="media" @saved="emits('tags-saved')" />
 
               <v-card v-if="media.files.length" class="d-flex w-100" color="grey-darken-3" variant="flat">
                 <v-card-text class="pb-2 w-100">
