@@ -53,6 +53,14 @@ export class MediaGroupDto {
   @Transform(({ value }) => value ?? [], { toClassOnly: true })
   starring!: MediaGroupDto[]
 
+  @Expose()
+  @Type(() => MediaGroupDto)
+  parent!: MediaGroupDto
+
+  @Expose()
+  @Type(() => MediaGroupDto)
+  groups!: MediaGroupDto[]
+
   get nbBest() {
     return this.media?.filter(({ isBest }) => isBest).length
   }

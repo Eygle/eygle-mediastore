@@ -43,6 +43,10 @@ async function reload() {
       <v-spacer />
       <StatusIcon :group="group" spaced />
       <v-divider vertical class="mx-4 my-n2" />
+      <v-btn
+        icon="mdi-plus"
+        variant="flat"
+        @click="openMediaGroupDialog(undefined, { parent: { id: group.id } as any })" />
       <v-btn icon="mdi-pencil" variant="flat" @click="openMediaGroupDialog(group)" />
       <v-divider vertical class="mx-4 my-n2" />
     </template>
@@ -67,7 +71,9 @@ async function reload() {
           </div>
         </div>
 
-        <v-divider v-if="group?.tags.length || group?.externalLink || group?.lastEntry || group?.comment" class="my-8" />
+        <v-divider
+          v-if="group?.tags.length || group?.externalLink || group?.lastEntry || group?.comment"
+          class="my-8" />
 
         <MediaCard v-for="media of group.media" :key="media.id" :media="media" class="mt-4" @tags-saved="reload" />
       </div>

@@ -13,7 +13,7 @@ import useConfirm from '@/composables/confirm'
 import ConfirmDialog from '@/components/dialogs/ConfirmDialog.vue'
 
 const { createMediaGroup, updateMediaGroup, deleteMediaGroup } = useApi()
-const { upsertMediaGroupDialogOpened: opened, mediaGroup: source } = useDialogs()
+const { upsertMediaGroupDialogOpened: opened, mediaGroup: source, mediaGroupDefault: defaultValues } = useDialogs()
 const { confirm } = useConfirm()
 const { toastError } = useToast()
 
@@ -26,7 +26,7 @@ const model = ref(initForm())
 const valid = ref(false)
 const tagInput = ref('')
 
-watch(source, () => (model.value = initForm()), { deep: true })
+watch([source, defaultValues], () => (model.value = initForm()), { deep: true })
 
 async function save() {
   try {
@@ -46,9 +46,13 @@ async function save() {
 }
 
 function initForm(): MediaGroupDto {
+  console.log('has source value', !!source.value)
+  console.log('init form', source.value
+      ? instanceToInstance(source.value!)
+      : plainToInstance(MediaGroupDto, { field: props.field, tags: [], starring: [], ...defaultValues.value }))
   return source.value
     ? instanceToInstance(source.value!)
-    : plainToInstance(MediaGroupDto, { field: props.field, tags: [], starring: [] })
+    : plainToInstance(MediaGroupDto, { field: props.field, tags: [], starring: [], ...defaultValues.value })
 }
 
 function confirmDelete() {
@@ -68,7 +72,7 @@ function confirmDelete() {
         <v-card-title>{{ source ? 'Edit' : 'Create' }} {{ field || 'media group' }}</v-card-title>
         <v-card-text>
           <v-select
-            v-if="!field"
+            v-if="!field && !model.parent"
             v-model="model.field"
             :items="fieldsOptions"
             :rules="[rules.required()]"
