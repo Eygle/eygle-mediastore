@@ -23,7 +23,7 @@ const tabs = computed(() => groupsByFields.value.map((group) => group[0].field))
 <template>
   <div class="h-100 d-flex flex-column">
     <v-tabs v-model="tab" align-tabs="center">
-      <v-tab v-for="(field, idx) of tabs" :value="idx" class="text-capitalize">{{ field }}</v-tab>
+      <v-tab v-for="(field, idx) of tabs" :value="idx" class="text-capitalize">{{ field }} ({{ groupsByFields[idx].length }})</v-tab>
     </v-tabs>
 
     <div v-if="loading" class="d-flex align-center justify-center flex-grow-1 mt-8">
