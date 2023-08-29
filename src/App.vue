@@ -10,7 +10,7 @@ const layout = computed(() => route.meta?.layout || Layout.Default)
 
 <template>
   <v-app full-height>
-    <component :is="layout" :key="route.name">
+    <component :is="layout" :key="route.fullPath">
       <router-view />
     </component>
   </v-app>

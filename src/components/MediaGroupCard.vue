@@ -30,11 +30,11 @@ defineProps<{ group: MediaGroupDto; noAction?: boolean; includeComment?: boolean
                   <v-badge
                     :content="group.nbToSee"
                     v-bind="props"
-                    color="secondary"
+                    color="blue"
                     bordered
                     class="pt-2 ml-2"
                     :class="group.nbToSee < 10 ? 'pr-1' : 'pr-3'">
-                    <v-icon icon="mdi-eye" color="secondary" />
+                    <v-icon icon="mdi-eye" color="blue" />
                   </v-badge>
                 </template>
               </v-tooltip>
