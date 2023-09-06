@@ -4,10 +4,11 @@ import { AdminService } from './admin.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { MediaGroup } from '../media-group/media-group.entity';
 import { TagModule } from '../tag/tag.module';
+import { Media } from '../media/media.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([MediaGroup]),
+    TypeOrmModule.forFeature([MediaGroup, Media]),
     forwardRef(() => TagModule),
   ],
   controllers: [AdminController],

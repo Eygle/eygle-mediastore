@@ -9,4 +9,9 @@ export class AdminController {
   synchronizeParentTags() {
     return this.adminService.synchronizeParentTags();
   }
+
+  @Get('/change-files-path')
+  changeFilesPath() {
+    return this.adminService.changeFilesPath();
+  }
 }

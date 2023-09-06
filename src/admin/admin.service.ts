@@ -3,12 +3,14 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { MediaGroup } from '../media-group/media-group.entity';
 import { In, IsNull, Not, Repository } from 'typeorm';
 import { Field } from '../types/Field';
+import { Media } from '../media/media.entity';
 
 @Injectable()
 export class AdminService {
   constructor(
     @InjectRepository(MediaGroup)
     private mediaGroupRepository: Repository<MediaGroup>,
+    @InjectRepository(Media) private mediaRepository: Repository<Media>,
   ) {}
 
   // Following bug where tags where not added to parent throughout UpsertTagsDialog
@@ -51,5 +53,19 @@ export class AdminService {
       await this.mediaGroupRepository.save(toSave);
     }
     return res;
+  }
+
+  async changeFilesPath() {
+    const oldPath = '/media/eygle/DD 10 To/';
+    const newPath = '/mnt/dd-10-to/';
+    const mediaList = await this.mediaRepository.find();
+
+    mediaList.forEach((media) =>
+      media.files.forEach(
+        (file, idx) => (media.files[idx] = file.replace(oldPath, newPath)),
+      ),
+    );
+    await this.mediaRepository.save(mediaList);
+    return 'OK';
   }
 }
