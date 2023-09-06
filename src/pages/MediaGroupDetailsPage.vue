@@ -53,7 +53,7 @@ function onSave(saved: MediaGroupDto) {
       <StatusIcon :group="group" spaced />
       <v-divider vertical class="mx-4 my-n2" />
       <v-btn
-        icon="mdi-plus"
+        icon="mdi-account-multiple-plus"
         variant="flat"
         @click="openMediaGroupDialog(undefined, { parent: { id: group.id } as any })" />
       <v-btn icon="mdi-pencil" variant="flat" @click="openMediaGroupDialog(group)" />
