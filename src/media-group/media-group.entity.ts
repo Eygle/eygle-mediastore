@@ -28,7 +28,7 @@ export class MediaGroup {
 
   @Column({ default: false })
   @Index()
-  trimmed: boolean;
+  toTrim: boolean;
 
   @Column({ nullable: true })
   count: number;
@@ -49,6 +49,10 @@ export class MediaGroup {
   @Column({ default: false })
   @Index()
   toTag: boolean;
+
+  @Column({ default: false })
+  @Index()
+  toSee: boolean;
 
   @Column({ nullable: true })
   comment: string;
