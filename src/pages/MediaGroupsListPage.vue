@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { onBeforeMount, ref, watch } from 'vue'
+import {computed, onBeforeMount, ref, watch} from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { VDataIterator } from 'vuetify/labs/VDataIterator'
 import { MediaGroupDto } from '@/dto/MediaGroupDto'
@@ -21,8 +21,18 @@ const groups = ref<MediaGroupDto[]>([])
 const loading = ref(false)
 const page = ref(1)
 const search = ref('')
+const filter = ref<Filters | null>(null)
+const filters = [
+  { title: 'None', value: null },
+  { title: 'To See', value: 'toSee|nbToSee' },
+  { title: 'To Tag', value: 'toTag' },
+  { title: 'To Trim', value: 'toTrim' },
+  { title: 'Has best', value: 'nbBest' },
+]
 
 onBeforeMount(reload)
+
+const displayedGroups = computed(() => groups.value.filter(v => filter.value ? filter.value.split('|').some(f => v[f]) : true))
 
 async function reload(forceRefresh = false) {
   loading.value = true
@@ -54,9 +64,12 @@ watch(page, () => window.scrollTo({ top: 0, behavior: 'smooth' }))
 <template>
   <teleport to="#toolbar">
     <span class="text-capitalize text-h6">{{ route.name }}</span>
-    <v-chip v-if="!loading" class="ml-3">{{ groups.length }}</v-chip>
+    <v-chip v-if="!loading" class="ml-3">{{ displayedGroups.length }}</v-chip>
     <v-spacer />
     <v-text-field v-model="search" label="search" hide-details density="compact" clearable />
+    <div class="ml-4" >
+      <v-select v-model="filter" :items="filters" item-title="title" label="Filter" hide-details density="compact"/>
+    </div>
     <v-spacer />
     <v-divider vertical class="mx-4 my-n2" />
     <v-btn icon="mdi-reload" :loading="loading" variant="flat" @click="reload(true)" />
@@ -66,7 +79,7 @@ watch(page, () => window.scrollTo({ top: 0, behavior: 'smooth' }))
       <v-progress-circular indeterminate size="100" />
     </div>
     <template v-else>
-      <v-data-iterator :items="groups" :page="page" :search="search" items-per-page="25">
+      <v-data-iterator :items="displayedGroups" :page="page" :search="search" items-per-page="25">
         <template #default="{ items }">
           <MediaGroupCard v-for="group of items" :key="group.raw.id" :group="group.raw" class="mt-4" />
         </template>

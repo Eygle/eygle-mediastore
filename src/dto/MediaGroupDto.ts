@@ -16,7 +16,7 @@ export class MediaGroupDto {
   field!: Field
 
   @Expose()
-  trimmed!: boolean
+  toTrim!: boolean
 
   @Expose()
   count?: number
@@ -36,6 +36,9 @@ export class MediaGroupDto {
 
   @Expose()
   toTag!: boolean
+
+  @Expose()
+  toSee!: boolean
 
   @Expose()
   comment!: string | null

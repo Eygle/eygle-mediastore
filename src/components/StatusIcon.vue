@@ -17,14 +17,14 @@ defineProps<{ media?: MediaDto; group?: MediaGroupDto; spaced?: boolean }>()
         <v-icon icon="mdi-tag-plus" color="orange-lighten-2" :class="spaced ? 'ml-4' : 'ml-2'" v-bind="props" />
       </template>
     </v-tooltip>
-    <v-tooltip v-if="media?.toSee" text="To see">
+    <v-tooltip v-if="media?.toSee || (!group?.nbToSee && group?.toSee)" text="To see">
       <template #activator="{ props }">
         <v-icon icon="mdi-eye" color="blue" :class="spaced ? 'ml-4' : 'ml-2'" v-bind="props" />
       </template>
     </v-tooltip>
-    <v-tooltip v-if="group?.trimmed" text="Trimmed">
+    <v-tooltip v-if="group?.toTrim" text="To Trim">
       <template #activator="{ props }">
-        <v-icon icon="mdi-content-cut" color="green-lighten-2" :class="spaced ? 'ml-4' : 'ml-2'" v-bind="props" />
+        <v-icon icon="mdi-content-cut" color="pink-lighten-2" :class="spaced ? 'ml-4' : 'ml-2'" v-bind="props" />
       </template>
     </v-tooltip>
     <v-tooltip v-if="media?.isBest" text="Best">

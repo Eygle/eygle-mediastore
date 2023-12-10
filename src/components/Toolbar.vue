@@ -9,9 +9,7 @@ const formatTitle: { text: string; highlight?: boolean }[] = 'Eygle Mediastore'
 <template>
   <v-app-bar app clipped-left fixed>
     <div class="title-container d-flex flex-row align-center">
-      <v-btn class="mr-1" icon @click.stop="$emit('toggle-mini-variant')">
-        <v-icon>mdi-menu</v-icon>
-      </v-btn>
+      <v-btn icon="mdi-menu" class="mr-1" @click.stop="$emit('toggle-mini-variant')" />
       <router-link :to="{ name: RouteName.Home }" class="app-title">
         <span v-for="part of formatTitle" :class="{ highlight: part.highlight }">{{ part.text }}</span>
       </router-link>

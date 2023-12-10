@@ -93,7 +93,7 @@ function confirmDelete() {
             multiple
             hide-details
             class="mt-4" />
-          <v-checkbox v-model="model.trimmed" label="Trimmed" hide-details />
+          <v-checkbox v-model="model.toTrim" label="ToTrim" hide-details />
           <div class="d-flex align-center mb-4">
             <v-text-field
               v-model="model.count"
@@ -120,6 +120,7 @@ function confirmDelete() {
           <div class="d-flex justify-space-between">
             <v-checkbox v-model="model.toFollow" label="To follow" hide-details />
             <v-checkbox v-model="model.toTag" label="To tag" hide-details />
+            <v-checkbox v-model="model.toSee" label="To see" hide-details />
           </div>
           <v-textarea v-model="model.comment" label="Comment" />
         </v-card-text>

@@ -6,7 +6,7 @@ const upsertMediaDialogOpened = ref(false)
 const upsertMediaGroupDialogOpened = ref(false)
 const media = ref<MediaDto | undefined>()
 const mediaGroup = ref<MediaGroupDto | undefined>()
-const mediaGroupDefault = ref<Partial<MediaGroupDto> | undefined>()
+const mediaGroupDefault = ref<Partial<MediaGroupDto> | undefined>({ toTrim: true })
 
 export function useDialogs() {
   function openMediaDialog(source?: MediaDto) {
@@ -17,7 +17,7 @@ export function useDialogs() {
   function openMediaGroupDialog(source?: MediaGroupDto, defaultValues?: Partial<MediaGroupDto>) {
     upsertMediaGroupDialogOpened.value = true
     mediaGroup.value = source
-    mediaGroupDefault.value = defaultValues
+    mediaGroupDefault.value = { ...defaultValues, toTrim: true }
   }
 
   return { media, mediaGroup, mediaGroupDefault, openMediaDialog, openMediaGroupDialog, upsertMediaDialogOpened, upsertMediaGroupDialogOpened}

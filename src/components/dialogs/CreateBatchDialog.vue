@@ -133,11 +133,12 @@ async function processProfileBatch() {
       continue
     }
     const profile = profiles[profiles.length - 1]
+    profile.toTrim = true
     if (line.startsWith('>>')) {
       const [trimmed, count, last] = line.substring(2).split(' - ')
 
       if (trimmed.trim().toLowerCase() === 'trimmed') {
-        profile.trimmed = true
+        profile.toTrim = false
       }
       if (count) {
         const [nbr, total] = count.trim().split('/')
