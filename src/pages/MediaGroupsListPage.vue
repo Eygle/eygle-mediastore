@@ -27,6 +27,7 @@ const filters = [
   { title: 'To See', value: 'toSee|nbToSee' },
   { title: 'To Tag', value: 'toTag' },
   { title: 'To Trim', value: 'toTrim' },
+  { title: 'To Follow', value: 'toFollow' },
   { title: 'Has best', value: 'nbBest' },
 ]
 
