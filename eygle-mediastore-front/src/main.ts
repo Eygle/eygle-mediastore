@@ -1,5 +1,4 @@
 import 'reflect-metadata'
-import '@/assets/fonts.css'
 import '@/assets/styles.scss'
 
 import { Component, createApp } from 'vue'

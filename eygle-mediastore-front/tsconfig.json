@@ -1,27 +1,32 @@
 {
   "compilerOptions": {
+    "baseUrl": ".",
     "target": "esnext",
+    "useDefineForClassFields": true,
+    "allowSyntheticDefaultImports": true,
+    "experimentalDecorators": true,
+    "composite": true,
     "module": "esnext",
+    "moduleResolution": "node",
     "strict": true,
     "jsx": "preserve",
-    "importHelpers": true,
-    "moduleResolution": "node",
-    "skipLibCheck": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "forceConsistentCasingInFileNames": true,
-    "useDefineForClassFields": true,
-    "experimentalDecorators": true,
+    "sourceMap": false,
     "resolveJsonModule": true,
-    "sourceMap": true,
-    "baseUrl": ".",
-    "types": ["unplugin-vue-macros/macros-global", "webpack-env", "vuetify"],
+    "esModuleInterop": true,
+    "lib": ["esnext", "dom"],
+    "types": [
+      "node",
+      "vuetify"
+    ],
     "paths": {
-      "photoswipe/lightbox": ["./node_modules/photoswipe/dist/types/photoswipe.d.ts"],
       "@/*": ["src/*"]
-    },
-    "lib": ["esnext", "dom", "dom.iterable", "scripthost"]
+    }
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue", "tests/**/*.ts", "tests/**/*.tsx"],
-  "exclude": ["node_modules"]
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.d.ts",
+    "src/**/*.tsx",
+    "src/**/*.vue",
+    "vite.config.ts"
+  ]
 }

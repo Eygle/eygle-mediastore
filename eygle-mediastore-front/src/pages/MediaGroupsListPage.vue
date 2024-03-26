@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import {computed, onBeforeMount, ref, watch} from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { VDataIterator } from 'vuetify/labs/VDataIterator'
 import { MediaGroupDto } from '@/dto/MediaGroupDto'
 import MediaGroupCard from '@/components/MediaGroupCard.vue'
 import UpsertMediaGroupDialog from '@/components/dialogs/UpsertMediaGroupDialog.vue'
