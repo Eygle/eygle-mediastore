@@ -1,3 +1,5 @@
 eygle-mediastore-front/node_modules
 eygle-mediastore-front/dist
 eygle-mediastore-front/config.json
+/eygle-mediastore-back/dist
+/eygle-mediastore-back/node_modules
