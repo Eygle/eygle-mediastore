@@ -1,6 +1,6 @@
 module.exports = {
   apps: [{
     name: "eygle-mediastore-back",
-    script: "npm run start"
+    script: "npm run start:prod"
   }]
 }
