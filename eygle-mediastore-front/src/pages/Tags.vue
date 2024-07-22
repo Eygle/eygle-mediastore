@@ -107,7 +107,7 @@ async function remove(tag) {
         density="compact"
       >
         <template #item.title="{ item }">
-          <v-form v-if="editForm?.id === item.raw.id" @submit.prevent="updateCurrentTag()">
+          <v-form v-if="editForm?.id === item.id" @submit.prevent="updateCurrentTag()">
             <v-text-field
               v-model="editForm.title"
               density="compact"
@@ -116,23 +116,23 @@ async function remove(tag) {
               autofocus
               @keydown.esc="editForm = null" />
           </v-form>
-          <router-link v-else :to="{ name: RouteName.Tag, params: { id: item.raw.id } }">{{
-            item.raw.title
+          <router-link v-else :to="{ name: RouteName.Tag, params: { id: item.id } }">{{
+            item.title
           }}</router-link>
         </template>
         <template #item.edit="{ item }">
           <v-btn
-            :icon="editForm?.id === item.raw.id ? 'mdi-close' : 'mdi-pencil'"
+            :icon="editForm?.id === item.id ? 'mdi-close' : 'mdi-pencil'"
             density="compact"
             variant="flat"
-            @click="toggleTagUpdate(item.raw)" />
+            @click="toggleTagUpdate(item)" />
         </template>
         <template #item.delete="{ item }">
           <v-btn
             icon="mdi-delete"
             density="compact"
             variant="flat"
-            @click="confirm('Delete tag', `Do you want to delete '${item.raw.title}'?`, () => remove(item.raw))" />
+            @click="confirm('Delete tag', `Do you want to delete '${item.title}'?`, () => remove(item))" />
         </template>
       </v-data-table>
     </div>
