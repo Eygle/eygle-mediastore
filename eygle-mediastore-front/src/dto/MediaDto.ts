@@ -20,6 +20,9 @@ export class MediaDto {
   isBest!: boolean
 
   @Expose()
+  isAbsoluteBest!: boolean
+
+  @Expose()
   toTag!: boolean
 
   @Expose()

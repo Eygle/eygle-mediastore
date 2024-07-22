@@ -48,6 +48,11 @@ export class MediaController {
     return this.mediaService.getAllBest();
   }
 
+  @Get('/absolute-best')
+  getAbsoluteBest() {
+    return this.mediaService.getAllAbsoluteBest();
+  }
+
   @Get('/to-tag')
   getToTag() {
     return this.mediaService.getAllToTag();

@@ -89,6 +89,10 @@ export class MediaService {
     return this.getAllGroupedByParents({ isBest: true });
   }
 
+  async getAllAbsoluteBest(): Promise<MediaGroup[]> {
+    return this.getAllGroupedByParents({ isAbsoluteBest: true });
+  }
+
   async getAllToTag(): Promise<MediaGroup[]> {
     return this.getAllGroupedByParents({ toTag: true });
   }

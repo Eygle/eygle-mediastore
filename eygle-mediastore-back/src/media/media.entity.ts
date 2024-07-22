@@ -33,6 +33,10 @@ export class Media {
 
   @Column({ default: false })
   @Index()
+  isAbsoluteBest: boolean;
+
+  @Column({ default: false })
+  @Index()
   toTag: boolean;
 
   @Column({ nullable: true })

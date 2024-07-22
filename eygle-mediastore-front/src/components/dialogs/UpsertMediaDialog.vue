@@ -100,6 +100,7 @@ function confirmDelete() {
             hide-details
             class="mt-4" />
           <v-checkbox v-model="form.isBest" color="primary" label="Is best?" hide-details />
+          <v-checkbox v-model="form.isAbsoluteBest" color="red-lighten-2" label="Is absolute best?" hide-details />
           <v-checkbox v-model="form.toSee" label="To see?" hide-details />
           <v-checkbox v-model="form.toTag" label="To tag?" />
           <div class="d-flex align-center">
