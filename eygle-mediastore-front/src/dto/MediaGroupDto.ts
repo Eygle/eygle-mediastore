@@ -57,6 +57,10 @@ export class MediaGroupDto {
   starring!: MediaGroupDto[]
 
   @Expose()
+  @Type(() => MediaDto)
+  starringMedia!: MediaDto[]
+
+  @Expose()
   @Type(() => MediaGroupDto)
   parent!: MediaGroupDto
 

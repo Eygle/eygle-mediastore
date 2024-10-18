@@ -63,6 +63,7 @@ export class MediaGroupService {
         groups: { tags: true, parent: true, media: true },
         parent: true,
         starring: true,
+        starringMedia: { tags: true, parent: true },
       },
       order: {
         media: { title: 'asc', tags: { title: 'asc' } },

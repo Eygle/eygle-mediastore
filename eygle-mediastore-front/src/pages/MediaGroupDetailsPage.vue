@@ -84,9 +84,13 @@ function onSave(saved: MediaGroupDto) {
           v-if="group?.tags.length || group?.externalLink || group?.lastEntry || group?.comment"
           class="my-8" />
 
-        <MediaGroupCard v-for="g of group.groups" :group="g" class="mt-4" />
+        <MediaGroupCard v-for="g of group.groups" :group="g" :key="g.id" class="mt-4" />
         <v-divider v-if="group.groups?.length && group.media?.length" class="my-8" />
         <MediaCard v-for="media of group.media" :key="media.id" :media="media" class="mt-4" @tags-saved="reload" />
+        <template v-if="group.starringMedia.length">
+          <h2 class="mt-6">Starring in</h2>
+        <MediaCard v-for="media of group.starringMedia" :key="media.id" :media="media" class="mt-4" @tags-saved="reload" />
+        </template>
       </div>
       <UpsertMediaGroupDialog v-if="group" @saved="onSave" />
       <UpsertMediaDialog v-if="group" :parent="group" @saved="reload" />

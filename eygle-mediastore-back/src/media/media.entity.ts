@@ -57,7 +57,7 @@ export class Media {
   @JoinTable()
   tags: Tag[];
 
-  @ManyToMany(() => MediaGroup)
+  @ManyToMany(() => MediaGroup, (group) => group.starringMedia)
   @JoinTable()
   starring: MediaGroup[];
 

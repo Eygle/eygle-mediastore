@@ -68,6 +68,9 @@ export class MediaGroup {
   @JoinTable()
   starring: MediaGroup[];
 
+  @ManyToMany(() => Media, (media) => media.starring)
+  starringMedia: Media[];
+
   @ManyToOne(() => MediaGroup, { nullable: true })
   @Index()
   parent: MediaGroup;
