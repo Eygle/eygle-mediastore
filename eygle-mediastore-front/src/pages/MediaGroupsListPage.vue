@@ -88,7 +88,7 @@ watch(page, () => window.scrollTo({ top: 0, behavior: 'smooth' }))
         </template>
       </v-data-iterator>
       <UpsertMediaGroupDialog :field="route.meta.field" @saved="onSave" />
-      <v-btn icon="mdi-plus" color="primary" class="fab" size="large" @click="openMediaGroupDialog()" />
+      <v-btn icon="mdi-plus" color="primary" class="fab bottom" size="large" @click="openMediaGroupDialog()" />
     </template>
   </v-container>
 </template>

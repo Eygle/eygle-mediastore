@@ -18,3 +18,11 @@ export function stringToDuration(duration: string) {
 
   return +h * 3600 + +m * 60 + +s
 }
+
+export function formatDuration(duration: string) {
+  let parts = duration.split(':')
+  while (parts[0] === '00') {
+    parts = parts.slice(1)
+  }
+  return parts.join(':')
+}

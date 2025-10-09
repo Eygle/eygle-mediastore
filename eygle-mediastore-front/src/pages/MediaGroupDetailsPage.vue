@@ -94,7 +94,7 @@ function onSave(saved: MediaGroupDto) {
       </div>
       <UpsertMediaGroupDialog v-if="group" @saved="onSave" />
       <UpsertMediaDialog v-if="group" :parent="group" @saved="reload" />
-      <v-btn icon="mdi-plus" color="primary" class="fab top" size="large" @click="openMediaDialog()" />
+      <v-btn icon="mdi-plus" color="primary" class="fab bottom" size="large" @click="openMediaDialog()" />
     </template>
   </v-container>
 </template>

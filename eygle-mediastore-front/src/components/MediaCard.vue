@@ -4,9 +4,7 @@ import copy from 'copy-to-clipboard'
 import { MediaDto } from '@/dto/MediaDto'
 import TagChips from '@/components/TagChips.vue'
 import { useDialogs } from '@/composables/dialogs'
-import { durationToString, stringToDuration } from '@/utils/time'
-import { RouteName } from '@/types/RouteName'
-import { Field } from '@/types/Field'
+import { durationToString, formatDuration, stringToDuration } from '@/utils/time'
 import StatusIcon from '@/components/StatusIcon.vue'
 import StarringList from '@/components/StarringList.vue'
 
@@ -57,6 +55,7 @@ const emits = defineEmits(['tags-saved'])
                   </span>
                 </div>
               </div>
+              <div v-else-if="media.progress[1]" class="d-flex justify-end">Duration: {{ formatDuration(media.progress[1]) }}</div>
 
               <div class="mt-4 pl-2 border-s-lg text-pre" v-if="media.comment">
                 {{ media.comment }}
