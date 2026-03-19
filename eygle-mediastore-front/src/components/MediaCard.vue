@@ -55,7 +55,7 @@ const emits = defineEmits(['tags-saved'])
                   </span>
                 </div>
               </div>
-              <div v-else-if="media.progress[1]" class="d-flex justify-end">Duration: {{ formatDuration(media.progress[1]) }}</div>
+              <div v-else-if="media.progress[1]" class="d-flex justify-end mt-2">Duration: {{ formatDuration(media.progress[1]) }}</div>
 
               <div class="mt-4 pl-2 border-s-lg text-pre" v-if="media.comment">
                 {{ media.comment }}

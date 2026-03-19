@@ -68,7 +68,7 @@ export class MediaService {
     const mediaList = await this.mediaRepository
       .createQueryBuilder('media')
       .where('media.progress IS NOT NULL')
-      .where(`media.progress != '{null,null}'`)
+      .where(`media.progress[1] IS NOT NULL`)
       .leftJoinAndSelect('media.tags', 'tag')
       .leftJoinAndSelect('media.starring', 'starring')
       .leftJoinAndSelect('media.parent', 'parent')
