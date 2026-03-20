@@ -14,6 +14,7 @@ export enum RouteName {
   Tag = 'tag',
   InProgress = 'in-progress',
   ToSee = 'to-see',
+  PotentialBest = 'potential-best',
   Best = 'best',
   AbsoluteBest = 'absolute-best',
   ToTag = 'to-tag',

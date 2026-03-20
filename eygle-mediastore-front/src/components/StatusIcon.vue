@@ -27,6 +27,11 @@ defineProps<{ media?: MediaDto; group?: MediaGroupDto; spaced?: boolean }>()
         <v-icon icon="mdi-content-cut" color="pink-lighten-2" :class="spaced ? 'ml-4' : 'ml-2'" v-bind="props" />
       </template>
     </v-tooltip>
+    <v-tooltip v-if="media?.isPotentialBest" text="Potential best">
+      <template #activator="{ props }">
+        <v-icon icon="mdi-star-cog" color="orange-lighten-2" :class="spaced ? 'ml-4' : 'ml-2'" v-bind="props" />
+      </template>
+    </v-tooltip>
     <v-tooltip v-if="media?.isBest" text="Best">
       <template #activator="{ props }">
         <v-icon icon="mdi-star" color="primary" :class="spaced ? 'ml-4' : 'ml-2'" v-bind="props" />

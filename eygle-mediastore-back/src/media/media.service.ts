@@ -85,6 +85,10 @@ export class MediaService {
     return this.getAllGroupedByParents({ toSee: true });
   }
 
+  async getAllPotentialBest(): Promise<MediaGroup[]> {
+    return this.getAllGroupedByParents({ isPotentialBest: true });
+  }
+
   async getAllBest(): Promise<MediaGroup[]> {
     return this.getAllGroupedByParents({ isBest: true });
   }

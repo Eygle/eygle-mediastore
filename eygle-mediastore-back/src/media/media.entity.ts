@@ -29,6 +29,10 @@ export class Media {
 
   @Column({ default: false })
   @Index()
+  isPotentialBest: boolean;
+
+  @Column({ default: false })
+  @Index()
   isBest: boolean;
 
   @Column({ default: false })

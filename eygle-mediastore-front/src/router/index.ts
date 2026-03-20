@@ -82,6 +82,12 @@ const router = createRouter({
       meta: { navbar: true, icon: 'mdi-heart-plus' },
     },
     {
+      path: '/potential-best',
+      name: RouteName.PotentialBest,
+      component: () => import('../pages/MediaGroupsByFieldsPage.vue'),
+      meta: { navbar: true, icon: 'mdi-star-cog' },
+    },
+    {
       path: '/to-tag',
       name: RouteName.ToTag,
       component: () => import('../pages/MediaGroupsByFieldsPage.vue'),

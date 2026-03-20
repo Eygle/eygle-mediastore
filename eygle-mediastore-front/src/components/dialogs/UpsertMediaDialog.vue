@@ -73,16 +73,18 @@ function confirmDelete() {
           <div class="mb-2">
             <div v-for="(_, idx) in form.files" :key="idx" class="d-flex align-center">
               <v-text-field
-                  v-model="form.files[idx]"
-                  :label="`File ${idx + 1}`"
-                  :rules="idx === 0 ? [rules.required()] : undefined"
-                  autofocus />
+                v-model="form.files[idx]"
+                :label="`File ${idx + 1}`"
+                :rules="idx === 0 ? [rules.required()] : undefined"
+                autofocus
+              />
               <v-btn
-                  v-if="idx === form.files.length - 1"
-                  class="ml-4"
-                  icon="mdi-plus"
-                  variant="text"
-                  @click="form.files.push(null)" />
+                v-if="idx === form.files.length - 1"
+                class="ml-4"
+                icon="mdi-plus"
+                variant="text"
+                @click="form.files.push(null)"
+              />
               <v-btn v-else class="ml-4" icon="mdi-minus" variant="text" @click="form.files.splice(idx, 1)" />
             </div>
           </div>
@@ -98,9 +100,11 @@ function confirmDelete() {
             label="Starring"
             multiple
             hide-details
-            class="mt-4" />
+            class="mt-4"
+          />
           <v-checkbox v-model="form.isBest" color="primary" label="Is best?" hide-details />
           <v-checkbox v-model="form.isAbsoluteBest" color="red-lighten-2" label="Is absolute best?" hide-details />
+          <v-checkbox v-model="form.isPotentialBest" label="Is potential best?" hide-details />
           <v-checkbox v-model="form.toSee" label="To see?" hide-details />
           <v-checkbox v-model="form.toTag" label="To tag?" />
           <div class="d-flex align-center">
@@ -109,14 +113,16 @@ function confirmDelete() {
               density="compact"
               label="Progress"
               placeholder="[hh:][mm:]ss"
-              :rules="[rules.duration()]" />
+              :rules="[rules.duration()]"
+            />
             <span class="mx-2">/</span>
             <v-text-field
               v-model="form.progress[1]"
               density="compact"
               label="Total time"
               placeholder="[hh:][mm:]ss"
-              :rules="[rules.duration()]" />
+              :rules="[rules.duration()]"
+            />
           </div>
           <v-text-field v-model="form.externalLink" label="Link" />
           <v-textarea v-model="form.comment" label="Comment" />

@@ -43,6 +43,11 @@ export class MediaController {
     return this.mediaService.getAllToSee();
   }
 
+  @Get('/potential-best')
+  getPotentialBest() {
+    return this.mediaService.getAllPotentialBest();
+  }
+
   @Get('/best')
   getBest() {
     return this.mediaService.getAllBest();

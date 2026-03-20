@@ -17,6 +17,9 @@ export class MediaDto {
   toSee!: boolean
 
   @Expose()
+  isPotentialBest!: boolean
+
+  @Expose()
   isBest!: boolean
 
   @Expose()
