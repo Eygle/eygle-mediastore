@@ -62,22 +62,12 @@ watch(opened, () => (tags.value = [...props.parent.tags]))
       <v-card-title>Manage tags</v-card-title>
       <v-card-text>
         <p class="mb-4">{{ parent.title || parent.name }}</p>
-        <TagsAutocomplete
-          v-model:input="input"
-          :exclude="tags"
-          autofocus
-          @add-tag="(tag) => tags.push(tag)"
-          class="mb-4" />
-
-        <v-chip v-for="(tag, idx) of tags" class="mr-2 mb-2">
-          {{ tag.title }}
-          <v-icon icon="mdi-close-circle ml-1 mr-n1" size="18" @click="tags.splice(idx, 1)" />
-        </v-chip>
+        <TagsAutocomplete v-model="tags" v-model:input="input" autofocus class="mb-4" />
 
         <v-expand-transition>
           <div v-if="addedTags.length" class="mt-4">
             <h2 class="mb-2">Added tags</h2>
-            <v-chip v-for="tag in addedTags" color="green-lighten-2" class="mr-2 mb-2">
+            <v-chip v-for="tag in addedTags" :key="tag.title" color="green-lighten-2" class="mr-2 mb-2">
               {{ tag.title }}
             </v-chip>
           </div>
@@ -85,7 +75,7 @@ watch(opened, () => (tags.value = [...props.parent.tags]))
         <v-expand-transition>
           <div v-if="deletedTags.length" class="mt-4">
             <h2 class="mb-2">Deleted tags</h2>
-            <v-chip v-for="tag in deletedTags" color="red-lighten-2" class="mr-2 mb-2">
+            <v-chip v-for="tag in deletedTags" :key="tag.title" color="red-lighten-2" class="mr-2 mb-2">
               {{ tag.title }}
             </v-chip>
           </div>
@@ -95,8 +85,9 @@ watch(opened, () => (tags.value = [...props.parent.tags]))
             <v-expansion-panel-text>
               <v-chip
                 v-for="tag in suggest.tags.filter(({ title }) => !tags.find((t) => t.title === title))"
+                :key="tag.title"
                 class="mr-2 mb-2"
-                @click.native="tags.push(tag)">
+                @click="tags.push(tag)">
                 {{ tag.title }}
               </v-chip>
             </v-expansion-panel-text>
