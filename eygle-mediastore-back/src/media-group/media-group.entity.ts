@@ -14,7 +14,10 @@ import { Tag } from '../tag/tag.entity';
 import { Field } from '../types/Field';
 import { Media } from '../media/media.entity';
 
+// Expression index created manually (synchronize would drop it otherwise):
+// CREATE INDEX "IDX_media_group_lower_name" ON "mediastore"."media_group" (LOWER(name) text_pattern_ops);
 @Entity()
+@Index('IDX_media_group_lower_name', { synchronize: false })
 export class MediaGroup {
   @PrimaryGeneratedColumn()
   id: number;
@@ -55,6 +58,7 @@ export class MediaGroup {
   toSee: boolean;
 
   @Column({ nullable: true })
+  @Index({ where: '"comment" IS NOT NULL' })
   comment: string;
 
   @ManyToMany(() => Tag)
@@ -71,7 +75,7 @@ export class MediaGroup {
   @ManyToMany(() => Media, (media) => media.starring)
   starringMedia: Media[];
 
-  @ManyToOne(() => MediaGroup, { nullable: true })
+  @ManyToOne(() => MediaGroup, (group) => group.groups, { nullable: true })
   @Index()
   parent: MediaGroup;
 

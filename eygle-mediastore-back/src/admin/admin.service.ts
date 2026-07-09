@@ -21,6 +21,7 @@ export class AdminService {
         { parent: Not(IsNull()) },
       ],
       relations: { tags: true, media: { tags: true, parent: true } },
+      relationLoadStrategy: 'query',
     });
 
     const res = [];
