@@ -6,6 +6,8 @@ import { Field } from '@/types/Field'
 import { MediaDto } from '@/dto/MediaDto'
 import { TagDto } from '@/dto/TagDto'
 
+export type FieldCount = { field: Field | null; count: number }
+
 export function useApi() {
   const config = useConfig()
   const rest = axios.create({ baseURL: config.api, responseType: 'json' })
@@ -27,14 +29,24 @@ export function useApi() {
     return res.data
   }
 
-  async function fetchMediaList(endpoint: string) {
-    const res = await rest.get<unknown[]>(`/media/${endpoint}`)
+  async function fetchMediaList(endpoint: string, field?: string) {
+    const res = await rest.get<unknown[]>(`/media/${endpoint}${field ? `?field=${field}` : ''}`)
     return res.data.map((data) => plainToInstance(MediaGroupDto, data))
   }
 
-  async function fetchMediaGroupsList(endpoint: string) {
-    const res = await rest.get<unknown[]>(`/media-group/${endpoint}`)
+  async function fetchMediaGroupsList(endpoint: string, field?: string) {
+    const res = await rest.get<unknown[]>(`/media-group/${endpoint}${field ? `?field=${field}` : ''}`)
     return res.data.map((data) => plainToInstance(MediaGroupDto, data))
+  }
+
+  async function fetchMediaCountByField(flag: string): Promise<FieldCount[]> {
+    const res = await rest.get<FieldCount[]>(`/media/count-by-field?flag=${flag}`)
+    return res.data
+  }
+
+  async function fetchMediaGroupCountByField(flag: string): Promise<FieldCount[]> {
+    const res = await rest.get<FieldCount[]>(`/media-group/count-by-field?flag=${flag}`)
+    return res.data
   }
 
   async function createMediaGroup(data: MediaGroupDto): Promise<MediaGroupDto | null> {
@@ -137,6 +149,8 @@ export function useApi() {
     createMedia,
     fetchMediaList,
     fetchMediaGroupsList,
+    fetchMediaCountByField,
+    fetchMediaGroupCountByField,
     getTagById,
     fetchTags,
     findTagsByName,

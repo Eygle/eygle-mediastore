@@ -18,7 +18,7 @@ defineProps<{ group: MediaGroupDto; noAction?: boolean; includeComment?: boolean
         <div class="d-flex align-center" v-bind="props">
           <div class="flex-grow-1">
             <v-card-title class="d-flex align-center">
-              <p class="text-truncate">{{ group.name }}</p>
+              <p class="text-truncate">{{ group.displayName || group.name }}</p>
               <span class="text-caption ml-2" v-if="group.count || group.total">
                 ({{ group.count || group.total }})
               </span>
