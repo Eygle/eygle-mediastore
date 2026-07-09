@@ -1,17 +1,24 @@
-import { Column, CreateDateColumn, Entity, Index, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  Index,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @Entity()
 export class Tag {
   @PrimaryGeneratedColumn()
-  id: number
+  id: number;
 
   @Column()
   @Index({ unique: true })
-  title: string
+  title: string;
 
   @CreateDateColumn()
-  createdAd: Date
+  createdAd: Date;
 
   @UpdateDateColumn()
-  updatedAt: Date
+  updatedAt: Date;
 }
