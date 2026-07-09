@@ -1,12 +1,25 @@
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  forwardRef,
+  Inject,
+  Injectable,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { In, IsNull, Not, Raw, Repository } from 'typeorm';
+import { In, Raw, Repository } from 'typeorm';
 import { FindOptionsWhere } from 'typeorm/find-options/FindOptionsWhere';
 import { MediaGroup } from './media-group.entity';
 import { TagService } from '../tag/tag.service';
 import { Field } from '../types/Field';
 import { Tag } from '../tag/tag.entity';
 import { compareName, compareTitle } from '../utils/compare';
+import { EFFECTIVE_FIELD_CTE } from '../utils/effective-field';
+
+const FLAG_CONDITIONS = {
+  'to-tag': 'media_group.to_tag',
+  commented: 'media_group.comment IS NOT NULL',
+} as const;
+
+export type MediaGroupFlag = keyof typeof FLAG_CONDITIONS;
 
 @Injectable()
 export class MediaGroupService {
@@ -122,12 +135,74 @@ export class MediaGroupService {
     });
   }
 
-  async getAllToTag(): Promise<MediaGroup[]> {
-    return this.getAllWithTagsAndStarring({ toTag: true });
+  countByField(
+    flag: MediaGroupFlag,
+  ): Promise<{ field: Field; count: number }[]> {
+    return this.mediaGroupRepository.query(
+      `${EFFECTIVE_FIELD_CTE}
+       SELECT effective_field.field AS field, COUNT(*)::int AS count
+       FROM mediastore.media_group media_group
+       JOIN effective_field ON effective_field.group_id = media_group.id
+       WHERE ${this.flagCondition(flag)}
+       GROUP BY effective_field.field`,
+    );
   }
 
-  async getAllCommented(): Promise<MediaGroup[]> {
-    return this.getAllWithTagsAndStarring({ comment: Not(IsNull()) });
+  // field 'none' matches groups whose whole parent chain has no field
+  async getAllFlagged(
+    flag: MediaGroupFlag,
+    field?: string,
+  ): Promise<MediaGroup[]> {
+    const fieldFilter =
+      field === 'none'
+        ? ' AND effective_field.field IS NULL'
+        : field
+          ? ' AND effective_field.field = $1'
+          : '';
+    const ids = await this.mediaGroupRepository.query(
+      `${EFFECTIVE_FIELD_CTE}
+       SELECT media_group.id AS id
+       FROM mediastore.media_group media_group
+       JOIN effective_field ON effective_field.group_id = media_group.id
+       WHERE ${this.flagCondition(flag)}${fieldFilter}`,
+      field && field !== 'none' ? [field] : [],
+    );
+    return this.getAllWithTagsAndStarring({
+      id: In(ids.map(({ id }) => id)),
+    });
+  }
+
+  private flagCondition(flag: MediaGroupFlag): string {
+    const condition = FLAG_CONDITIONS[flag];
+    if (!condition) throw new BadRequestException(`Unknown flag '${flag}'`);
+    return condition;
+  }
+
+  // Sets displayName ("Ancestor - Parent - Name") on each group and sorts by
+  // it, so nested groups appear next to their parent in flat listings
+  async setDisplayNames(groups: MediaGroup[]): Promise<MediaGroup[]> {
+    if (!groups.length) return groups;
+    const rows: { id: number; display_name: string }[] =
+      await this.mediaGroupRepository.query(
+        `WITH RECURSIVE path AS (
+             SELECT id, parent_id, name AS display_name
+             FROM mediastore.media_group
+             WHERE id = ANY($1)
+           UNION ALL
+             SELECT path.id, parent.parent_id, parent.name || ' - ' || path.display_name
+             FROM path
+             JOIN mediastore.media_group parent ON parent.id = path.parent_id
+         )
+         SELECT id, display_name FROM path WHERE parent_id IS NULL`,
+        [groups.map(({ id }) => id)],
+      );
+    const names = new Map(
+      rows.map(({ id, display_name }) => [id, display_name]),
+    );
+    for (const group of groups) {
+      group.displayName = names.get(group.id) ?? group.name;
+    }
+    return groups.sort((a, b) => a.displayName.localeCompare(b.displayName));
   }
 
   async getAllToFollow(): Promise<MediaGroup[]> {
@@ -142,7 +217,7 @@ export class MediaGroupService {
       order: { name: 'asc' },
     });
     for (const group of groups) group.tags?.sort(compareTitle);
-    return groups;
+    return this.setDisplayNames(groups);
   }
 
   async update(id: number, data: Partial<MediaGroup>) {

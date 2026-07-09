@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { In, IsNull, Not, Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { FindOptionsWhere } from 'typeorm/find-options/FindOptionsWhere';
 import * as path from 'path';
 import { Media } from './media.entity';
@@ -10,6 +10,20 @@ import { MediaGroup } from '../media-group/media-group.entity';
 import { groupByParents } from '../utils/group-by-parents';
 import { Tag } from '../tag/tag.entity';
 import { compareTitle } from '../utils/compare';
+import { EFFECTIVE_FIELD_CTE } from '../utils/effective-field';
+import { Field } from '../types/Field';
+
+const FLAG_CONDITIONS = {
+  'in-progress': 'media.progress[1] IS NOT NULL',
+  'to-see': 'media.to_see',
+  'potential-best': 'media.is_potential_best',
+  best: 'media.is_best',
+  'absolute-best': 'media.is_absolute_best',
+  'to-tag': 'media.to_tag',
+  commented: 'media.comment IS NOT NULL',
+} as const;
+
+export type MediaFlag = keyof typeof FLAG_CONDITIONS;
 
 @Injectable()
 export class MediaService {
@@ -69,37 +83,42 @@ export class MediaService {
     });
   }
 
-  async getAllInProgress(): Promise<MediaGroup[]> {
-    const ids = await this.mediaRepository
-      .createQueryBuilder('media')
-      .select('media.id', 'id')
-      .where('media.progress[1] IS NOT NULL')
-      .getRawMany<{ id: number }>();
-    return this.getAllGroupedByParents({ id: In(ids.map(({ id }) => id)) });
+  countByField(flag: MediaFlag): Promise<{ field: Field; count: number }[]> {
+    return this.mediaRepository.query(
+      `${EFFECTIVE_FIELD_CTE}
+       SELECT effective_field.field AS field, COUNT(*)::int AS count
+       FROM mediastore.media media
+       JOIN effective_field ON effective_field.group_id = media.parent_id
+       WHERE ${this.flagCondition(flag)}
+       GROUP BY effective_field.field`,
+    );
   }
 
-  async getAllToSee(): Promise<MediaGroup[]> {
-    return this.getAllGroupedByParents({ toSee: true });
+  // field 'none' matches media whose whole parent chain has no field
+  async getAllFlagged(flag: MediaFlag, field?: string): Promise<MediaGroup[]> {
+    const fieldFilter =
+      field === 'none'
+        ? ' AND effective_field.field IS NULL'
+        : field
+          ? ' AND effective_field.field = $1'
+          : '';
+    const ids = await this.mediaRepository.query(
+      `${EFFECTIVE_FIELD_CTE}
+       SELECT media.id AS id
+       FROM mediastore.media media
+       JOIN effective_field ON effective_field.group_id = media.parent_id
+       WHERE ${this.flagCondition(flag)}${fieldFilter}`,
+      field && field !== 'none' ? [field] : [],
+    );
+    return this.getAllGroupedByParents({
+      id: In(ids.map(({ id }) => id)),
+    });
   }
 
-  async getAllPotentialBest(): Promise<MediaGroup[]> {
-    return this.getAllGroupedByParents({ isPotentialBest: true });
-  }
-
-  async getAllBest(): Promise<MediaGroup[]> {
-    return this.getAllGroupedByParents({ isBest: true });
-  }
-
-  async getAllAbsoluteBest(): Promise<MediaGroup[]> {
-    return this.getAllGroupedByParents({ isAbsoluteBest: true });
-  }
-
-  async getAllToTag(): Promise<MediaGroup[]> {
-    return this.getAllGroupedByParents({ toTag: true });
-  }
-
-  async getAllCommented(): Promise<MediaGroup[]> {
-    return this.getAllGroupedByParents({ comment: Not(IsNull()) });
+  private flagCondition(flag: MediaFlag): string {
+    const condition = FLAG_CONDITIONS[flag];
+    if (!condition) throw new BadRequestException(`Unknown flag '${flag}'`);
+    return condition;
   }
 
   async update(id: number, data: Media) {
@@ -168,7 +187,7 @@ export class MediaService {
         compareTitle(a, b),
     );
 
-    return groupByParents(mediaList);
+    return this.mediaGroupService.setDisplayNames(groupByParents(mediaList));
   }
 
   delete(id: number) {
