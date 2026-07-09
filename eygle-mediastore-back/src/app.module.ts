@@ -20,7 +20,7 @@ import { AdminModule } from './admin/admin.module';
       schema: 'mediastore',
       autoLoadEntities: true,
       logging: true,
-      synchronize: true,
+      synchronize: false,
       namingStrategy: new SnakeNamingStrategy(),
     }),
     MediaModule,
