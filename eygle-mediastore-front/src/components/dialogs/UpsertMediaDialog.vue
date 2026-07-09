@@ -88,11 +88,7 @@ function confirmDelete() {
               <v-btn v-else class="ml-4" icon="mdi-minus" variant="text" @click="form.files.splice(idx, 1)" />
             </div>
           </div>
-          <TagsAutocomplete v-model:input="tagInput" :exclude="form.tags" @add-tag="(tag) => form.tags.push(tag)" />
-          <v-chip v-for="(tag, idx) of form.tags" class="mr-2 mt-2">
-            {{ tag.title }}
-            <v-icon icon="mdi-close-circle ml-1 mr-n1" size="18" @click="form.tags.splice(idx, 1)" />
-          </v-chip>
+          <TagsAutocomplete v-model="form.tags" v-model:input="tagInput" />
           <v-text-field v-model="form.title" label="Title" class="mt-4" hide-details />
           <MediaGroupAutocomplete
             v-model="form.starring"

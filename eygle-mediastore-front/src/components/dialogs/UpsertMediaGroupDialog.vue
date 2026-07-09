@@ -77,15 +77,7 @@ function confirmDelete() {
             class="mb-4" />
           <MediaGroupAutocomplete v-if="source" v-model="model.parent" label="Parent" />
           <v-text-field v-model="model.name" label="Name" autofocus :rules="[rules.required()]" hide-details="auto" />
-          <TagsAutocomplete
-            v-model:input="tagInput"
-            :exclude="model.tags"
-            @add-tag="(tag) => model.tags.push(tag)"
-            class="mt-4" />
-          <v-chip v-for="(tag, idx) of model.tags" class="mr-2 mt-2">
-            {{ tag.title }}
-            <v-icon icon="mdi-close-circle ml-1 mr-n1" size="18" @click="model.tags.splice(idx, 1)" />
-          </v-chip>
+          <TagsAutocomplete v-model="model.tags" v-model:input="tagInput" class="mt-4" />
           <MediaGroupAutocomplete
             v-model="model.starring"
             :fields="[Field.Profile, Field.Star]"

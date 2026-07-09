@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "dev": "cp config.local.json config.json && vite",
-    "build": "cp config.prod.json config.json && vite build && cp config.local.json config.json",
+    "dev": "vite",
+    "build": "vite build",
     "pretty-quick": "pretty-quick",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
     "deploy": "npm run build && ssh eygle@192.168.0.21 'rm -rf /var/www/eygle-mediastore-front/assets' && scp -r dist/* eygle@192.168.0.21:/var/www/eygle-mediastore-front"
@@ -14,12 +14,12 @@
     "@vueuse/core": "^10.9.0",
     "axios": "^1.6.8",
     "class-transformer": "^0.5.1",
-    "core-js": "^3.36.1",
     "copy-to-clipboard": "^3.3.3",
+    "core-js": "^3.36.1",
     "reflect-metadata": "^0.2.1",
-    "vue": "^3.4.21",
-    "vue-router": "^4.3.0",
-    "vuetify": "^3.5.11"
+    "vue": "^3.5.39",
+    "vue-router": "^4.6.4",
+    "vuetify": "^3.12.9"
   },
   "devDependencies": {
     "@babel/types": "^7.24.0",

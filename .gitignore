@@ -1,5 +1,5 @@
 eygle-mediastore-front/node_modules
 eygle-mediastore-front/dist
-eygle-mediastore-front/config.json
+*.tsbuildinfo
 /eygle-mediastore-back/dist
 /eygle-mediastore-back/node_modules
