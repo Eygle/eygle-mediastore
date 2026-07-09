@@ -3,6 +3,25 @@ import Home from '../pages/Home.vue'
 import { RouteName } from '@/types/RouteName'
 import { Field } from '@/types/Field'
 
+// One page listing the fields having results (with counts), one page listing
+// the results of a single field.
+function byFieldRoutes(flag: RouteName, meta: { icon: string; divider?: boolean; groups?: boolean }) {
+  return [
+    {
+      path: `/${flag}`,
+      name: flag,
+      component: () => import('../pages/MediaGroupsByFieldsPage.vue'),
+      meta: { navbar: true, byFields: true, ...meta },
+    },
+    {
+      path: `/${flag}/:field`,
+      name: `${flag}-details`,
+      component: () => import('../pages/MediaGroupsByFieldDetailsPage.vue'),
+      meta: { flag, groups: meta.groups },
+    },
+  ]
+}
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -57,48 +76,13 @@ const router = createRouter({
       meta: { navbar: true, icon: 'mdi-tag', divider: true },
     },
     { path: '/tags/:id', name: RouteName.Tag, component: () => import('../pages/Tag.vue') },
-    {
-      path: '/in-progress',
-      name: RouteName.InProgress,
-      component: () => import('../pages/MediaGroupsByFieldsPage.vue'),
-      meta: { navbar: true, icon: 'mdi-timer-sand', divider: true },
-    },
-    {
-      path: '/to-see',
-      name: RouteName.ToSee,
-      component: () => import('../pages/MediaGroupsByFieldsPage.vue'),
-      meta: { navbar: true, icon: 'mdi-eye' },
-    },
-    {
-      path: '/best',
-      name: RouteName.Best,
-      component: () => import('../pages/MediaGroupsByFieldsPage.vue'),
-      meta: { navbar: true, icon: 'mdi-star' },
-    },
-    {
-      path: '/absolute-best',
-      name: RouteName.AbsoluteBest,
-      component: () => import('../pages/MediaGroupsByFieldsPage.vue'),
-      meta: { navbar: true, icon: 'mdi-heart-plus' },
-    },
-    {
-      path: '/potential-best',
-      name: RouteName.PotentialBest,
-      component: () => import('../pages/MediaGroupsByFieldsPage.vue'),
-      meta: { navbar: true, icon: 'mdi-star-cog' },
-    },
-    {
-      path: '/to-tag',
-      name: RouteName.ToTag,
-      component: () => import('../pages/MediaGroupsByFieldsPage.vue'),
-      meta: { navbar: true, icon: 'mdi-tag-plus', groups: true },
-    },
-    {
-      path: '/commented',
-      name: RouteName.Commented,
-      component: () => import('../pages/MediaGroupsByFieldsPage.vue'),
-      meta: { navbar: true, icon: 'mdi-comment', groups: true },
-    },
+    ...byFieldRoutes(RouteName.InProgress, { icon: 'mdi-timer-sand', divider: true }),
+    ...byFieldRoutes(RouteName.ToSee, { icon: 'mdi-eye' }),
+    ...byFieldRoutes(RouteName.Best, { icon: 'mdi-star' }),
+    ...byFieldRoutes(RouteName.AbsoluteBest, { icon: 'mdi-heart-plus' }),
+    ...byFieldRoutes(RouteName.PotentialBest, { icon: 'mdi-star-cog' }),
+    ...byFieldRoutes(RouteName.ToTag, { icon: 'mdi-tag-plus', groups: true }),
+    ...byFieldRoutes(RouteName.Commented, { icon: 'mdi-comment', groups: true }),
     {
       path: '/to-follow',
       name: RouteName.ToFollow,

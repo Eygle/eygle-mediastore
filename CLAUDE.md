@@ -39,14 +39,14 @@ Three entities, defined in the backend (`src/*/**.entity.ts`) and mirrored as cl
 - **Media** — belongs to one MediaGroup (`parent`), has `files` paths, `progress`, and boolean status flags (`toSee`, `isPotentialBest`, `isBest`, `isAbsoluteBest`, `toTag`).
 - **Tag** — flat, unique-title tags attached to both media and groups.
 
-The boolean status flags drive matching list endpoints on both entities (e.g. `GET /media/to-see`, `/media/best`, `/media/commented`) and one frontend navbar route each.
+The boolean status flags drive matching endpoints on both entities: `GET /media/count-by-field?flag=best` returns per-field result counts, and the list endpoints (e.g. `GET /media/best`, `/media/commented`) accept an optional `?field=` query (`none` = no field in the whole parent chain). A recursive CTE (`src/utils/effective-field.ts`) resolves each group's "effective" field by climbing parents, so media in nested groups (e.g. sub-websites) are attributed to their root section.
 
 ## Architecture notes
 
 **Backend** follows standard Nest module-per-entity structure (`media/`, `media-group/`, `tag/`), each with controller + service + entity. `admin/` holds one-off data-repair endpoints (tag synchronization, file-path migration). `src/utils/group-by-parents.ts` regroups a flat media list under their parent groups — the shape the status-flag endpoints return.
 
 **Frontend:**
-- Routing is convention-driven: each `Field` value gets a list route (`MediaGroupsListPage`) and a detail route (`MediaGroupDetailsPage`); status-flag routes share `MediaGroupsByFieldsPage`. Navbar is generated from route `meta` (`navbar`, `icon`, `field`, `groups`, `divider`) in `src/router/index.ts`.
+- Routing is convention-driven: each `Field` value gets a list route (`MediaGroupsListPage`) and a detail route (`MediaGroupDetailsPage`); each status flag gets two routes via the `byFieldRoutes` helper: `/<flag>` (`MediaGroupsByFieldsPage`, fields having results + counts) and `/<flag>/:field` (`MediaGroupsByFieldDetailsPage`, results of one field, groups linking to their detail page). Navbar is generated from route `meta` (`navbar`, `icon`, `field`, `groups`, `divider`) in `src/router/index.ts`.
 - No store library. State lives in composables (`src/composables/`): `api.ts` wraps all axios calls and converts payloads to/from DTO classes via class-transformer (`plainToInstance`/`instanceToPlain` — keep this pattern when adding endpoints), `cache.ts` is a simple keyed in-memory cache, plus `dialogs.ts`, `confirm.ts`, `toast.ts` for UI state.
 - CRUD happens through the dialogs in `src/components/dialogs/` (Upsert*, ConfirmDialog, CreateBatchDialog, MergeTagsDialog).
 - DTO classes carry presentation logic as getters (e.g. `MediaGroupDto.nbBest`, `lastEntryRelativeTime`).

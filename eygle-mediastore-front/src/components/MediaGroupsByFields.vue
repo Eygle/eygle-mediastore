@@ -60,7 +60,7 @@ const tabs = computed(() => groupsByFields.value.map((group) => group[0].field))
               :key="group.id"
               class="text-h5 d-block mt-8"
             >
-              {{ group.name }}
+              {{ group.displayName || group.name }}
             </router-link>
             <MediaCard v-for="media of group.media" :key="media.id" :media="media" no-action class="mt-4" />
           </template>

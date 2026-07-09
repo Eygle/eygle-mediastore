@@ -8,7 +8,7 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { MediaService } from './media.service';
+import { MediaFlag, MediaService } from './media.service';
 
 type MediaGroupQuery = {
   filters?: {
@@ -33,39 +33,44 @@ export class MediaController {
     return this.mediaService.getAll();
   }
 
+  @Get('/count-by-field')
+  countByField(@Query('flag') flag: MediaFlag) {
+    return this.mediaService.countByField(flag);
+  }
+
   @Get('/in-progress')
-  getInProgress() {
-    return this.mediaService.getAllInProgress();
+  getInProgress(@Query('field') field?: string) {
+    return this.mediaService.getAllFlagged('in-progress', field);
   }
 
   @Get('/to-see')
-  getToSee() {
-    return this.mediaService.getAllToSee();
+  getToSee(@Query('field') field?: string) {
+    return this.mediaService.getAllFlagged('to-see', field);
   }
 
   @Get('/potential-best')
-  getPotentialBest() {
-    return this.mediaService.getAllPotentialBest();
+  getPotentialBest(@Query('field') field?: string) {
+    return this.mediaService.getAllFlagged('potential-best', field);
   }
 
   @Get('/best')
-  getBest() {
-    return this.mediaService.getAllBest();
+  getBest(@Query('field') field?: string) {
+    return this.mediaService.getAllFlagged('best', field);
   }
 
   @Get('/absolute-best')
-  getAbsoluteBest() {
-    return this.mediaService.getAllAbsoluteBest();
+  getAbsoluteBest(@Query('field') field?: string) {
+    return this.mediaService.getAllFlagged('absolute-best', field);
   }
 
   @Get('/to-tag')
-  getToTag() {
-    return this.mediaService.getAllToTag();
+  getToTag(@Query('field') field?: string) {
+    return this.mediaService.getAllFlagged('to-tag', field);
   }
 
   @Get('/commented')
-  getCommented() {
-    return this.mediaService.getAllCommented();
+  getCommented(@Query('field') field?: string) {
+    return this.mediaService.getAllFlagged('commented', field);
   }
 
   @Patch(':id')

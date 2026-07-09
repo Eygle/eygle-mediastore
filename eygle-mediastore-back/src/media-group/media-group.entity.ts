@@ -87,4 +87,9 @@ export class MediaGroup {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  // Not a column: name prefixed with the ancestor names ("Website - Entry"),
+  // set by MediaGroupService.setDisplayNames on flat listings so nested
+  // groups sort next to their parent
+  displayName?: string;
 }

@@ -8,7 +8,7 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { MediaGroupService } from './media-group.service';
+import { MediaGroupFlag, MediaGroupService } from './media-group.service';
 import { Field } from '../types/Field';
 
 type MediaGroupQuery = {
@@ -41,14 +41,19 @@ export class MediaGroupController {
     return this.mediaGroupService.findAllByName(name, fields);
   }
 
+  @Get('/count-by-field')
+  countByField(@Query('flag') flag: MediaGroupFlag) {
+    return this.mediaGroupService.countByField(flag);
+  }
+
   @Get('/to-tag')
-  getToTag() {
-    return this.mediaGroupService.getAllToTag();
+  getToTag(@Query('field') field?: string) {
+    return this.mediaGroupService.getAllFlagged('to-tag', field);
   }
 
   @Get('/commented')
-  getCommented() {
-    return this.mediaGroupService.getAllCommented();
+  getCommented(@Query('field') field?: string) {
+    return this.mediaGroupService.getAllFlagged('commented', field);
   }
 
   @Get('/to-follow')

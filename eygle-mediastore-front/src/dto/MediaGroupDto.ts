@@ -12,6 +12,11 @@ export class MediaGroupDto {
   @Expose()
   name!: string
 
+  // Name prefixed with the ancestor names ("Website - Entry"), only set by
+  // the backend on flat listings
+  @Expose()
+  displayName?: string
+
   @Expose()
   field!: Field
 

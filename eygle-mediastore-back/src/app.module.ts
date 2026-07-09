@@ -19,7 +19,7 @@ import { AdminModule } from './admin/admin.module';
       database: 'eygle',
       schema: 'mediastore',
       autoLoadEntities: true,
-      logging: true,
+      logging: false,
       synchronize: false,
       namingStrategy: new SnakeNamingStrategy(),
     }),

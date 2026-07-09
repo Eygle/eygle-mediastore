@@ -27,7 +27,10 @@ async function reload() {
   ])
 
   tag.value = tagInfo
-  groups.value = mergeMediaAndParents(fromMedia, fromGroups)
+  // Both sources are sorted, but their merge is not
+  groups.value = mergeMediaAndParents(fromMedia, fromGroups).sort((a, b) =>
+    (a.displayName || a.name).localeCompare(b.displayName || b.name)
+  )
   loading.value = false
 }
 </script>

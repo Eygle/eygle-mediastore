@@ -1,4 +1,12 @@
-import { Body, Controller, Delete, Get, Param, Patch, Query } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Query,
+} from '@nestjs/common';
 import { TagService } from './tag.service';
 import { Tag } from './tag.entity';
 
