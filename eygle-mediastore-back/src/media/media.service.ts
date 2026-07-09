@@ -9,6 +9,7 @@ import { MediaGroupService } from '../media-group/media-group.service';
 import { MediaGroup } from '../media-group/media-group.entity';
 import { groupByParents } from '../utils/group-by-parents';
 import { Tag } from '../tag/tag.entity';
+import { compareTitle } from '../utils/compare';
 
 @Injectable()
 export class MediaService {
@@ -38,7 +39,10 @@ export class MediaService {
   }
 
   getAll(): Promise<Media[]> {
-    return this.mediaRepository.find({ relations: { tags: true } });
+    return this.mediaRepository.find({
+      relations: { tags: true },
+      relationLoadStrategy: 'query',
+    });
   }
 
   findOneById(id: number) {
@@ -61,24 +65,17 @@ export class MediaService {
     return this.mediaRepository.find({
       where: { parent: { id: parentId } },
       relations: { tags: true, starring: true },
+      relationLoadStrategy: 'query',
     });
   }
 
   async getAllInProgress(): Promise<MediaGroup[]> {
-    const mediaList = await this.mediaRepository
+    const ids = await this.mediaRepository
       .createQueryBuilder('media')
-      .where('media.progress IS NOT NULL')
-      .where(`media.progress[1] IS NOT NULL`)
-      .leftJoinAndSelect('media.tags', 'tag')
-      .leftJoinAndSelect('media.starring', 'starring')
-      .leftJoinAndSelect('media.parent', 'parent')
-      .leftJoinAndSelect('parent.tags', 'parent_tag')
-      .addOrderBy('parent.name', 'ASC')
-      .addOrderBy('parent_tag.title', 'ASC')
-      .addOrderBy('media.title', 'ASC')
-      .addOrderBy('tag.title', 'ASC')
-      .getMany();
-    return groupByParents(mediaList);
+      .select('media.id', 'id')
+      .where('media.progress[1] IS NOT NULL')
+      .getRawMany<{ id: number }>();
+    return this.getAllGroupedByParents({ id: In(ids.map(({ id }) => id)) });
   }
 
   async getAllToSee(): Promise<MediaGroup[]> {
@@ -152,15 +149,25 @@ export class MediaService {
   }
 
   private async getAllGroupedByParents(where: FindOptionsWhere<Media>) {
+    // 'query' loads each relation with a separate WHERE IN query instead of
+    // joining everything at once, which multiplies rows (media × tags ×
+    // parent tags × starring) and makes hydration very slow.
     const mediaList = await this.mediaRepository.find({
       where,
       relations: { tags: true, starring: true, parent: { tags: true } },
-      order: {
-        parent: { name: 'asc', tags: { title: 'asc' } },
-        title: 'asc',
-        tags: { title: 'asc' },
-      },
+      relationLoadStrategy: 'query',
     });
+
+    for (const media of mediaList) {
+      media.tags?.sort(compareTitle);
+      media.parent?.tags?.sort(compareTitle);
+    }
+    mediaList.sort(
+      (a, b) =>
+        (a.parent?.name ?? '').localeCompare(b.parent?.name ?? '') ||
+        compareTitle(a, b),
+    );
+
     return groupByParents(mediaList);
   }
 

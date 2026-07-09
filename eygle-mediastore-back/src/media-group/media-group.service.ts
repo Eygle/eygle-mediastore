@@ -1,10 +1,12 @@
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, IsNull, Not, Raw, Repository } from 'typeorm';
+import { FindOptionsWhere } from 'typeorm/find-options/FindOptionsWhere';
 import { MediaGroup } from './media-group.entity';
 import { TagService } from '../tag/tag.service';
 import { Field } from '../types/Field';
 import { Tag } from '../tag/tag.entity';
+import { compareName, compareTitle } from '../utils/compare';
 
 @Injectable()
 export class MediaGroupService {
@@ -23,23 +25,27 @@ export class MediaGroupService {
     return this.mediaGroupRepository.save(entity);
   }
 
-  getAll() {
-    return this.mediaGroupRepository.find({
+  async getAll() {
+    const groups = await this.mediaGroupRepository.find({
       relations: { tags: true, media: true },
-      order: { name: 'asc', tags: { title: 'asc' } },
+      relationLoadStrategy: 'query',
+      order: { name: 'asc' },
     });
+    for (const group of groups) group.tags?.sort(compareTitle);
+    return groups;
   }
 
-  getAllByField(field: Field) {
-    return this.mediaGroupRepository
-      .createQueryBuilder('groups')
-      .where({ field })
-      .leftJoinAndSelect('groups.tags', 'tag')
-      .leftJoinAndSelect('groups.media', 'media')
-      .leftJoinAndSelect('groups.starring', 'starring')
-      .orderBy('LOWER(groups.name)', 'ASC')
-      .addOrderBy('tag.title', 'ASC')
-      .getMany();
+  async getAllByField(field: Field) {
+    const groups = await this.mediaGroupRepository.find({
+      where: { field },
+      relations: { tags: true, media: true, starring: true },
+      relationLoadStrategy: 'query',
+    });
+    groups.sort((a, b) =>
+      a.name.toLowerCase().localeCompare(b.name.toLowerCase()),
+    );
+    for (const group of groups) group.tags?.sort(compareTitle);
+    return groups;
   }
 
   async getAllWithTag(tagId: number): Promise<MediaGroup[]> {
@@ -47,30 +53,50 @@ export class MediaGroupService {
       where: { tags: { id: tagId } },
       select: { id: true },
     });
-    return this.mediaGroupRepository.find({
-      where: { id: In(res.map(({ id }) => id)) },
-      relations: { tags: true, starring: true },
-      order: { name: 'asc', tags: { title: 'asc' } },
+    return this.getAllWithTagsAndStarring({
+      id: In(res.map(({ id }) => id)),
     });
   }
 
-  findOneById(id: number) {
-    return this.mediaGroupRepository.findOne({
+  async findOneById(id: number) {
+    const group = await this.mediaGroupRepository.findOne({
       where: { id },
       relations: {
         tags: true,
-        media: { tags: true, starring: true, parent: true },
-        groups: { tags: true, parent: true, media: true },
-        parent: true,
+        media: { tags: true, starring: true },
+        groups: { tags: true, media: true },
         starring: true,
         starringMedia: { tags: true, parent: true },
       },
-      order: {
-        media: { title: 'asc', tags: { title: 'asc' } },
-        tags: { title: 'asc' },
-        groups: { name: 'asc', tags: { title: 'asc' } },
-      },
+      relationLoadStrategy: 'query',
     });
+    if (!group) return group;
+
+    // The 'query' strategy cannot load the self-referencing parent relation
+    // ("table name MediaGroup specified more than once"), so the group's own
+    // parent is fetched separately with the default join strategy. The parent
+    // of group.media and group.groups is this group by definition.
+    const { parent } = await this.mediaGroupRepository.findOne({
+      where: { id },
+      relations: { parent: true },
+    });
+    group.parent = parent;
+
+    const asParent = { ...group, parent: undefined } as MediaGroup;
+    delete asParent.tags;
+    delete asParent.media;
+    delete asParent.groups;
+    delete asParent.starring;
+    delete asParent.starringMedia;
+    for (const media of group.media || []) media.parent = asParent;
+    for (const child of group.groups || []) child.parent = asParent;
+
+    group.tags?.sort(compareTitle);
+    group.media?.sort(compareTitle);
+    group.groups?.sort(compareName);
+    for (const media of group.media || []) media.tags?.sort(compareTitle);
+    for (const child of group.groups || []) child.tags?.sort(compareTitle);
+    return group;
   }
 
   findOneByName(name: string) {
@@ -97,27 +123,26 @@ export class MediaGroupService {
   }
 
   async getAllToTag(): Promise<MediaGroup[]> {
-    return this.mediaGroupRepository.find({
-      where: { toTag: true },
-      relations: { tags: true, starring: true },
-      order: { name: 'asc', tags: { title: 'asc' } },
-    });
+    return this.getAllWithTagsAndStarring({ toTag: true });
   }
 
   async getAllCommented(): Promise<MediaGroup[]> {
-    return this.mediaGroupRepository.find({
-      where: { comment: Not(IsNull()) },
-      relations: { tags: true, starring: true },
-      order: { name: 'asc', tags: { title: 'asc' } },
-    });
+    return this.getAllWithTagsAndStarring({ comment: Not(IsNull()) });
   }
 
   async getAllToFollow(): Promise<MediaGroup[]> {
-    return this.mediaGroupRepository.find({
-      where: { toFollow: true },
+    return this.getAllWithTagsAndStarring({ toFollow: true });
+  }
+
+  private async getAllWithTagsAndStarring(where: FindOptionsWhere<MediaGroup>) {
+    const groups = await this.mediaGroupRepository.find({
+      where,
       relations: { tags: true, starring: true },
-      order: { name: 'asc', tags: { title: 'asc' } },
+      relationLoadStrategy: 'query',
+      order: { name: 'asc' },
     });
+    for (const group of groups) group.tags?.sort(compareTitle);
+    return groups;
   }
 
   async update(id: number, data: Partial<MediaGroup>) {
